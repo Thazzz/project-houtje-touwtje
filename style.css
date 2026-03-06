@@ -27,10 +27,8 @@ font-weight: 300;
 /* HERO */
 
 .hero {
-
-text-align: center;
-padding: 90px 20px 40px 20px;
-
+text-align:center;
+padding:120px 20px 60px 20px;
 }
 
 .logo {
