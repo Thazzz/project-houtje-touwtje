@@ -399,10 +399,7 @@ font-size: 34px;
 
 letter-spacing: 0.5px;
 
-margin-bottom: 10px;
-
-margin-top: 0;
-
+margin: 0 0 6px 0;
 }
 
 
@@ -418,13 +415,18 @@ color: #d0d0d0;
 
 }
 
+.about-page .intro {
+margin-top: 0;
+margin-bottom: 0;
+}
+
 .about-page .hero {
-padding: 20px 20px 0px 20px;
+padding: 10px 20px 0px 20px;
 }
 
 .about-page .logo {
 
-margin-bottom: 10px;
+margin-bottom: 4px;
 
 }
 
@@ -459,6 +461,8 @@ box-shadow: 0 12px 35px rgba(0,0,0,0.6);
 
 filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7));
 
+transition: transform 0.2s ease, filter 0.2s ease;
+
 }
 
 .portrait:hover {
@@ -468,8 +472,6 @@ transform: rotate(-1deg) scale(1.03);
 filter: drop-shadow(0 10px 30px rgba(0,0,0,0.8));
 
 cursor: pointer;
-
-transition: transform 0.2s ease;
 
 }
 
