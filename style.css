@@ -1,13 +1,12 @@
-/* BASIS */
+/* =========================
+   BASIS
+========================= */
 
 body {
-
 margin: 0;
-
 font-family: 'Inter', sans-serif;
 
 background-color: #111;
-
 background-image:
 linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
 url("images/Werkplaats.png");
@@ -18,52 +17,43 @@ background-attachment: fixed;
 background-repeat: no-repeat;
 
 color: #eaeaea;
-
 line-height: 1.6;
 font-weight: 300;
 
 min-height: 100vh;
-
 }
 
 
-/* MAIN LAYOUT */
+/* =========================
+   LAYOUT
+========================= */
 
 main {
-
 max-width: 1200px;
-
 margin: auto;
-
 }
 
 
-/* HERO */
+/* =========================
+   HERO
+========================= */
 
 .hero {
-
 text-align: center;
-
 padding: 120px 20px 60px 20px;
-
 position: relative;
-
 overflow: hidden;
-
 }
 
-
-/* SPOTLIGHT EFFECT */
+/* spotlight */
 
 .hero::before {
 
 content: "";
-
 position: absolute;
 
 top: -200px;
 left: 50%;
-
 transform: translateX(-50%);
 
 width: 800px;
@@ -77,181 +67,19 @@ rgba(0,0,0,0) 70%
 );
 
 pointer-events: none;
-
 z-index: 1;
 
 }
 
-
-/* LOGO */
-
-.logo {
-
-max-width: 520px;
-
-width: 90%;
-
-margin-bottom: 30px;
-
-position: relative;
-
-z-index: 2;
-
-filter: drop-shadow(0 8px 25px rgba(0,0,0,0.7));
-
-animation: fadeLogo 2.2s ease-out forwards;
-
-opacity: 0;
-
-}
-
-
-/* INTRO */
-
-.intro {
-
-max-width: 720px;
-
-margin: auto;
-
-opacity: 0;
-
-animation: fadeIntro 2s ease-out 1s forwards;
-
-position: relative;
-
-z-index: 2;
-
-}
-
-.intro h1 {
-
-font-family: 'Roboto Slab', serif;
-
-font-size: 30px;
-
-margin-bottom: 20px;
-
-color: #ffffff;
-
-}
-
-.intro p {
-
-color: #d6d6d6;
-
-}
-
-
-/* PROJECTS */
-
-.projects {
-
-max-width: 1100px;
-
-margin: 80px auto;
-
-padding: 0 20px;
-
-display: grid;
-
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-
-gap: 30px;
-
-}
-
-
-/* PROJECT BLOKKEN */
-
-.project {
-
-background: rgba(20,20,20,0.85);
-
-padding: 30px;
-
-border-radius: 10px;
-
-text-decoration: none;
-
-color: inherit;
-
-transition: all 0.25s ease;
-
-backdrop-filter: blur(3px);
-
-}
-
-.project h2 {
-
-font-family: 'Roboto Slab', serif;
-
-margin-top: 0;
-
-color: #ffffff;
-
-}
-
-.project p {
-
-color: #cfcfcf;
-
-}
-
-.project:hover {
-
-transform: translateY(-6px);
-
-background: rgba(35,35,35,0.95);
-
-box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-
-}
-
-
-/* EMAIL */
-
-.email {
-
-color: #cccccc;
-
-text-decoration: none;
-
-}
-
-.email:hover {
-
-text-decoration: underline;
-
-}
-
-
-/* FOOTER */
-
-footer {
-
-text-align: center;
-
-padding: 60px 20px 40px 20px;
-
-color: #888;
-
-font-size: 14px;
-
-}
-
-
-/* STOFDEELTJES */
+/* stofdeeltjes */
 
 .hero::after {
 
 content: "";
-
 position: absolute;
 
 top: -150px;
 left: 50%;
-
 transform: translateX(-50%);
 
 width: 900px;
@@ -277,7 +105,6 @@ background-position:
 animation: dustFloat 80s linear infinite;
 
 opacity: 0.35;
-
 z-index: 1;
 
 mix-blend-mode: screen;
@@ -285,20 +112,161 @@ mix-blend-mode: screen;
 }
 
 
-/* HOMEPAGE LINKS */
+/* =========================
+   LOGO + INTRO
+========================= */
+
+.logo {
+
+max-width: 520px;
+width: 90%;
+
+margin-bottom: 30px;
+
+position: relative;
+z-index: 2;
+
+filter: drop-shadow(0 8px 25px rgba(0,0,0,0.7));
+
+animation: fadeLogo 2.2s ease-out forwards;
+
+opacity: 0;
+
+}
+
+.intro {
+
+max-width: 720px;
+margin: auto;
+
+opacity: 0;
+animation: fadeIntro 2s ease-out 1s forwards;
+
+position: relative;
+z-index: 2;
+
+}
+
+.intro h1 {
+
+font-family: 'Roboto Slab', serif;
+font-size: 30px;
+
+margin-bottom: 20px;
+
+color: #ffffff;
+
+}
+
+.intro p {
+color: #d6d6d6;
+}
+
+
+/* =========================
+   PROJECT BLOKKEN
+========================= */
+
+.projects {
+
+max-width: 1100px;
+margin: 80px auto;
+
+padding: 0 20px;
+
+display: grid;
+
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+
+gap: 30px;
+
+}
+
+.project {
+
+background: rgba(20,20,20,0.85);
+
+padding: 30px;
+
+border-radius: 10px;
+
+text-decoration: none;
+color: inherit;
+
+transition: all 0.25s ease;
+
+backdrop-filter: blur(3px);
+
+}
+
+.project h2 {
+
+font-family: 'Roboto Slab', serif;
+margin-top: 0;
+
+color: #ffffff;
+
+}
+
+.project p {
+color: #cfcfcf;
+}
+
+.project:hover {
+
+transform: translateY(-6px);
+
+background: rgba(35,35,35,0.95);
+
+box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+
+text-align: center;
+
+padding: 60px 20px 40px 20px;
+
+color: #888;
+
+font-size: 14px;
+
+}
+
+.email {
+
+color: #cccccc;
+
+text-decoration: none;
+
+}
+
+.email:hover {
+text-decoration: underline;
+}
+
+
+/* =========================
+   HOMEPAGE LINKS
+========================= */
 
 .home-links {
 
 position: fixed;
 
-bottom: 20px;
-left: 20px;
-right: 20px;
+bottom: 60px;
+left: 60px;
+right: 60px;
 
 display: flex;
 
 justify-content: space-between;
-
 align-items: center;
 
 pointer-events: none;
@@ -308,30 +276,34 @@ z-index: 5;
 }
 
 .home-links a {
-
 pointer-events: auto;
-
 }
 
 
-/* INSTAGRAM */
+/* =========================
+   INSTAGRAM ICONEN
+========================= */
 
 .insta-group {
 
 display: flex;
 
-gap: 14px;
+gap: 18px;
 
 }
 
 .insta-group img {
 
-width: 26px;
-height: 26px;
+width: 60px;
+height: 60px;
 
-opacity: 0.75;
+opacity: 0.85;
 
-transition: opacity 0.2s ease, transform 0.2s ease;
+transition: all 0.2s ease;
+
+/* spotlight effect */
+
+filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
 
 }
 
@@ -339,149 +311,14 @@ transition: opacity 0.2s ease, transform 0.2s ease;
 
 opacity: 1;
 
-transform: scale(1.1);
+transform: scale(1.15);
 
 }
 
 
-/* ABOUT LINK */
-
-.about {
-
-font-size: 14px;
-
-color: #cccccc;
-
-text-decoration: none;
-
-border-bottom: 1px solid rgba(255,255,255,0.2);
-
-padding-bottom: 2px;
-
-transition: opacity 0.2s ease;
-
-}
-
-.about:hover {
-
-opacity: 1;
-
-}
-
-
-/* ANIMATIES */
-
-@keyframes dustFloat {
-
-0% {
-
-transform: translate(-50%, 0);
-
-}
-
-100% {
-
-transform: translate(-50%, -200px);
-
-}
-
-}
-
-@keyframes fadeLogo {
-
-0% {
-
-opacity: 0;
-
-transform: translateY(-10px);
-
-}
-
-100% {
-
-opacity: 1;
-
-transform: translateY(0);
-
-}
-
-}
-
-@keyframes fadeIntro {
-
-0% {
-
-opacity: 0;
-
-transform: translateY(10px);
-
-}
-
-100% {
-
-opacity: 1;
-
-transform: translateY(0);
-
-}
-
-}
-
-
-/* MOBILE */
-
-@media (max-width: 700px) {
-
-.hero {
-
-padding: 80px 20px 40px 20px;
-
-}
-
-.logo {
-
-max-width: 90%;
-
-}
-
-.intro h1 {
-
-font-size: 24px;
-
-}
-
-.intro p {
-
-font-size: 15px;
-
-}
-
-.projects {
-
-margin: 50px auto;
-
-}
-
-.project {
-
-padding: 24px;
-
-}
-
-.home-links {
-
-bottom: 40px;
-left: 40px;
-right: 40px;
-
-}
-
-.insta-group img {
-
-width: 42px;
-height: 42px;
-
-}
+/* =========================
+   TOOLTIP
+========================= */
 
 .insta-group a {
 
@@ -489,21 +326,18 @@ position: relative;
 
 }
 
-
-/* TOOLTIP */
-
 .insta-group a::before {
 
 content: attr(title);
 
 position: absolute;
 
-bottom: 55px;
+bottom: 70px;
 left: 50%;
 
 transform: translateX(-50%);
 
-background: rgba(0,0,0,0.8);
+background: rgba(0,0,0,0.85);
 
 color: #ddd;
 
@@ -523,43 +357,45 @@ pointer-events: none;
 
 }
 
-
 .insta-group a:hover::before {
 
 opacity: 1;
 
 }
 
+
+/* =========================
+   ABOUT LINK
+========================= */
+
 .about {
 
-font-size: 13px;
+font-size: 14px;
+
+color: #cccccc;
+
+text-decoration: none;
+
+border-bottom: 1px solid rgba(255,255,255,0.2);
+
+padding-bottom: 2px;
+
+transition: opacity 0.2s ease;
 
 }
 
+.about:hover {
+opacity: 1;
 }
 
-/* ABOUT PAGE */
+
+/* =========================
+   ABOUT PAGE
+========================= */
 
 .about-page .hero {
-
 padding: 40px 20px 10px 20px;
-
 }
-
-
-.about-container {
-
-max-width: 750px;
-
-margin: auto;
-
-padding: 0 20px;
-
-position: relative;
-
-}
-
-
 
 .about-layout {
 
@@ -571,9 +407,6 @@ padding: 0 20px;
 
 }
 
-
-/* TEKST BLOK */
-
 .about-text {
 
 font-size: 16px;
@@ -583,9 +416,6 @@ line-height: 1.7;
 color: #d6d6d6;
 
 }
-
-
-/* PORTRET FOTO */
 
 .portrait {
 
@@ -613,6 +443,82 @@ transform: rotate(-1deg);
 
 transition: transform 0.2s ease;
 
+}
+
+
+/* =========================
+   ANIMATIES
+========================= */
+
+@keyframes dustFloat {
+
+0% { transform: translate(-50%,0); }
+100% { transform: translate(-50%,-200px); }
+
+}
+
+@keyframes fadeLogo {
+
+0% { opacity:0; transform: translateY(-10px); }
+100% { opacity:1; transform: translateY(0); }
+
+}
+
+@keyframes fadeIntro {
+
+0% { opacity:0; transform: translateY(10px); }
+100% { opacity:1; transform: translateY(0); }
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width:700px){
+
+.hero {
+padding: 80px 20px 40px 20px;
+}
+
+.logo {
+max-width: 90%;
+}
+
+.intro h1 {
+font-size: 24px;
+}
+
+.intro p {
+font-size: 15px;
+}
+
+.projects {
+margin: 50px auto;
+}
+
+.project {
+padding: 24px;
+}
+
+.home-links {
+
+bottom: 40px;
+left: 30px;
+right: 30px;
+
+}
+
+.insta-group img {
+
+width: 52px;
+height: 52px;
+
+}
+
+.about {
+font-size: 13px;
 }
 
 }
