@@ -10,38 +10,89 @@ background-color: #111;
 
 background-image:
 linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-url("images/werkplaats.png");
+url("images/Werkplaats.png");
 
 background-size: cover;
-background-attachment: fixed;
 background-position: center;
+background-attachment: fixed;
+background-repeat: no-repeat;
 
 color: #eaeaea;
 
 line-height: 1.6;
 font-weight: 300;
 
+min-height: 100vh;
+
 }
+
 
 
 /* HERO */
 
 .hero {
-text-align:center;
-padding:120px 20px 60px 20px;
+
+text-align: center;
+
+padding: 120px 20px 60px 20px;
+
+position: relative;
+
 }
+
+
+/* SPOTLIGHT EFFECT */
+
+.hero::before {
+
+content: "";
+
+position: absolute;
+
+top: -200px;
+left: 50%;
+
+transform: translateX(-50%);
+
+width: 800px;
+height: 600px;
+
+background: radial-gradient(
+circle,
+rgba(255,255,255,0.08) 0%,
+rgba(255,255,255,0.04) 30%,
+rgba(0,0,0,0) 70%
+);
+
+pointer-events: none;
+
+}
+
+
+/* LOGO */
 
 .logo {
 
 max-width: 520px;
+
 width: 90%;
+
 margin-bottom: 30px;
 
+position: relative;
+
+z-index: 2;
+
 }
+
+
+
+/* INTRO */
 
 .intro {
 
 max-width: 720px;
+
 margin: auto;
 
 }
@@ -49,8 +100,11 @@ margin: auto;
 .intro h1 {
 
 font-family: 'Roboto Slab', serif;
+
 font-size: 30px;
+
 margin-bottom: 20px;
+
 color: #ffffff;
 
 }
@@ -62,7 +116,8 @@ color: #d6d6d6;
 }
 
 
-/* PROJECT SECTIE */
+
+/* PROJECTS */
 
 .projects {
 
@@ -73,11 +128,13 @@ margin: 80px auto;
 padding: 0 20px;
 
 display: grid;
+
 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
 gap: 30px;
 
 }
+
 
 
 /* PROJECT BLOKKEN */
@@ -91,6 +148,7 @@ padding: 30px;
 border-radius: 10px;
 
 text-decoration: none;
+
 color: inherit;
 
 transition: all 0.25s ease;
@@ -115,25 +173,23 @@ color: #cfcfcf;
 
 }
 
-
-/* HOVER EFFECT */
-
 .project:hover {
 
 transform: translateY(-6px);
 
 background: rgba(35,35,35,0.95);
 
-box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+box-shadow: 0 8px 30px rgba(0,0,0,0.6);
 
 }
+
 
 
 /* EMAIL */
 
 .email {
 
-color: #cfcfcf;
+color: #cccccc;
 
 text-decoration: none;
 
@@ -144,6 +200,7 @@ text-decoration: none;
 text-decoration: underline;
 
 }
+
 
 
 /* FOOTER */
