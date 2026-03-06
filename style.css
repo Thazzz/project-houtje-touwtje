@@ -27,6 +27,16 @@ min-height: 100vh;
 }
 
 
+/* MAIN LAYOUT */
+
+main {
+
+max-width: 1200px;
+
+margin: auto;
+
+}
+
 
 /* HERO */
 
@@ -39,6 +49,7 @@ padding: 120px 20px 60px 20px;
 position: relative;
 
 overflow: hidden;
+
 }
 
 
@@ -71,6 +82,7 @@ z-index: 1;
 
 }
 
+
 /* LOGO */
 
 .logo {
@@ -94,7 +106,6 @@ opacity: 0;
 }
 
 
-
 /* INTRO */
 
 .intro {
@@ -108,6 +119,7 @@ opacity: 0;
 animation: fadeIntro 2s ease-out 1s forwards;
 
 position: relative;
+
 z-index: 2;
 
 }
@@ -131,7 +143,6 @@ color: #d6d6d6;
 }
 
 
-
 /* PROJECTS */
 
 .projects {
@@ -149,7 +160,6 @@ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 gap: 30px;
 
 }
-
 
 
 /* PROJECT BLOKKEN */
@@ -199,7 +209,6 @@ box-shadow: 0 8px 30px rgba(0,0,0,0.6);
 }
 
 
-
 /* EMAIL */
 
 .email {
@@ -217,7 +226,6 @@ text-decoration: underline;
 }
 
 
-
 /* FOOTER */
 
 footer {
@@ -231,6 +239,7 @@ color: #888;
 font-size: 14px;
 
 }
+
 
 /* STOFDEELTJES */
 
@@ -275,6 +284,93 @@ mix-blend-mode: screen;
 
 }
 
+
+/* HOMEPAGE LINKS */
+
+.home-links {
+
+position: fixed;
+
+bottom: 20px;
+left: 20px;
+right: 20px;
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: center;
+
+pointer-events: none;
+
+z-index: 5;
+
+}
+
+.home-links a {
+
+pointer-events: auto;
+
+}
+
+
+/* INSTAGRAM */
+
+.insta-group {
+
+display: flex;
+
+gap: 14px;
+
+}
+
+.insta-group img {
+
+width: 26px;
+height: 26px;
+
+opacity: 0.75;
+
+transition: opacity 0.2s ease, transform 0.2s ease;
+
+}
+
+.insta-group img:hover {
+
+opacity: 1;
+
+transform: scale(1.1);
+
+}
+
+
+/* ABOUT LINK */
+
+.about {
+
+font-size: 14px;
+
+color: #cccccc;
+
+text-decoration: none;
+
+border-bottom: 1px solid rgba(255,255,255,0.2);
+
+padding-bottom: 2px;
+
+transition: opacity 0.2s ease;
+
+}
+
+.about:hover {
+
+opacity: 1;
+
+}
+
+
+/* ANIMATIES */
+
 @keyframes dustFloat {
 
 0% {
@@ -294,13 +390,19 @@ transform: translate(-50%, -200px);
 @keyframes fadeLogo {
 
 0% {
+
 opacity: 0;
+
 transform: translateY(-10px);
+
 }
 
 100% {
+
 opacity: 1;
+
 transform: translateY(0);
+
 }
 
 }
@@ -308,16 +410,25 @@ transform: translateY(0);
 @keyframes fadeIntro {
 
 0% {
+
 opacity: 0;
+
 transform: translateY(10px);
+
 }
 
 100% {
+
 opacity: 1;
+
 transform: translateY(0);
+
 }
 
 }
+
+
+/* MOBILE */
 
 @media (max-width: 700px) {
 
@@ -354,6 +465,25 @@ margin: 50px auto;
 .project {
 
 padding: 24px;
+
+}
+
+.home-links {
+
+bottom: 15px;
+
+}
+
+.insta-group img {
+
+width: 24px;
+height: 24px;
+
+}
+
+.about {
+
+font-size: 13px;
 
 }
 
