@@ -33,10 +33,26 @@ max-width: 1200px;
 margin: auto;
 }
 
-
 /* =========================
    HERO
 ========================= */
+
+/* Compactere header voor subpagina's */
+
+body:not(.home) .hero {
+padding: 40px 20px 30px 20px;
+}
+
+body:not(.home) .logo {
+max-width: 420px;
+margin-bottom: 12px;
+}
+
+body:not(.home) .intro h1 {
+margin-top: 0;
+margin-bottom: 10px;
+}
+
 
 .hero {
 text-align: center;
@@ -133,6 +149,8 @@ animation: fadeLogo 2.2s ease-out forwards;
 opacity: 0;
 
 }
+
+
 
 .intro {
 
