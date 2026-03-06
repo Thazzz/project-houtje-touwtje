@@ -126,7 +126,7 @@ margin-bottom: 30px;
 position: relative;
 z-index: 2;
 
-filter: drop-shadow(0 8px 25px rgba(0,0,0,0.7));
+filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7));
 
 animation: fadeLogo 2.2s ease-out forwards;
 
@@ -303,7 +303,7 @@ transition: all 0.2s ease;
 
 /* spotlight effect */
 
-filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
+filter: drop-shadow(0 8px 24px rgba(0,0,0,0.6));
 
 }
 
@@ -311,7 +311,7 @@ filter: drop-shadow(0 4px 10px rgba(0,0,0,0.6));
 
 opacity: 1;
 
-transform: scale(1.15);
+transform: scale(1.1);
 
 }
 
@@ -393,6 +393,31 @@ opacity: 1;
    ABOUT PAGE
 ========================= */
 
+.about-page .intro h1 {
+
+font-size: 34px;
+
+letter-spacing: 0.5px;
+
+margin-bottom: 10px;
+
+margin-top: 0;
+
+}
+
+
+.about-page .intro p {
+
+max-width: 600px;
+
+margin: 0 auto 10px auto;
+
+font-size: 16px;
+
+color: #d0d0d0;
+
+}
+
 .about-page .hero {
 padding: 20px 20px 0px 20px;
 }
@@ -411,21 +436,6 @@ margin: 10px auto 60px auto;
 
 padding: 0 20px;
 
-}
-
-.about-page .intro h1{
-
-margin-top: 0;
-
-}
-
-.about-text {
-
-font-size: 16px;
-
-line-height: 1.7;
-
-color: #d6d6d6;
 
 }
 
@@ -435,11 +445,9 @@ float: right;
 
 width: 160px;
 
-margin: 10px 0 20px 30px;
+margin: -40px 0 20px 30px;
 
 border-radius: 6px;
-
-box-shadow: 0 12px 35px rgba(0,0,0,0.6);
 
 border: 1px solid rgba(255,255,255,0.1);
 
@@ -447,11 +455,19 @@ background: #1b1b1b;
 
 padding: 6px;
 
+box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+
+filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7));
+
 }
 
 .portrait:hover {
 
-transform: rotate(-1deg);
+transform: rotate(-1deg) scale(1.03);
+
+filter: drop-shadow(0 10px 30px rgba(0,0,0,0.8));
+
+cursor: pointer;
 
 transition: transform 0.2s ease;
 
@@ -466,6 +482,11 @@ Logboek Lijn
 position: relative;
 
 padding-left: 24px;
+
+font-size: 16px;
+line-height: 1.7;
+
+color: #d6d6d6;
 
 }
 
@@ -552,16 +573,22 @@ padding: 24px;
 
 .home-links {
 
-bottom: 40px;
-left: 30px;
-right: 30px;
+position: static;
+
+margin-top: 60px;
+
+display: flex;
+
+justify-content: space-around;
+
+align-items: center;
 
 }
 
 .insta-group img {
 
-width: 52px;
-height: 52px;
+width: 40px;
+height: 40px;
 
 }
 
