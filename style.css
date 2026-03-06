@@ -310,6 +310,11 @@ visibility: hidden;
 
 @media (max-width:600px){
 
+.project:hover{
+transform:none;
+}
+
+
 h1{
 font-size:2.2rem;
 }
