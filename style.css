@@ -38,6 +38,7 @@ padding: 120px 20px 60px 20px;
 
 position: relative;
 
+overflow: hidden;
 }
 
 
@@ -59,15 +60,16 @@ height: 600px;
 
 background: radial-gradient(
 circle,
-rgba(255,255,255,0.08) 0%,
+rgba(255,255,255,0.12) 0%,
 rgba(255,255,255,0.04) 30%,
 rgba(0,0,0,0) 70%
 );
 
 pointer-events: none;
 
-}
+z-index: 1;
 
+}
 
 /* LOGO */
 
@@ -83,6 +85,12 @@ position: relative;
 
 z-index: 2;
 
+filter: drop-shadow(0 8px 25px rgba(0,0,0,0.7));
+
+animation: fadeLogo 2.2s ease-out forwards;
+
+opacity: 0;
+
 }
 
 
@@ -94,6 +102,13 @@ z-index: 2;
 max-width: 720px;
 
 margin: auto;
+
+opacity: 0;
+
+animation: fadeIntro 2s ease-out 1s forwards;
+
+position: relative;
+z-index: 2;
 
 }
 
@@ -245,9 +260,18 @@ background-size:
 180px 180px,
 250px 250px;
 
+background-position:
+0 0,
+60px 40px,
+120px 80px;
+
 animation: dustFloat 80s linear infinite;
 
 opacity: 0.35;
+
+z-index: 1;
+
+mix-blend-mode: screen;
 
 }
 
@@ -262,6 +286,74 @@ transform: translate(-50%, 0);
 100% {
 
 transform: translate(-50%, -200px);
+
+}
+
+}
+
+@keyframes fadeLogo {
+
+0% {
+opacity: 0;
+transform: translateY(-10px);
+}
+
+100% {
+opacity: 1;
+transform: translateY(0);
+}
+
+}
+
+@keyframes fadeIntro {
+
+0% {
+opacity: 0;
+transform: translateY(10px);
+}
+
+100% {
+opacity: 1;
+transform: translateY(0);
+}
+
+}
+
+@media (max-width: 700px) {
+
+.hero {
+
+padding: 80px 20px 40px 20px;
+
+}
+
+.logo {
+
+max-width: 90%;
+
+}
+
+.intro h1 {
+
+font-size: 24px;
+
+}
+
+.intro p {
+
+font-size: 15px;
+
+}
+
+.projects {
+
+margin: 50px auto;
+
+}
+
+.project {
+
+padding: 24px;
 
 }
 
