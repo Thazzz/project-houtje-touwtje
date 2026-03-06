@@ -216,3 +216,53 @@ color: #888;
 font-size: 14px;
 
 }
+
+/* STOFDEELTJES */
+
+.hero::after {
+
+content: "";
+
+position: absolute;
+
+top: -150px;
+left: 50%;
+
+transform: translateX(-50%);
+
+width: 900px;
+height: 700px;
+
+pointer-events: none;
+
+background-image:
+radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px),
+radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+
+background-size:
+120px 120px,
+180px 180px,
+250px 250px;
+
+animation: dustFloat 80s linear infinite;
+
+opacity: 0.35;
+
+}
+
+@keyframes dustFloat {
+
+0% {
+
+transform: translate(-50%, 0);
+
+}
+
+100% {
+
+transform: translate(-50%, -200px);
+
+}
+
+}
