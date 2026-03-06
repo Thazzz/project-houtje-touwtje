@@ -184,7 +184,7 @@ gap: 30px;
 
 .project {
 
-background: rgba(20,20,20,0.85);
+background: rgba(18,18,18,0.85);
 
 padding: 30px;
 
@@ -193,7 +193,7 @@ border-radius: 10px;
 text-decoration: none;
 color: inherit;
 
-transition: all 0.25s ease;
+transition: all 0.3s ease;
 
 backdrop-filter: blur(3px);
 
@@ -216,12 +216,13 @@ color: #cfcfcf;
 
 transform: translateY(-6px);
 
-background: rgba(35,35,35,0.95);
+background: rgba(45,45,45,0.95);
 
-box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+box-shadow:
+0 10px 40px rgba(0,0,0,0.7),
+0 0 30px rgba(255,255,255,0.06);
 
 }
-
 
 /* =========================
    FOOTER
