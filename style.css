@@ -558,7 +558,7 @@ position: relative;
 
 max-width: 900px;
 
-margin: 20px auto 60px auto;
+margin: 10px auto 60px auto;
 
 padding: 0 20px;
 
@@ -600,4 +600,12 @@ padding: 6px;
 
 }
 
+.portrait:hover {
 
+transform: rotate(-1deg);
+
+transition: transform 0.2s ease;
+
+}
+
+}
