@@ -184,25 +184,24 @@ animation: fadeOut 1s ease 2.5s forwards;
 /* Touw */
 
 .rope {
-width: 200px;
-height: 4px;
+width: 220px;
+height: 5px;
 
 background: repeating-linear-gradient(
 45deg,
-#d9c29c,
-#d9c29c 3px,
-#bfa57c 3px,
-#bfa57c 6px
+#e3cda4,
+#e3cda4 3px,
+#c5a87c 3px,
+#c5a87c 6px
 );
 
-margin-bottom: 20px;
+margin-bottom: 24px;
 
 transform: scaleX(0);
 transform-origin: left;
 
-animation: ropePull 1.2s ease forwards;
+animation: ropePull 1.3s ease forwards;
 }
-
 
 /* Houten balk */
 
