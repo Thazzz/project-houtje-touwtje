@@ -394,6 +394,15 @@ opacity: 1;
    ABOUT PAGE
 ========================= */
 
+/* HERO EFFECTEN UIT OP ABOUT PAGINA */
+
+.about-page .hero::before,
+.about-page .hero::after {
+
+display: none;
+
+}
+
 .about-page .intro h1 {
 
 font-size: 34px;
