@@ -394,7 +394,13 @@ opacity: 1;
 ========================= */
 
 .about-page .hero {
-padding: 40px 20px 10px 20px;
+padding: 20px 20px 0px 20px;
+}
+
+.about-page .logo {
+
+margin-bottom: 10px;
+
 }
 
 .about-layout {
@@ -404,6 +410,12 @@ max-width: 900px;
 margin: 10px auto 60px auto;
 
 padding: 0 20px;
+
+}
+
+.about-page .intro h1{
+
+margin-top: 0;
 
 }
 
@@ -442,6 +454,42 @@ padding: 6px;
 transform: rotate(-1deg);
 
 transition: transform 0.2s ease;
+
+}
+
+/*  =========================
+Logboek Lijn
+=========================  */
+
+.about-text {
+
+position: relative;
+
+padding-left: 24px;
+
+}
+
+.about-text::before {
+
+opacity: 0.7;
+
+content: "";
+
+position: absolute;
+
+left: 0;
+top: 4px;
+
+width: 3px;
+height: 100%;
+
+background: linear-gradient(
+to bottom,
+rgba(255,255,255,0.18),
+rgba(255,255,255,0.05)
+);
+
+border-radius: 2px;
 
 }
 
