@@ -41,10 +41,9 @@ Een voertuig gebouwd om overal te komen en steeds verder te verbeteren.
 
 <section class="gallery">
 
-<img src="images/lc1.jpg">
-<img src="images/lc2.jpg">
-<img src="images/lc3.jpg">
-<img src="images/lc4.jpg">
+<img src="images/lc1.jpg" onclick="openLightbox(this)">
+<img src="images/lc2.jpg" onclick="openLightbox(this)">
+<img src="images/lc3.jpg" onclick="openLightbox(this)">
 
 </section>
 
@@ -61,6 +60,32 @@ info@houtjetouwtjeproducties.nl
 <p>© 2026 Houtjetouwtjeproducties</p>
 
 </footer>
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+
+<img id="lightbox-img">
+
+</div>
+
+<script>
+
+function openLightbox(img){
+
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+lightbox.style.display = "flex";
+lightboxImg.src = img.src;
+
+}
+
+function closeLightbox(){
+
+document.getElementById("lightbox").style.display = "none";
+
+}
+
+</script>
 
 </body>
 </html>
