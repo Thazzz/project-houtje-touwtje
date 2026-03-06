@@ -1,346 +1,107 @@
-/* RESET */
-
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
-}
-
-
-
-/* BASIS */
-
 body {
 
+margin: 0;
 font-family: 'Inter', sans-serif;
-
-background-color: #111;
-background-image:
-linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
-url("images/Werkplaats.png");
-background-size: cover;
-background-attachment: fixed;
-background-position: center;
-color: #eaeaea;
-
-line-height: 1.6;
-
-font-weight: 300;
+background: #0f0f0f;
+color: #e6e6e6;
 
 }
 
-.contact a{
-color: inherit;
-text-decoration: none;
+/* HERO */
+
+.hero {
+
+text-align: center;
+padding: 80px 20px 40px 20px;
+
 }
 
-.contact a:hover{
-opacity:0.7;
-}
+.logo {
 
-
-
-/* CONTAINER */
-
-.container {
-
+max-width: 500px;
 width: 90%;
+margin-bottom: 30px;
 
-max-width: 900px;
+}
 
+.intro {
+
+max-width: 700px;
 margin: auto;
 
 }
 
+.intro h1 {
 
+font-family: 'Roboto Slab', serif;
+font-size: 28px;
+margin-bottom: 20px;
+color: #ffffff;
 
-/* HEADER */
+}
 
-header {
+.intro p {
 
-padding: 140px 0 80px 0;
+line-height: 1.6;
+color: #cfcfcf;
 
 }
 
 
+/* PROJECTS */
 
-h1 {
+.projects {
 
-font-size: 3rem;
+max-width: 1100px;
+margin: 80px auto;
+padding: 0 20px;
 
-font-weight: 600;
-
-letter-spacing: -1px;
-
-}
-
-
-
-.subtitle {
-
-margin-top: 10px;
-
-color: #888;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 30px;
 
 }
-
-
-
-/* SECTIES */
-
-section {
-
-padding: 80px 0;
-
-}
-
-
-
-h2 {
-
-font-size: 1.4rem;
-
-margin-bottom: 40px;
-
-font-weight: 400;
-
-letter-spacing: 2px;
-
-text-transform: uppercase;
-
-color: #aaa;
-
-}
-
-
-
-/* PROJECTEN */
-
-.project a{
-text-decoration:none;
-color:inherit;
-display:block;
-}
-
 
 .project {
 
-margin-bottom: 40px;
+background: #1a1a1a;
+padding: 30px;
+border-radius: 8px;
 
-padding-bottom: 20px;
-
-border-bottom: 1px solid #222;
-
-transition: all 0.3s ease;
+transition: all 0.25s ease;
 
 }
 
+.project h2 {
 
+font-family: 'Roboto Slab', serif;
+margin-top: 0;
+color: #ffffff;
+
+}
+
+.project p {
+
+color: #c9c9c9;
+line-height: 1.5;
+
+}
 
 .project:hover {
 
-border-color: #555;
-
-transform: translateX(5px);
-
-}
-
-
-
-h3 {
-
-font-size: 1.2rem;
-
-font-weight: 400;
-
-margin-bottom: 6px;
+transform: translateY(-6px);
+background: #222;
 
 }
-
 
 
 /* FOOTER */
 
 footer {
 
-padding: 60px 0;
-
-font-size: 0.8rem;
-
-color: #666;
-
-}
-
-
-
-/* ======================= */
-/* INTRO ANIMATIE */
-/* ======================= */
-
-
-#intro {
-
-position: fixed;
-
-inset: 0;
-
-background: #111;
-
-display: flex;
-
-justify-content: center;
-
-align-items: center;
-
-flex-direction: column;
-
-z-index: 9999;
-
-animation: fadeOut 1s ease 2.5s forwards;
-
-}
-
-
-
-/* Touw */
-
-.rope {
-width: 220px;
-height: 5px;
-
-background: repeating-linear-gradient(
-45deg,
-#e3cda4,
-#e3cda4 3px,
-#c5a87c 3px,
-#c5a87c 6px
-);
-
-margin-bottom: 24px;
-
-transform: scaleX(0);
-transform-origin: left;
-
-animation: ropePull 1.3s ease forwards;
-}
-
-/* Houten balk */
-
-.wood {
-
-width: 120px;
-
-height: 8px;
-
-background: linear-gradient(
-90deg,
-#4a2e16,
-#6a4321,
-#4a2e16
-);
-
-margin-bottom: 25px;
-
-transform: translateX(-200px);
-
-animation: woodSlide 1s ease forwards;
-
-}
-
-
-
-/* Titel */
-
-.title {
-
-letter-spacing: 4px;
-
-font-size: 16px;
-font-weight: 400;
-
-opacity: 0;
-
-animation: titleFade 1s ease 1.2s forwards;
-
-}
-
-
-
-/* Animaties */
-
-@keyframes ropePull {
-to {
-transform: scaleX(1);
-}
-}
-
-
-
-@keyframes woodSlide {
-
-to {
-
-transform: translateX(0);
-
-}
-
-}
-
-
-
-@keyframes titleFade {
-
-to {
-
-opacity: 1;
-
-}
-
-}
-
-
-
-@keyframes fadeOut {
-
-to {
-
-opacity: 0;
-
-visibility: hidden;
-
-}
-
-}
-
-/* ======================= */
-/* MOBIEL */
-/* ======================= */
-
-@media (max-width:600px){
-
-.project:hover{
-transform:none;
-}
-
-
-h1{
-font-size:2.2rem;
-}
-
-header{
-padding:100px 0 60px 0;
-}
-
-section{
-padding:60px 0;
-}
-
-.container{
-width:92%;
-}
-
-.project{
-margin-bottom:30px;
-}
+text-align: center;
+padding: 40px 20px;
+font-size: 14px;
+color: #777;
 
 }
