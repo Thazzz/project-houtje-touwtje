@@ -1,96 +1,139 @@
 body {
 
-margin: 0;
-font-family: 'Inter', sans-serif;
-background: #0f0f0f;
-color: #e6e6e6;
+margin:0;
+font-family:'Inter', sans-serif;
+color:#e6e6e6;
+background:#000;
 
 }
+
+
+/* ACHTERGROND FOTO */
+
+.background {
+
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background-image:url("images/background.jpg");
+background-size:cover;
+background-position:center;
+
+filter:brightness(0.35);
+
+z-index:-1;
+
+}
+
 
 /* HERO */
 
 .hero {
 
-text-align: center;
-padding: 80px 20px 40px 20px;
+text-align:center;
+padding:90px 20px 40px 20px;
 
 }
 
 .logo {
 
-max-width: 500px;
-width: 90%;
-margin-bottom: 30px;
+max-width:520px;
+width:90%;
+margin-bottom:30px;
 
 }
 
 .intro {
 
-max-width: 700px;
-margin: auto;
+max-width:720px;
+margin:auto;
 
 }
 
 .intro h1 {
 
-font-family: 'Roboto Slab', serif;
-font-size: 28px;
-margin-bottom: 20px;
-color: #ffffff;
+font-family:'Roboto Slab', serif;
+font-size:30px;
+margin-bottom:20px;
 
 }
 
 .intro p {
 
-line-height: 1.6;
-color: #cfcfcf;
+line-height:1.7;
+color:#d0d0d0;
 
 }
 
 
-/* PROJECTS */
+/* PROJECT BLOKKEN */
 
 .projects {
 
-max-width: 1100px;
-margin: 80px auto;
-padding: 0 20px;
+max-width:1100px;
+margin:80px auto;
 
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-gap: 30px;
+padding:0 20px;
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
 
 }
 
 .project {
 
-background: #1a1a1a;
-padding: 30px;
-border-radius: 8px;
+background:rgba(20,20,20,0.85);
 
-transition: all 0.25s ease;
+padding:30px;
+
+border-radius:10px;
+
+text-decoration:none;
+color:inherit;
+
+transition:all 0.25s ease;
+
+backdrop-filter:blur(3px);
 
 }
 
 .project h2 {
 
-font-family: 'Roboto Slab', serif;
-margin-top: 0;
-color: #ffffff;
+font-family:'Roboto Slab', serif;
+margin-top:0;
 
 }
 
 .project p {
 
-color: #c9c9c9;
-line-height: 1.5;
+color:#cfcfcf;
 
 }
 
 .project:hover {
 
-transform: translateY(-6px);
-background: #222;
+transform:translateY(-6px);
+background:rgba(40,40,40,0.95);
+
+}
+
+
+/* EMAIL */
+
+.email {
+
+color:#cccccc;
+text-decoration:none;
+
+}
+
+.email:hover {
+
+text-decoration:underline;
 
 }
 
@@ -99,9 +142,8 @@ background: #222;
 
 footer {
 
-text-align: center;
-padding: 40px 20px;
-font-size: 14px;
-color: #777;
+text-align:center;
+padding:60px 20px 40px 20px;
+color:#888;
 
 }
