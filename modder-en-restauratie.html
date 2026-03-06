@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modder & Restauratie | Houtjetouwtjeproducties</title>
+
+<link rel="icon" type="image/png" href="images/favicon.png">
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Roboto+Slab:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+<header class="hero">
+
+<a href="index.html">
+<img src="images/logo.png" class="logo" alt="Houtjetouwtjeproducties">
+</a>
+
+<div class="intro">
+
+<h1>Modder & Restauratie</h1>
+
+<p>
+Projecten rond terreinwagens, techniek en herstel.
+Van sleutelen in de werkplaats tot rijden waar de weg ophoudt.
+</p>
+
+</div>
+
+</header>
+
+<main>
+
+<section class="gallery">
+
+<img src="images/lc1.jpg" onclick="openLightbox(this)">
+<img src="images/lc2.jpg" onclick="openLightbox(this)">
+<img src="images/lc3.jpg" onclick="openLightbox(this)">
+<img src="images/lc4.jpg" onclick="openLightbox(this)">
+
+</section>
+
+</main>
+
+<footer>
+
+<p>
+<a href="mailto:info@houtjetouwtjeproducties.nl" class="email">
+info@houtjetouwtjeproducties.nl
+</a>
+</p>
+
+<p>© 2026 Houtjetouwtjeproducties</p>
+
+</footer>
+
+
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+<img id="lightbox-img">
+</div>
+
+
+<script>
+
+function openLightbox(img){
+
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+lightbox.style.display = "flex";
+lightboxImg.src = img.src;
+
+}
+
+function closeLightbox(){
+
+document.getElementById("lightbox").style.display = "none";
+
+}
+
+</script>
+
+
+</body>
+</html>
