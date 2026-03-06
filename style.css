@@ -184,15 +184,20 @@ animation: fadeOut 1s ease 2.5s forwards;
 /* Touw */
 
 .rope {
-width: 150;
-height: 3px;
+width: 0;
+height: 4px;
+
 background: repeating-linear-gradient(
 45deg,
-#d2b48c,
-#d2b48c 4px,
-#c2a36f 4px,
-#c2a36f 8px
+#d9c29c,
+#d9c29c 3px,
+#bfa57c 3px,
+#bfa57c 6px
 );
+
+margin-bottom: 20px;
+
+animation: ropePull 1.2s ease forwards;
 }
 
 
@@ -285,6 +290,5 @@ opacity: 0;
 visibility: hidden;
 
 }
-
 
 }
