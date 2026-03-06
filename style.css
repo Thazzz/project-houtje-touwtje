@@ -554,6 +554,95 @@ border-radius: 2px;
 
 
 /* =========================
+   GALLERY
+========================= */
+
+.gallery {
+
+max-width: 1100px;
+
+margin: 40px auto;
+
+padding: 0 20px;
+
+display: grid;
+
+grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+
+gap: 20px;
+
+}
+
+.gallery img {
+
+width: 100%;
+
+border-radius: 6px;
+
+box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+
+transition: transform 0.25s ease;
+cursor: pointer;
+
+}
+
+.gallery img:hover {
+
+transform: scale(1.03);
+
+}
+
+.gallery iframe {
+
+width: 100%;
+
+aspect-ratio: 16 / 9;
+
+border-radius: 6px;
+
+}
+
+
+/* =========================
+   LIGHTBOX
+========================= */
+
+.lightbox {
+
+display: none;
+
+position: fixed;
+
+z-index: 1000;
+
+left: 0;
+top: 0;
+
+width: 100%;
+height: 100%;
+
+background: rgba(0,0,0,0.85);
+
+justify-content: center;
+align-items: center;
+
+}
+
+.lightbox img {
+
+max-width: 90%;
+max-height: 90%;
+
+border-radius: 6px;
+
+box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+
+cursor: pointer;
+
+}
+
+
+/* =========================
    MOBILE
 ========================= */
 
@@ -606,93 +695,6 @@ height: 40px;
 
 .about {
 font-size: 13px;
-}
-
-/* =========================
-   GALLERY
-========================= */
-
-.gallery {
-
-max-width: 1100px;
-
-margin: 40px auto;
-
-padding: 0 20px;
-
-display: grid;
-
-grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
-
-gap: 20px;
-
-}
-
-.gallery img {
-
-width: 100%;
-
-border-radius: 6px;
-
-box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-
-transition: transform 0.25s ease;
-cursor: pointer;
-
-}
-
-.gallery iframe {
-
-width: 100%;
-
-aspect-ratio: 16 / 9;
-
-border-radius: 6px;
-
-}
-
-.gallery img:hover {
-
-transform: scale(1.03);
-
-}
-
-/* =========================
-   LIGHTBOX
-========================= */
-
-.lightbox {
-
-display: none;
-
-position: fixed;
-
-z-index: 1000;
-
-left: 0;
-top: 0;
-
-width: 100%;
-height: 100%;
-
-background: rgba(0,0,0,0.85);
-
-justify-content: center;
-align-items: center;
-
-}
-
-.lightbox img {
-
-max-width: 90%;
-max-height: 90%;
-
-border-radius: 6px;
-
-box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-
-cursor: pointer;
-
 }
 
 }
