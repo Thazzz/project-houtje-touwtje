@@ -1,70 +1,286 @@
+/* RESET */
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
+
+
+
+/* BASIS */
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #111111;
-    color: #eaeaea;
-    line-height: 1.6;
-    font-weight: 300;
+
+font-family: 'Inter', sans-serif;
+
+background-color: #111;
+
+color: #eaeaea;
+
+line-height: 1.6;
+
+font-weight: 300;
+
 }
+
+
+
+/* CONTAINER */
 
 .container {
-    width: 90%;
-    max-width: 900px;
-    margin: 0 auto;
+
+width: 90%;
+
+max-width: 900px;
+
+margin: auto;
+
 }
+
+
+
+/* HEADER */
 
 header {
-    padding: 120px 0 60px 0;
+
+padding: 140px 0 80px 0;
+
 }
+
+
 
 h1 {
-    font-size: 3rem;
-    font-weight: 600;
-    letter-spacing: -1px;
+
+font-size: 3rem;
+
+font-weight: 600;
+
+letter-spacing: -1px;
+
 }
+
+
 
 .subtitle {
-    margin-top: 10px;
-    color: #888;
+
+margin-top: 10px;
+
+color: #888;
+
 }
+
+
+
+/* SECTIES */
 
 section {
-    padding: 80px 0;
+
+padding: 80px 0;
+
 }
+
+
 
 h2 {
-    font-size: 1.5rem;
-    margin-bottom: 40px;
-    font-weight: 400;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #aaa;
+
+font-size: 1.4rem;
+
+margin-bottom: 40px;
+
+font-weight: 400;
+
+letter-spacing: 2px;
+
+text-transform: uppercase;
+
+color: #aaa;
+
 }
+
+
+
+/* PROJECTEN */
 
 .project {
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #222;
-    transition: 0.3s ease;
+
+margin-bottom: 40px;
+
+padding-bottom: 20px;
+
+border-bottom: 1px solid #222;
+
+transition: all 0.3s ease;
+
 }
+
+
 
 .project:hover {
-    border-color: #555;
+
+border-color: #555;
+
+transform: translateX(5px);
+
 }
+
+
 
 h3 {
-    font-size: 1.2rem;
-    font-weight: 400;
-    margin-bottom: 5px;
+
+font-size: 1.2rem;
+
+font-weight: 400;
+
+margin-bottom: 6px;
+
 }
 
+
+
+/* FOOTER */
+
 footer {
-    padding: 60px 0;
-    font-size: 0.8rem;
-    color: #666;
+
+padding: 60px 0;
+
+font-size: 0.8rem;
+
+color: #666;
+
+}
+
+
+
+/* ======================= */
+/* INTRO ANIMATIE */
+/* ======================= */
+
+
+#intro {
+
+position: fixed;
+
+inset: 0;
+
+background: #111;
+
+display: flex;
+
+justify-content: center;
+
+align-items: center;
+
+flex-direction: column;
+
+z-index: 9999;
+
+animation: fadeOut 1s ease 2.5s forwards;
+
+}
+
+
+
+/* Touw */
+
+.rope {
+
+width: 0;
+
+height: 2px;
+
+background: #d2b48c;
+
+margin-bottom: 20px;
+
+animation: ropePull 1s ease forwards;
+
+}
+
+
+
+/* Houten balk */
+
+.wood {
+
+width: 120px;
+
+height: 8px;
+
+background: #5c3b1e;
+
+margin-bottom: 25px;
+
+transform: translateX(-200px);
+
+animation: woodSlide 1s ease forwards;
+
+}
+
+
+
+/* Titel */
+
+.title {
+
+letter-spacing: 4px;
+
+font-size: 14px;
+
+opacity: 0;
+
+animation: titleFade 1s ease 1.2s forwards;
+
+}
+
+
+
+/* Animaties */
+
+@keyframes ropePull {
+
+to {
+
+width: 200px;
+
+}
+
+}
+
+
+
+@keyframes woodSlide {
+
+to {
+
+transform: translateX(0);
+
+}
+
+}
+
+
+
+@keyframes titleFade {
+
+to {
+
+opacity: 1;
+
+}
+
+}
+
+
+
+@keyframes fadeOut {
+
+to {
+
+opacity: 0;
+
+visibility: hidden;
+
+}
+
 }
