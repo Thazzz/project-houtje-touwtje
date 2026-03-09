@@ -497,7 +497,7 @@ pointer-events: auto;
 
 display: flex;
 flex-direction: column;
-gap: 14px;
+gap: 6px;
 
 }
 
@@ -525,7 +525,7 @@ transform: scale(1.1);
 
 display: flex;
 align-items: center;
-gap: 6px;
+gap: 5px;
 
 text-decoration: none;
 
