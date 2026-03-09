@@ -195,7 +195,34 @@ font-size: 13px;
 
 }
 
-/* links */
+.maker-bar::after {
+
+content: "";
+
+position: absolute;
+
+bottom: 0;
+left: 50%;
+transform: translateX(-50%);
+
+width: 0%;
+height: 2px;
+opacity: 0.6;
+
+background: linear-gradient(
+to right,
+rgba(255,255,255,0),
+rgba(255,255,255,0.35),
+rgba(255,255,255,0)
+);
+
+transition: width 0.4s ease;
+
+}
+
+/* =========================
+ links
+========================= */
 
 .maker-bar a {
 
@@ -280,7 +307,8 @@ padding: 0 20px;
 
 display: grid;
 
-grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+justify-content: center;
 
 gap: 30px;
 
@@ -299,7 +327,8 @@ border: 1px solid rgba(255,255,255,0.06);
 text-decoration: none;
 color: inherit;
 
-transition: all 0.3s ease;
+transition: transform 0.35s ease, box-shadow 0.35s ease;
+will-change: transform;
 
 backdrop-filter: blur(3px);
 
@@ -324,12 +353,12 @@ color: #cfcfcf;
 
 .project:hover {
 
-transform: translateY(-6px) scale(1.01);
+transform: translateY(-8px);
 
 background: rgba(40,40,40,0.95);
 
 box-shadow:
-0 12px 45px rgba(0,0,0,0.75);
+0 20px 60px rgba(0,0,0,0.8);
 
 }
 
