@@ -94,6 +94,19 @@ z-index: 1;
 
 }
 
+.top-hover {
+
+position: fixed;
+top: 0;
+left: 0;
+
+width: 100%;
+height: 20px;
+
+z-index: 998;
+
+}
+
 /* =========================
    STOFDEELTJES IN HET LICHT
 ========================= */
@@ -106,14 +119,12 @@ position: absolute;
 top: -150px;
 left: 50%;
 
-transform: translateX(-50%);
+transform: translate(-50%,0);
 
 width: 900px;
 height: 700px;
 
 pointer-events: none;
-
-/* stofdeeltjes */
 
 background-image:
 radial-gradient(rgba(255,255,255,0.18) 1.2px, transparent 1.2px),
@@ -139,9 +150,14 @@ z-index: 1;
 mix-blend-mode: screen;
 
 }
+
 /* =========================
    MAKER BAR (VERBORGEN)
 ========================= */
+.top-hover:hover + .maker-bar,
+.maker-bar:hover {
+top: 0;
+}
 
 .maker-bar {
 
@@ -165,7 +181,7 @@ padding-right: 40px;
 
 gap: 20px;
 
-transition: top 0.25s ease;
+transition: top 0.35s cubic-bezier(.22,.61,.36,1);
 
 z-index: 999;
 
@@ -191,11 +207,6 @@ color: white;
 
 }
 
-/* verschijnt bij hover bovenkant */
-
-body:has(.maker-bar:hover) .maker-bar {
-top: 0;
-}
 
 /* =========================
    LOGO + INTRO
@@ -670,7 +681,7 @@ border-radius: 2px;
 @keyframes dustFloat {
 
 0% { transform: translate(-50%,0); }
-100% { transform: translate(-50%,-200px); }
+100% { transform: translate(-50%,-220px); }
 
 }
 
