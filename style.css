@@ -496,7 +496,8 @@ pointer-events: auto;
 .insta-group {
 
 display: flex;
-gap: 18px;
+flex-direction: column;
+gap: 14px;
 
 }
 
@@ -520,6 +521,30 @@ transform: scale(1.1);
 
 }
 
+.insta-group a {
+
+display: flex;
+align-items: center;
+gap: 12px;
+
+text-decoration: none;
+
+}
+
+.insta-group span {
+
+font-size: 14px;
+color: #d0d0d0;
+
+opacity: 0.85;
+
+transition: opacity 0.2s ease;
+
+}
+
+.insta-group a:hover span {
+opacity: 1;
+}
 
 /* =========================
    TOOLTIP
