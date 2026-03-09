@@ -688,11 +688,33 @@ font-size: 15px;
 }
 
 .projects {
-margin: 50px auto;
+
+margin: 40px auto 60px auto;
+
+padding: 0 20px;
+
+gap: 20px;
+
 }
 
 .project {
-padding: 24px;
+padding: 20px;
+}
+
+.project h2 {
+
+font-size: 20px;
+
+margin-bottom: 8px;
+
+}
+
+.project p {
+
+font-size: 14px;
+
+line-height: 1.5;
+
 }
 
 .home-links {
@@ -717,7 +739,8 @@ height: 40px;
 }
 
 .about {
-font-size: 13px;
+font-size: 16px;
+padding: 6px 0;
 }
 
 }
