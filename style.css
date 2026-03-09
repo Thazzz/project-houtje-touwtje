@@ -767,7 +767,7 @@ padding: 0 20px;
 
 display: grid;
 
-grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+grid-template-columns: repeat(4, 1fr);
 
 gap: 20px;
 
@@ -799,6 +799,31 @@ aspect-ratio: 16 / 9;
 
 border-radius: 6px;
 
+}
+
+/* =========================
+   GALLERY RESPONSIVE
+========================= */
+
+/* tablet */
+@media (max-width: 1000px){
+.gallery{
+grid-template-columns: repeat(3, 1fr);
+}
+}
+
+/* kleine tablet */
+@media (max-width: 700px){
+.gallery{
+grid-template-columns: repeat(2, 1fr);
+}
+}
+
+/* telefoon */
+@media (max-width: 450px){
+.gallery{
+grid-template-columns: 1fr;
+}
 }
 
 
