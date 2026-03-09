@@ -838,8 +838,8 @@ display:none;
 }
 
 .maker-bar{
-top:0;
-opacity:1;
+.maker-bar{
+display:none;
 }
 
 }
