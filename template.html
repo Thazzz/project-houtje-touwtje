@@ -6,7 +6,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Houtjetouwtjeproducties</title>
+<title>PAGINA TITEL | Houtjetouwtjeproducties</title>
+
+<!-- OpenGraph preview -->
+<meta property="og:title" content="Houtjetouwtjeproducties">
+<meta property="og:description" content="Experimenten uit een werkplaats – hout, staal, techniek, film en avontuur.">
+<meta property="og:image" content="https://houtjetouwtjeproducties.nl/images/Preview.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://houtjetouwtjeproducties.nl">
+
+<!-- Twitter / X preview -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Houtjetouwtjeproducties">
+<meta name="twitter:description" content="Experimenten uit een werkplaats – hout, staal, techniek, film en avontuur.">
+<meta name="twitter:image" content="https://houtjetouwtjeproducties.nl/images/Preview.png">
 
 <link rel="icon" type="image/png" href="images/favicon.png">
 
@@ -16,6 +29,7 @@
 
 </head>
 
+
 <body>
 
 <header class="hero">
@@ -24,12 +38,26 @@
 <img src="images/logo.png" class="logo" alt="Houtjetouwtjeproducties">
 </a>
 
+<div class="intro">
+
+<h1>PAGINA TITEL</h1>
+
+<p>
+Korte introductie van deze pagina.
+</p>
+
+</div>
+
 </header>
 
 
-<main class="content">
+<main>
 
-<!-- PAGINA INHOUD KOMT HIER -->
+<section class="gallery">
+
+<!-- PAGINA CONTENT HIER -->
+
+</section>
 
 </main>
 
@@ -45,6 +73,97 @@ info@houtjetouwtjeproducties.nl
 <p>© 2026 Houtjetouwtjeproducties</p>
 
 </footer>
+
+
+<!-- Lightbox (optioneel voor foto pagina's) -->
+
+<div id="lightbox" class="lightbox">
+
+<span class="lightbox-prev" onclick="prevImage()">❮</span>
+
+<img id="lightbox-img">
+
+<span class="lightbox-next" onclick="nextImage()">❯</span>
+
+</div>
+
+
+<<script>
+
+let galleryImages = [];
+let currentIndex = 0;
+
+function openLightbox(img){
+
+galleryImages = Array.from(document.querySelectorAll(".gallery img"));
+currentIndex = galleryImages.indexOf(img);
+
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+lightbox.style.display = "flex";
+lightboxImg.src = img.src;
+
+}
+
+function closeLightbox(){
+document.getElementById("lightbox").style.display = "none";
+}
+
+function showImage(index){
+
+if(index < 0){
+index = galleryImages.length - 1;
+}
+
+if(index >= galleryImages.length){
+index = 0;
+}
+
+currentIndex = index;
+
+document.getElementById("lightbox-img").src =
+galleryImages[currentIndex].src;
+
+}
+
+function nextImage(){
+showImage(currentIndex + 1);
+}
+
+function prevImage(){
+showImage(currentIndex - 1);
+}
+
+document.addEventListener("keydown", function(e){
+
+if(document.getElementById("lightbox").style.display === "flex"){
+
+if(e.key === "ArrowRight"){
+nextImage();
+}
+
+if(e.key === "ArrowLeft"){
+prevImage();
+}
+
+if(e.key === "Escape"){
+closeLightbox();
+}
+
+}
+
+});
+
+document.getElementById("lightbox").addEventListener("click", function(e){
+
+if(e.target.id === "lightbox"){
+closeLightbox();
+}
+
+});
+
+</script>
 
 </body>
 </html>
