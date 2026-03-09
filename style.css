@@ -273,9 +273,8 @@ color: white;
    LOGO + INTRO
 ========================= */
 
-.logo {
-
-max-width: 520px;
+.home .logo {
+max-width: 420px;
 width: 90%;
 
 margin-bottom: 30px;
@@ -289,6 +288,10 @@ animation: fadeLogo 2.2s ease-out forwards;
 
 opacity: 0;
 
+}
+
+body:not(.home) .logo {
+max-width: 320px;
 }
 
 .intro {
