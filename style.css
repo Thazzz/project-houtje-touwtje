@@ -838,7 +838,8 @@ display:none;
 }
 
 .maker-bar{
-display:none;
+top:0;
+opacity:1;
 }
 
 }
