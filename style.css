@@ -282,10 +282,13 @@ margin-bottom: 30px;
 position: relative;
 z-index: 2;
 
-filter: drop-shadow(0 6px 20px rgba(0,0,0,0.7));
+filter:
+drop-shadow(0 10px 25px rgba(0,0,0,0.8))
+drop-shadow(0 0 18px rgba(255,255,255,0.08));
 
-animation: fadeLogo 2.2s ease-out forwards;
-
+animation:
+fadeLogo 2.2s ease-out forwards,
+logoFloat 7s ease-in-out infinite 2.2s;
 opacity: 0;
 
 }
@@ -731,6 +734,14 @@ border-radius: 2px;
 
 0% { opacity:0; transform: translateY(-10px); }
 100% { opacity:1; transform: translateY(0); }
+
+}
+
+@keyframes logoFloat {
+
+0% { transform: translateY(0px); }
+50% { transform: translateY(-3px); }
+100% { transform: translateY(0px); }
 
 }
 
