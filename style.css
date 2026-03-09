@@ -469,7 +469,7 @@ text-decoration: underline;
 
 position: fixed;
 
-bottom: 60px;
+bottom: 40px;
 left: 60px;
 right: 60px;
 
@@ -503,8 +503,8 @@ gap: 14px;
 
 .insta-group img {
 
-width: 60px;
-height: 60px;
+width: 48px;
+height: 48px;
 
 opacity: 0.85;
 
@@ -525,7 +525,7 @@ transform: scale(1.1);
 
 display: flex;
 align-items: center;
-gap: 12px;
+gap: 6px;
 
 text-decoration: none;
 
@@ -533,10 +533,10 @@ text-decoration: none;
 
 .insta-group span {
 
-font-size: 14px;
+font-size: 11px;
 color: #d0d0d0;
 
-opacity: 0.85;
+opacity: 0.8;
 
 transition: opacity 0.2s ease;
 
@@ -1005,8 +1005,8 @@ align-items: center;
 
 .insta-group img {
 
-width: 40px;
-height: 40px;
+width: 35px;
+height: 35px;
 
 }
 
