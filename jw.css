@@ -109,6 +109,7 @@ max-width: 1000px;
 margin: 60px auto 100px auto;
 
 position: relative;
+z-index: 1;
 
 display: flex;
 flex-wrap: wrap;
@@ -119,6 +120,36 @@ align-items: flex-start;
 gap: 40px;
 
 padding: 20px;
+
+
+}
+
+.polaroid-board::before {
+
+content: "";
+
+position: absolute;
+
+bottom: -40px;
+left: 50%;
+
+transform: translateX(-50%);
+
+width: 80%;
+height: 90px;
+
+background: radial-gradient(
+ellipse,
+rgba(0,0,0,0.45) 0%,
+rgba(0,0,0,0.25) 40%,
+rgba(0,0,0,0) 70%
+);
+
+filter: blur(20px);
+
+pointer-events: none;
+
+z-index: 0;
 
 }
 
