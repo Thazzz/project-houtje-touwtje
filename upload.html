@@ -103,7 +103,10 @@ const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
 
 const { createClient } = supabase
-const supabaseClient = createClient(supabaseUrl,supabaseKey)
+const supabaseClient = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+)
 
 /* -------------------------
 PREVIEW
