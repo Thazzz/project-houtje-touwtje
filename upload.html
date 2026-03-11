@@ -109,6 +109,10 @@ multiple
 
 <script>
 
+/* -------------------------
+SUPABASE
+------------------------- */
+
 const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
 
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
@@ -116,12 +120,19 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const { createClient } = supabase
 
 const supabaseClient = createClient(
-  supabaseUrl,
-  supabaseKey
+supabaseUrl,
+supabaseKey
 )
 
+/* -------------------------
+FIX 2 - mobiel camera stabiel
+------------------------- */
 
-/* preview tonen */
+document.getElementById("fileInput").setAttribute("capture","environment")
+
+/* -------------------------
+PREVIEW
+------------------------- */
 
 document.getElementById("fileInput").addEventListener("change", function(){
 
@@ -132,52 +143,69 @@ for(const file of this.files){
 
 const img = document.createElement("img")
 img.src = URL.createObjectURL(file)
+img.loading = "lazy"
+
 preview.appendChild(img)
 
 }
 
 })
 
-
-
-/* foto verkleinen */
+/* -------------------------
+STERKE RESIZE (mobiel veilig)
+------------------------- */
 
 async function resizeImage(file){
 
-return new Promise(resolve => {
+return new Promise((resolve)=>{
 
 const img = new Image()
 const reader = new FileReader()
 
-reader.onload = e => img.src = e.target.result
+reader.onload = function(e){
+img.src = e.target.result
+}
+
 reader.readAsDataURL(file)
 
-img.onload = () => {
+img.onload = function(){
 
 const canvas = document.createElement("canvas")
-const maxSize = 2000
+const ctx = canvas.getContext("2d")
+
+const maxSize = 1600
 
 let width = img.width
 let height = img.height
 
-if(width > height && width > maxSize){
+if(width > maxSize || height > maxSize){
+
+if(width > height){
 height *= maxSize / width
 width = maxSize
-}
-
-if(height > width && height > maxSize){
+}else{
 width *= maxSize / height
 height = maxSize
+}
+
 }
 
 canvas.width = width
 canvas.height = height
 
-const ctx = canvas.getContext("2d")
 ctx.drawImage(img,0,0,width,height)
 
-canvas.toBlob(blob => {
+canvas.toBlob(function(blob){
+
+/* FIX 1 fallback voor mobiel */
+
+if(!blob){
+resolve(file)
+return
+}
+
 resolve(blob)
+
 },"image/jpeg",0.9)
 
 }
@@ -186,9 +214,9 @@ resolve(blob)
 
 }
 
-
-
-/* upload */
+/* -------------------------
+UPLOAD
+------------------------- */
 
 async function uploadPhotos(){
 
@@ -201,11 +229,15 @@ status.innerText = "Kies eerst foto's"
 return
 }
 
+/* FIX 3 duidelijke status */
+
 status.innerText = "Foto's verwerken..."
 
 let uploaded = 0
 
 for(const file of files){
+
+status.innerText = "Upload bezig..."
 
 const resized = await resizeImage(file)
 
@@ -214,7 +246,7 @@ const fileName = Date.now() + "-" + Math.random().toString(36).substr(2,5) + ".j
 const { error } = await supabaseClient.storage
 .from("party")
 .upload(fileName, resized, {
-contentType: "image/jpeg"
+contentType:"image/jpeg",
 upsert:false
 })
 
