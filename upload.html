@@ -82,7 +82,7 @@ multiple
 
 <div class="preview" id="preview"></div>
 
-<button onclick="uploadPhotos()">Upload foto's</button>
+<button onclick="startUpload()">Upload foto's</button>
 
 <div class="progress">
 <div class="progress-bar" id="progressBar"></div>
@@ -95,15 +95,19 @@ multiple
 
 <script>
 
-const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
+/* -------------------------
+SUPABASE
+------------------------- */
 
-const supabaseKey = "YOUR KEY"
+const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
 
 const { createClient } = supabase
-
 const supabaseClient = createClient(supabaseUrl,supabaseKey)
 
-/* preview */
+/* -------------------------
+PREVIEW
+------------------------- */
 
 fileInput.addEventListener("change", function(){
 
@@ -120,7 +124,12 @@ preview.appendChild(img)
 
 })
 
-/* resize + rotatie */
+/* -------------------------
+IMAGE PROCESSING
+HEIC → JPEG
+ROTATION FIX
+COMPRESSION
+------------------------- */
 
 async function processImage(file){
 
@@ -159,8 +168,6 @@ height=max
 canvas.width=width
 canvas.height=height
 
-/* rotatie fix */
-
 if(orientation===6){
 canvas.width=height
 canvas.height=width
@@ -176,8 +183,6 @@ ctx.drawImage(img,-width,0,width,height)
 else{
 ctx.drawImage(img,0,0,width,height)
 }
-
-/* compressie */
 
 canvas.toBlob(blob=>{
 
@@ -198,30 +203,15 @@ resolve(blob)
 
 }
 
-/* upload */
+/* -------------------------
+UPLOAD
+------------------------- */
 
-async function uploadPhotos(){
+async function uploadSingle(file){
 
-const files=fileInput.files
-const status=document.getElementById("status")
-const progressBar=document.getElementById("progressBar")
+const processed = await processImage(file)
 
-if(files.length===0){
-status.innerText="Kies eerst foto's"
-return
-}
-
-let uploaded=0
-
-for(const file of files){
-
-status.innerText="Foto verwerken..."
-
-const processed=await processImage(file)
-
-status.innerText="Upload..."
-
-const fileName=crypto.randomUUID()+".jpg"
+const fileName = crypto.randomUUID()+".jpg"
 
 const { error } = await supabaseClient.storage
 .from("party")
@@ -229,16 +219,84 @@ const { error } = await supabaseClient.storage
 
 if(error){
 console.log(error)
-status.innerText="Upload fout"
+throw error
+}
+
+}
+
+/* -------------------------
+SMART QUEUE
+------------------------- */
+
+async function runQueue(files,concurrency=3){
+
+let index=0
+let completed=0
+
+const progressBar=document.getElementById("progressBar")
+const status=document.getElementById("status")
+
+return new Promise(resolve=>{
+
+async function worker(){
+
+while(index<files.length){
+
+const current=index++
+const file=files[current]
+
+status.innerText="Foto verwerken..."
+
+try{
+
+await uploadSingle(file)
+
+}catch(e){
+
+console.log(e)
+
+}
+
+completed++
+
+progressBar.style.width=
+Math.round((completed/files.length)*100)+"%"
+
+}
+
+}
+
+let workers=[]
+
+for(let i=0;i<concurrency;i++){
+
+workers.push(worker())
+
+}
+
+Promise.all(workers).then(resolve)
+
+})
+
+}
+
+/* -------------------------
+START
+------------------------- */
+
+async function startUpload(){
+
+const files=[...fileInput.files]
+const status=document.getElementById("status")
+
+if(files.length===0){
+status.innerText="Kies eerst foto's"
 return
 }
 
-uploaded++
+status.innerText="Upload gestart..."
 
-progressBar.style.width=
-Math.round((uploaded/files.length)*100)+"%"
-
-}
+await runQueue(files,3)
 
 status.innerText="Foto's geüpload 🎉"
 
