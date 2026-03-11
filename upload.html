@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="icon" href="data:,">
+
 <title>Upload je foto's</title>
 
 <style>
@@ -241,13 +243,12 @@ status.innerText = "Upload bezig..."
 
 const resized = await resizeImage(file)
 
-const fileName = Date.now() + "-" + Math.random().toString(36).substr(2,5) + ".jpg"
+const fileName = crypto.randomUUID() + ".jpg"
 
 const { error } = await supabaseClient.storage
 .from("party")
 .upload(fileName, resized, {
-contentType:"image/jpeg",
-upsert:false
+contentType:"image/jpeg"
 })
 
 if(error){
