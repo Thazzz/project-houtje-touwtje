@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chrissie's fotomuur</title>
+
+<link rel="stylesheet" href="feest.css">
+
+</head>
+
+<body>
+
+<div id="container">
+
+<div id="overlay">
+Chrissie's fotomuur
+<div id="sub">
+📸 Scan de QR code en upload je foto
+</div>
+</div>
+
+<div id="newphoto">Nieuwe foto! 📸</div>
+
+<img id="slide">
+
+<div id="polaroidStack"></div>
+
+<div id="qrbox">
+<div id="qr"></div>
+<div id="qrtext">Scan om foto's te uploaden</div>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+<script>
+
+console.log("slideshow gestart")
+
+/* SUPABASE */
+
+const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
+
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
+
+const supabaseClient = supabase.createClient(
+supabaseUrl,
+supabaseKey
+)
+
+/* DATA */
+
+let photos = []
+let queue = []
+let knownFiles = new Set()
+
+let spotlightActive = false
+let slideshowTimer
+
+let spotlightQueue = []
+let spotlightRunning = false
+
+/* HIGHLIGHT */
+
+function highlightNewPhoto(img){
+
+img.classList.remove("polaroid")
+img.classList.remove("newphoto-glow")
+
+void img.offsetWidth
+
+img.classList.add("polaroid")
+img.classList.add("newphoto-glow")
+
+setTimeout(()=>{
+img.classList.remove("newphoto-glow")
+},4000)
+
+}
+
+/* POLAROID STACK */
+
+function addPolaroidToStack(url){
+
+const stack = document.getElementById("polaroidStack")
+if(!stack) return
+
+const img = document.createElement("img")
+
+img.src = url
+img.className = "polaroid-item"
+
+img.style.setProperty(
+"--r",
+(Math.random()*20-10)+"deg"
+)
+
+img.style.left = Math.random()*120 + "px"
+img.style.top = Math.random()*120 + "px"
+
+stack.appendChild(img)
+
+if(stack.children.length > 8){
+stack.removeChild(stack.children[0])
+}
+
+}
+
+/* BANNER */
+
+function showNewPhotoBanner(){
+
+const banner = document.getElementById("newphoto")
+
+banner.style.opacity = 1
+
+setTimeout(()=>{
+banner.style.opacity = 0
+},3000)
+
+}
+
+/* SHUFFLE */
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+let j=Math.floor(Math.random()*(i+1))
+
+let temp=array[i]
+array[i]=array[j]
+array[j]=temp
+
+}
+
+return array
+
+}
+
+/* PRELOAD */
+
+function preloadNext(){
+
+if(queue.length===0) return
+
+const img=new Image()
+img.src=queue[queue.length-1]
+
+}
+
+/* SLIDESHOW */
+
+function showNext(){
+
+if(spotlightActive) return
+if(photos.length===0) return
+
+const img=document.getElementById("slide")
+
+if(queue.length===0){
+queue=shuffle([...photos])
+}
+
+const nextPhoto=queue.pop()
+
+if(!nextPhoto) return
+
+img.style.opacity=0
+
+setTimeout(()=>{
+
+img.src=nextPhoto
+
+img.onload=()=>{
+
+applyOrientation(img)
+
+highlightNewPhoto(img)
+
+img.style.opacity=1
+
+}
+
+preloadNext()
+
+},400)
+
+}
+
+/* SPOTLIGHT QUEUE */
+
+function processSpotlightQueue(){
+
+if(spotlightRunning) return
+if(spotlightQueue.length === 0) return
+
+spotlightRunning = true
+
+const url = spotlightQueue.shift()
+
+addPolaroidToStack(url)
+
+clearInterval(slideshowTimer)
+
+spotlightActive = false
+queue.unshift(url)
+
+showNext()
+
+spotlightActive = true
+
+setTimeout(()=>{
+
+spotlightActive = false
+slideshowTimer = setInterval(showNext,5000)
+
+spotlightRunning = false
+
+processSpotlightQueue()
+
+},3000)
+
+}
+
+/* FOTO'S LADEN */
+
+async function loadPhotos(){
+
+console.log("foto's laden...")
+
+let allFiles=[]
+let offset=0
+const limit=100
+
+while(true){
+
+const { data,error } = await supabaseClient
+.storage
+.from("party")
+.list("",{
+limit:limit,
+offset:offset,
+sortBy:{ column:"name",order:"desc" }
+})
+
+if(error){
+console.log("Supabase error:",error)
+return
+}
+
+if(!data || data.length===0){
+break
+}
+
+allFiles=allFiles.concat(data)
+
+if(data.length<limit){
+break
+}
+
+offset+=limit
+
+}
+
+const files=allFiles
+.filter(file=>file.name && !file.name.endsWith("/"))
+
+for(const file of files){
+
+if(!knownFiles.has(file.name)){
+
+knownFiles.add(file.name)
+
+const url =
+supabaseUrl + "/storage/v1/object/public/party/" + file.name
+
+photos.push(url)
+
+}
+
+}
+
+queue=shuffle([...photos])
+
+console.log("gevonden foto's:",photos.length)
+
+}
+
+/* REALTIME UPLOADS */
+
+function subscribeRealtime(){
+
+supabaseClient
+.channel("party-upload")
+.on(
+"postgres_changes",
+{
+event:"INSERT",
+schema:"storage",
+table:"objects"
+},
+payload=>{
+
+if(payload.new.bucket_id==="party"){
+
+const file=payload.new.name
+
+if(!knownFiles.has(file)){
+
+knownFiles.add(file)
+
+const url =
+supabaseUrl + "/storage/v1/object/public/party/" + file
+
+photos.push(url)
+
+showNewPhotoBanner()
+flashQR()
+
+spotlightQueue.push(url)
+
+processSpotlightQueue()
+
+}
+
+}
+
+}
+)
+.subscribe()
+
+}
+
+/* QR CODE */
+
+function createQR(){
+
+const uploadURL = window.location.origin + "/upload.html"
+
+new QRCode(document.getElementById("qr"),{
+text:uploadURL,
+width:150,
+height:150
+})
+
+}
+
+/* QR FLASH */
+
+function flashQR(){
+
+const qr = document.getElementById("qrbox")
+
+qr.classList.remove("qr-flash")
+
+requestAnimationFrame(()=>{
+qr.classList.add("qr-flash")
+})
+
+}
+
+/* ORIENTATION SCALING */
+
+function applyOrientation(img){
+
+if(img.naturalHeight > img.naturalWidth){
+
+img.style.maxHeight = "85vh"
+img.style.maxWidth = "60vw"
+
+}else{
+
+img.style.maxHeight = "75vh"
+img.style.maxWidth = "85vw"
+
+}
+
+}
+
+/* START */
+
+async function start(){
+
+createQR()
+
+await loadPhotos()
+
+showNext()
+
+slideshowTimer=setInterval(showNext,5000)
+
+subscribeRealtime()
+
+}
+
+start()
+
+</script>
+
+</body>
+</html>

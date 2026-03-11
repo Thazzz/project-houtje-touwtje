@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Upload je foto's</title>
+
+<style>
+
+body{
+background:#111;
+color:#eee;
+font-family:system-ui;
+margin:0;
+padding:20px;
+text-align:center;
+}
+
+h1{
+margin-top:10px;
+}
+
+input{
+margin-top:20px;
+font-size:18px;
+}
+
+button{
+margin-top:20px;
+padding:16px 28px;
+font-size:18px;
+background:#333;
+color:white;
+border:none;
+border-radius:8px;
+}
+
+button:active{
+background:#555;
+}
+
+.preview{
+margin-top:20px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+}
+
+.preview img{
+width:90px;
+height:90px;
+object-fit:cover;
+border-radius:6px;
+}
+
+.progress{
+margin-top:20px;
+width:100%;
+background:#333;
+border-radius:6px;
+overflow:hidden;
+height:14px;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#6be675;
+transition:width .2s;
+}
+
+#status{
+margin-top:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>📸 Upload je foto's</h1>
+
+<p>Maak een foto of kies uit je galerij</p>
+
+<input 
+type="file"
+id="fileInput"
+accept="image/*"
+capture="environment"
+multiple
+>
+
+<div class="preview" id="preview"></div>
+
+<button onclick="uploadPhotos()">Upload foto's</button>
+
+<div class="progress">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<p id="status"></p>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+
+const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
+
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
+
+
+/* preview tonen */
+
+document.getElementById("fileInput").addEventListener("change", function(){
+
+const preview = document.getElementById("preview")
+preview.innerHTML = ""
+
+for(const file of this.files){
+
+const img = document.createElement("img")
+img.src = URL.createObjectURL(file)
+preview.appendChild(img)
+
+}
+
+})
+
+
+
+/* foto verkleinen */
+
+async function resizeImage(file){
+
+return new Promise(resolve => {
+
+const img = new Image()
+const reader = new FileReader()
+
+reader.onload = e => img.src = e.target.result
+reader.readAsDataURL(file)
+
+img.onload = () => {
+
+const canvas = document.createElement("canvas")
+const maxSize = 2000
+
+let width = img.width
+let height = img.height
+
+if(width > height && width > maxSize){
+height *= maxSize / width
+width = maxSize
+}
+
+if(height > width && height > maxSize){
+width *= maxSize / height
+height = maxSize
+}
+
+canvas.width = width
+canvas.height = height
+
+const ctx = canvas.getContext("2d")
+ctx.drawImage(img,0,0,width,height)
+
+canvas.toBlob(blob => {
+resolve(blob)
+},"image/jpeg",0.9)
+
+}
+
+})
+
+}
+
+
+
+/* upload */
+
+async function uploadPhotos(){
+
+const files = document.getElementById("fileInput").files
+const status = document.getElementById("status")
+const progressBar = document.getElementById("progressBar")
+
+if(files.length === 0){
+status.innerText = "Kies eerst foto's"
+return
+}
+
+status.innerText = "Foto's verwerken..."
+
+let uploaded = 0
+
+for(const file of files){
+
+const resized = await resizeImage(file)
+
+const fileName = Date.now() + "-" + Math.random().toString(36).substr(2,5) + ".jpg"
+
+const { error } = await supabaseClient.storage
+.from("party")
+.upload(fileName, resized)
+
+if(error){
+console.log(error)
+status.innerText = "Upload fout"
+return
+}
+
+uploaded++
+
+const progress = Math.round((uploaded / files.length) * 100)
+
+progressBar.style.width = progress + "%"
+
+}
+
+status.innerText = "Foto's geüpload! 🎉"
+
+document.getElementById("fileInput").value = ""
+document.getElementById("preview").innerHTML = ""
+
+}
+
+</script>
+
+</body>
+</html>
