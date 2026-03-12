@@ -193,8 +193,6 @@ img.src=nextPhoto
 
 img.onload=()=>{
 
-applyOrientation(img)
-
 highlightNewPhoto(img)
 
 img.style.opacity=1
@@ -392,25 +390,6 @@ handleNewPhoto(url)
 
 }
 
-/* -------------------------------- */
-/* ORIENTATION */
-/* -------------------------------- */
-
-function applyOrientation(img){
-
-if(img.naturalHeight>img.naturalWidth){
-
-img.style.maxHeight="85vh"
-img.style.maxWidth="60vw"
-
-}else{
-
-img.style.maxHeight="75vh"
-img.style.maxWidth="85vw"
-
-}
-
-}
 
 /* -------------------------------- */
 /* START */

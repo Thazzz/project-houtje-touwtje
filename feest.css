@@ -53,12 +53,12 @@ margin-top:6px;
 box-shadow:0 20px 60px rgba(0,0,0,0.8);
 
 max-width:85vw;
-max-height:75vh;
+max-height:85vh;
 
 object-fit:contain;
 
 display:block;
-margin-top:120px;
+margin:120px auto 0 auto;
 
 opacity:0;
 transition:opacity 1s ease;
