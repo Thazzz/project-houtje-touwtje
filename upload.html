@@ -258,68 +258,82 @@ async function processImage(file){
 
 return new Promise(resolve=>{
 
-const reader=new FileReader()
-const img=new Image()
+const reader = new FileReader()
+const img = new Image()
 
-reader.onload=e=>img.src=e.target.result
+reader.onload = e => img.src = e.target.result
 reader.readAsDataURL(file)
 
-img.onload=function(){
+img.onload = function(){
 
-EXIF.getData(file,function(){
+EXIF.getData(img,function(){
 
-let orientation=EXIF.getTag(this,"Orientation")
+let orientation = EXIF.getTag(this,"Orientation") || 1
 
-const canvas=document.createElement("canvas")
-const ctx=canvas.getContext("2d")
+let width = img.width
+let height = img.height
 
-let width=img.width
-let height=img.height
+const max = 1400
 
-const max=1400
+/* resize */
 
-if(width>height && width>max){
-height*=max/width
-width=max
+if(width > height && width > max){
+height = height * (max / width)
+width = max
 }
 
-if(height>width && height>max){
-width*=max/height
-height=max
+if(height > width && height > max){
+width = width * (max / height)
+height = max
 }
 
-canvas.width = width
-canvas.height = height
+const canvas = document.createElement("canvas")
+const ctx = canvas.getContext("2d")
+
+/* orientation fix */
 
 if(orientation === 6){
 
 canvas.width = height
 canvas.height = width
 
-ctx.rotate(90*Math.PI/180)
-ctx.drawImage(img,0,-height,width,height)
+ctx.translate(height,0)
+ctx.rotate(Math.PI/2)
 
 }
+
 else if(orientation === 8){
 
 canvas.width = height
 canvas.height = width
 
-ctx.rotate(-90*Math.PI/180)
-ctx.drawImage(img,-width,0,width,height)
+ctx.translate(0,width)
+ctx.rotate(-Math.PI/2)
 
 }
+
 else if(orientation === 3){
 
+canvas.width = width
+canvas.height = height
+
+ctx.translate(width,height)
 ctx.rotate(Math.PI)
-ctx.drawImage(img,-width,-height,width,height)
 
 }
+
 else{
+
+canvas.width = width
+canvas.height = height
+
+}
+
+/* draw image */
 
 ctx.drawImage(img,0,0,width,height)
 
-}
+/* export */
 
 canvas.toBlob(blob=>{
 
