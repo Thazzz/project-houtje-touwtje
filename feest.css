@@ -58,31 +58,26 @@ text-align:center;
 
 font-size:48px;
 font-weight:700;
-letter-spacing:3px;
+letter-spacing:2px;
 
 z-index:1000;
 
-color:#ffffff;
+/* basis kleur */
 
-/* betere leesbaarheid boven foto's */
-
-padding:10px 24px;
-background:rgba(0,0,0,0.25);
-border-radius:14px;
-backdrop-filter:blur(4px);
+color:#ff4fd8;
 
 /* neon glow */
 
 text-shadow:
-0 0 5px #fff,
-0 0 10px #fff,
-0 0 20px #ff0080,
-0 0 40px #ff0080,
-0 0 80px #ff0080;
+0 0 6px rgba(255,255,255,0.9),
+0 0 12px rgba(255,0,120,0.8),
+0 0 30px rgba(255,0,120,0.6);
 
-/* neon flicker */
+/* animaties */
 
-animation:neonFlicker 4s infinite alternate;
+animation:
+neonColorShift 10s ease-in-out infinite,
+neonPulse 5s ease-in-out infinite;
 
 }
 
@@ -98,34 +93,59 @@ opacity:.9;
 color:#8affff;
 
 text-shadow:
-0 0 5px #8affff,
-0 0 15px #00e5ff,
-0 0 25px rgba(0,229,255,0.5);
+0 0 6px rgba(138,255,255,0.9),
+0 0 18px rgba(0,229,255,0.6);
 
 }
 
-/* neon flicker animatie */
+/* =================================
+   NEON COLOR SHIFT
+================================= */
 
-@keyframes neonFlicker{
+@keyframes neonColorShift{
 
 0%{
-opacity:1;
+color:#ff4fd8;
 text-shadow:
-0 0 5px #fff,
-0 0 10px #fff,
-0 0 20px #ff0080,
-0 0 40px #ff0080,
-0 0 80px #ff0080;
+0 0 6px rgba(255,255,255,0.9),
+0 0 12px rgba(255,0,120,0.8),
+0 0 30px rgba(255,0,120,0.6);
 }
 
-48%{opacity:1;}
-
-50%{opacity:.85;}
-
-52%{opacity:1;}
+50%{
+color:#c86bff;
+text-shadow:
+0 0 6px rgba(255,255,255,0.9),
+0 0 12px rgba(180,0,255,0.8),
+0 0 30px rgba(180,0,255,0.6);
+}
 
 100%{
-opacity:.95;
+color:#ff4fd8;
+text-shadow:
+0 0 6px rgba(255,255,255,0.9),
+0 0 12px rgba(255,0,120,0.8),
+0 0 30px rgba(255,0,120,0.6);
+}
+
+}
+
+/* =================================
+   NEON PULSE
+================================= */
+
+@keyframes neonPulse{
+
+0%{
+transform:translateX(-50%) scale(1);
+}
+
+50%{
+transform:translateX(-50%) scale(1.03);
+}
+
+100%{
+transform:translateX(-50%) scale(1);
 }
 
 }
