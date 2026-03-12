@@ -23,6 +23,8 @@ Chris10's PhotoWall
 </div>
 </div>
 
+<div id="spotlight"></div>
+
 <div id="newphoto">Nieuwe foto! 📸</div>
 
 <div id="photowall"></div>
@@ -97,6 +99,46 @@ wall.removeChild(wall.children[randomIndex])
 }
 
 }
+/* -------------------------------- */
+/* spotlight*/
+/* -------------------------------- */
+
+
+function showSpotlight(url){
+
+const container=document.getElementById("spotlight")
+
+container.innerHTML=""
+
+const img=document.createElement("img")
+
+img.src=url
+img.className="spotlight-photo"
+
+container.appendChild(img)
+
+setTimeout(()=>{
+img.classList.add("show")
+},50)
+
+/* na 3 seconden naar muur */
+
+setTimeout(()=>{
+
+img.classList.remove("show")
+
+setTimeout(()=>{
+
+container.innerHTML=""
+
+addPhotoToWall(url)
+
+},600)
+
+},3000)
+
+}
+
 
 /* -------------------------------- */
 /* POLAROID STACK */
@@ -158,8 +200,11 @@ photos.unshift(url)
 showNewPhotoBanner()
 flashQR()
 
-addPhotoToWall(url)
 addPolaroidToStack(url)
+
+/* spotlight tonen */
+
+showSpotlight(url)
 
 }
 

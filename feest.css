@@ -76,6 +76,61 @@ margin-top:6px;
 }
 
 
+/* =========================
+   SPOTLIGHT FOTO
+========================= */
+
+#spotlight{
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+max-width:70vw;
+max-height:70vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+pointer-events:none;
+
+z-index:10;
+
+}
+
+.spotlight-photo{
+
+max-width:100%;
+max-height:100%;
+
+border-radius:8px;
+
+box-shadow:
+0 40px 120px rgba(0,0,0,0.9),
+0 0 40px rgba(255,0,120,0.25);
+
+opacity:0;
+
+transform:scale(.9);
+
+transition:
+opacity .6s ease,
+transform .6s ease;
+
+}
+
+.spotlight-photo.show{
+
+opacity:1;
+
+transform:scale(1);
+
+}
+
 /* =================================
    PHOTO WALL
 ================================= */
