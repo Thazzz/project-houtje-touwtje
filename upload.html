@@ -11,63 +11,145 @@
 <style>
 
 body{
-background:#111;
+background:
+radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%),
+#111;
+
 color:#eee;
 font-family:system-ui;
 margin:0;
-padding:20px;
+padding:40px 20px;
 text-align:center;
 }
 
-button{
-margin-top:16px;
-padding:16px 28px;
-font-size:18px;
-background:#333;
-color:white;
-border:none;
-border-radius:8px;
+/* titels */
+
+h1{
+font-size:34px;
+margin-bottom:6px;
+letter-spacing:.5px;
+
+text-shadow:
+0 0 8px rgba(255,255,255,0.3),
+0 0 18px rgba(255,0,150,0.15);
 }
 
+h2{
+font-weight:400;
+font-size:18px;
+opacity:.8;
+margin-bottom:30px;
+}
+
+/* knoppen */
+
+button{
+margin-top:16px;
+padding:18px 30px;
+
+font-size:18px;
+
+background:linear-gradient(
+135deg,
+#444,
+#222
+);
+
+color:white;
+
+border:none;
+border-radius:10px;
+
+box-shadow:
+0 10px 25px rgba(0,0,0,0.5),
+0 0 12px rgba(255,0,150,0.1);
+
+transition:all .2s ease;
+
+cursor:pointer;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:
+0 14px 35px rgba(0,0,0,0.6),
+0 0 18px rgba(255,0,150,0.2);
+}
+
+/* preview grid */
+
 .preview{
-margin-top:20px;
+margin-top:30px;
+
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:10px;
+
+gap:14px;
 }
+
+/* foto preview */
 
 .preview img{
 width:90px;
 height:90px;
+
 object-fit:cover;
+
 border-radius:6px;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,0.6);
+
+background:white;
+padding:4px;
 }
 
+/* progress bar */
+
 .progress{
-margin-top:20px;
+margin-top:30px;
+
 width:100%;
+max-width:400px;
+margin-left:auto;
+margin-right:auto;
+
 background:#333;
+
 border-radius:6px;
 height:14px;
+
 overflow:hidden;
 }
 
 .progress-bar{
 height:100%;
 width:0%;
-background:#6be675;
+
+background:linear-gradient(
+90deg,
+#ff4fa3,
+#6be675
+);
+
 transition:width .2s;
 }
 
+/* status */
+
+#status{
+margin-top:14px;
+opacity:.8;
+}
 </style>
 
 </head>
 
 <body>
 
-<h1>📸 Upload je foto's</h1>
-<p>Maak een foto of kies uit je galerij</p>
+<h1>Chris10's PhotoWall</h1>
+<h2>Laat jouw moment achter voor Chris10</h2>
 
 <!-- verborgen inputs -->
 
@@ -98,7 +180,7 @@ style="display:none"
 
 <div class="preview" id="preview"></div>
 
-<button onclick="startUpload()">⬆ Upload naar de fotomuur</button>
+<button onclick="startUpload()">⬆ Voeg toe aan de PhotoWall</button>
 
 <div class="progress">
 <div class="progress-bar" id="progressBar"></div>
@@ -130,6 +212,8 @@ FILE SELECTIE
 
 let selectedFiles=[]
 
+const preview = document.getElementById("preview")
+
 function openCamera(){
 document.getElementById("cameraInput").click()
 }
@@ -147,11 +231,16 @@ selectedFiles.push(file)
 const img=document.createElement("img")
 img.src=URL.createObjectURL(file)
 
+img.onload = () => URL.revokeObjectURL(img.src)
+
 preview.appendChild(img)
 
 }
 
 }
+
+const cameraInput = document.getElementById("cameraInput")
+const galleryInput = document.getElementById("galleryInput")
 
 cameraInput.addEventListener("change",function(){
 handleFiles(this.files)
@@ -245,6 +334,12 @@ resolve(blob)
 }
 
 /* -------------------------
+LOCAL BROADCAST
+------------------------- */
+
+const photoChannel = new BroadcastChannel("party-photos")
+
+/* -------------------------
 UPLOAD
 ------------------------- */
 
@@ -268,7 +363,6 @@ supabaseUrl + "/storage/v1/object/public/party/" + fileName
 
 /* instant lokaal */
 
-const photoChannel = new BroadcastChannel("party-photos")
 photoChannel.postMessage(publicURL)
 
 /* realtime naar alle schermen */
@@ -282,7 +376,6 @@ payload:{url:publicURL}
 })
 
 }
-
 /* -------------------------
 QUEUE
 ------------------------- */
@@ -339,13 +432,20 @@ START UPLOAD
 
 async function startUpload(){
 
-const files=selectedFiles
-const status=document.getElementById("status")
+const files = selectedFiles
+const status = document.getElementById("status")
+const uploadButton = document.querySelector('button[onclick="startUpload()"]')
 
 if(files.length===0){
 status.innerText="Kies eerst foto's"
 return
 }
+
+/* knop uitzetten tijdens upload */
+
+uploadButton.disabled = true
+uploadButton.style.opacity = .6
+uploadButton.style.cursor = "not-allowed"
 
 status.innerText="Upload gestart..."
 
@@ -353,11 +453,18 @@ await runQueue(files,3)
 
 status.innerText="Foto's geüpload 🎉"
 
-selectedFiles=[]
-preview.innerHTML=""
+/* reset */
+
+selectedFiles = []
+preview.innerHTML = ""
+
+/* knop weer actief maken */
+
+uploadButton.disabled = false
+uploadButton.style.opacity = 1
+uploadButton.style.cursor = "pointer"
 
 }
-
 </script>
 
 </body>
