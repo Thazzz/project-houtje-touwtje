@@ -151,8 +151,7 @@ function preloadNext(){
 if(queue.length===0) return
 
 const img=new Image()
-img.src=queue[queue.length-1]
-
+img.src = queue[queue.length-1] || ""
 }
 
 /* SLIDESHOW */
@@ -208,6 +207,7 @@ const url = spotlightQueue.shift()
 addPolaroidToStack(url)
 
 clearInterval(slideshowTimer)
+slideshowTimer = null
 
 spotlightActive = false
 queue.unshift(url)
