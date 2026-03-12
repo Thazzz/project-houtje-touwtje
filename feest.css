@@ -60,9 +60,16 @@ font-size:48px;
 font-weight:700;
 letter-spacing:3px;
 
-z-index:20;
+z-index:1000;
 
 color:#ffffff;
+
+/* betere leesbaarheid boven foto's */
+
+padding:10px 24px;
+background:rgba(0,0,0,0.25);
+border-radius:14px;
+backdrop-filter:blur(4px);
 
 /* neon glow */
 
@@ -73,7 +80,7 @@ text-shadow:
 0 0 40px #ff0080,
 0 0 80px #ff0080;
 
-/* subtiele neon flicker */
+/* neon flicker */
 
 animation:neonFlicker 4s infinite alternate;
 
@@ -103,7 +110,6 @@ text-shadow:
 
 0%{
 opacity:1;
-
 text-shadow:
 0 0 5px #fff,
 0 0 10px #fff,
@@ -123,7 +129,6 @@ opacity:.95;
 }
 
 }
-
 /* =========================
    SPOTLIGHT FOTO
 ========================= */
