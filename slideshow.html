@@ -300,7 +300,7 @@ supabaseClient
 .on(
 "postgres_changes",
 {
-event: "INSERT",
+event: "*",
 schema: "storage",
 table: "objects",
 filter: "bucket_id=eq.party"
