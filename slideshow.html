@@ -115,9 +115,26 @@ addPhotoToWall(url)
 
 }
 
+/* CHECK PHOTO ON TABLE */
+
+function photoAlreadyOnWall(url){
+
+const wall=document.getElementById("photowall")
+
+for(const img of wall.children){
+if(img.src===url) return true
+}
+
+return false
+
+}
+
+
 /* PHOTO WALL */
 
 function addPhotoToWall(url){
+
+if(photoAlreadyOnWall(url)) return
 
 const wall=document.getElementById("photowall")
 
@@ -443,12 +460,18 @@ if(photos.length===0) return
 if(spotlightActive) return
 
 let url
+let attempts=0
 
 do{
 
 url=photos[Math.floor(Math.random()*photos.length)]
+attempts++
 
-}while(photos.length>1 && url===lastIdlePhoto)
+}while(
+photos.length>1 &&
+(url===lastIdlePhoto || photoAlreadyOnWall(url)) &&
+attempts<20
+)
 
 lastIdlePhoto=url
 
@@ -457,6 +480,7 @@ showSpotlight(url,true)
 idleSlideshowTimer=setTimeout(showNextIdlePhoto,6000)
 
 }
+
 
 /* START */
 
