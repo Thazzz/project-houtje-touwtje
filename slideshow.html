@@ -304,11 +304,12 @@ supabaseClient
 {
 event:"INSERT",
 schema:"storage",
-table:"objects"
+table:"objects",
+filter:"bucket_id=eq.party"
 },
 payload=>{
 
-if(payload.new.bucket_id==="party"){
+console.log("realtime upload:",payload)
 
 const file=payload.new.name
 
@@ -318,6 +319,24 @@ knownFiles.add(file)
 
 const url =
 supabaseUrl + "/storage/v1/object/public/party/" + file
+
+photos.unshift(url)
+queue.unshift(url)
+
+showNewPhotoBanner()
+flashQR()
+
+spotlightQueue.push(url)
+
+processSpotlightQueue()
+
+}
+
+}
+)
+.subscribe()
+
+}
 
 /* nieuw bovenop dataset */
 photos.unshift(url)
