@@ -56,21 +56,22 @@ supabaseKey
 
 /* DATA */
 
-let photos = []
-let queue = []
-let knownFiles = new Set()
+let photos=[]
+let queue=[]
+let knownFiles=new Set()
 
-let spotlightActive = false
 let slideshowTimer
 
-let spotlightQueue = []
-let spotlightRunning = false
+let spotlightQueue=[]
+let spotlightRunning=false
 
-/* INSTANT PHOTO CHANNEL */
+/* INSTANT CHANNEL */
 
 const photoChannel = new BroadcastChannel("party-photos")
 
+/* -------------------------------- */
 /* HIGHLIGHT */
+/* -------------------------------- */
 
 function highlightNewPhoto(img){
 
@@ -88,49 +89,54 @@ img.classList.remove("newphoto-glow")
 
 }
 
+/* -------------------------------- */
 /* POLAROID STACK */
+/* -------------------------------- */
 
 function addPolaroidToStack(url){
 
-const stack = document.getElementById("polaroidStack")
-if(!stack) return
+const stack=document.getElementById("polaroidStack")
 
-const img = document.createElement("img")
+const img=document.createElement("img")
 
-img.src = url
-img.className = "polaroid-item"
+img.src=url
+img.className="polaroid-item"
 
 img.style.setProperty(
 "--r",
 (Math.random()*20-10)+"deg"
 )
 
-img.style.left = Math.random()*120 + "px"
-img.style.top = Math.random()*120 + "px"
+img.style.left=Math.random()*120+"px"
+img.style.top=Math.random()*120+"px"
 
 stack.appendChild(img)
 
-if(stack.children.length > 8){
+if(stack.children.length>8){
 stack.removeChild(stack.children[0])
 }
 
 }
 
+/* -------------------------------- */
 /* BANNER */
+/* -------------------------------- */
 
 function showNewPhotoBanner(){
 
-const banner = document.getElementById("newphoto")
+const banner=document.getElementById("newphoto")
 
-banner.style.opacity = 1
+banner.style.opacity=1
 
 setTimeout(()=>{
-banner.style.opacity = 0
+banner.style.opacity=0
 },3000)
 
 }
 
+/* -------------------------------- */
 /* SHUFFLE */
+/* -------------------------------- */
 
 function shuffle(array){
 
@@ -148,21 +154,25 @@ return array
 
 }
 
+/* -------------------------------- */
 /* PRELOAD */
+/* -------------------------------- */
 
 function preloadNext(){
 
 if(queue.length===0) return
 
 const img=new Image()
-img.src = queue[queue.length-1] || ""
+img.src=queue[0]
+
 }
 
+/* -------------------------------- */
 /* SLIDESHOW */
+/* -------------------------------- */
 
 function showNext(){
 
-if(spotlightActive) return
 if(photos.length===0) return
 
 const img=document.getElementById("slide")
@@ -197,33 +207,32 @@ preloadNext()
 
 }
 
-/* SPOTLIGHT QUEUE */
+/* -------------------------------- */
+/* SPOTLIGHT */
+/* -------------------------------- */
 
 function processSpotlightQueue(){
 
 if(spotlightRunning) return
-if(spotlightQueue.length === 0) return
+if(spotlightQueue.length===0) return
 
-spotlightRunning = true
+spotlightRunning=true
 
-const url = spotlightQueue.shift()
+const url=spotlightQueue.shift()
 
 addPolaroidToStack(url)
 
 clearInterval(slideshowTimer)
-slideshowTimer = null
 
-spotlightActive = false
 queue.unshift(url)
 
 showNext()
 
 setTimeout(()=>{
 
-spotlightActive = false
-slideshowTimer = setInterval(showNext,5000)
+slideshowTimer=setInterval(showNext,5000)
 
-spotlightRunning = false
+spotlightRunning=false
 
 processSpotlightQueue()
 
@@ -231,7 +240,31 @@ processSpotlightQueue()
 
 }
 
+/* -------------------------------- */
+/* NIEUWE FOTO HANDLER */
+/* -------------------------------- */
+
+function handleNewPhoto(url){
+
+if(knownFiles.has(url)) return
+
+knownFiles.add(url)
+
+photos.unshift(url)
+queue.unshift(url)
+
+showNewPhotoBanner()
+flashQR()
+
+spotlightQueue.push(url)
+
+processSpotlightQueue()
+
+}
+
+/* -------------------------------- */
 /* FOTO'S LADEN */
+/* -------------------------------- */
 
 async function loadPhotos(){
 
@@ -249,43 +282,32 @@ const { data,error } = await supabaseClient
 .list("",{
 limit:limit,
 offset:offset,
-sortBy:{ column:"name",order:"desc" }
+sortBy:{column:"name",order:"desc"}
 })
 
 if(error){
-console.log("Supabase error:",error)
+console.log(error)
 return
 }
 
-if(!data || data.length===0){
-break
-}
+if(!data || data.length===0) break
 
 allFiles=allFiles.concat(data)
 
-if(data.length<limit){
-break
-}
+if(data.length<limit) break
 
 offset+=limit
 
 }
 
-const files=allFiles
-.filter(file=>file.name && !file.name.endsWith("/"))
-
-for(const file of files){
-
-if(!knownFiles.has(file.name)){
-
-knownFiles.add(file.name)
+for(const file of allFiles){
 
 const url =
-supabaseUrl + "/storage/v1/object/public/party/" + file.name
+supabaseUrl+"/storage/v1/object/public/party/"+file.name
+
+knownFiles.add(url)
 
 photos.push(url)
-
-}
 
 }
 
@@ -295,7 +317,9 @@ console.log("gevonden foto's:",photos.length)
 
 }
 
-/* REALTIME UPLOADS */
+/* -------------------------------- */
+/* REALTIME */
+/* -------------------------------- */
 
 function subscribeRealtime(){
 
@@ -304,49 +328,33 @@ supabaseClient
 .on(
 "postgres_changes",
 {
-event: "*",
-schema: "storage",
-table: "objects",
-filter: "bucket_id=eq.party"
+event:"INSERT",
+schema:"storage",
+table:"objects",
+filter:"bucket_id=eq.party"
 },
 (payload)=>{
 
-console.log("realtime upload:", payload)
+const file=payload.new.name
 
-const file = payload.new.name
+const url=
+supabaseUrl+"/storage/v1/object/public/party/"+file
 
-if(!knownFiles.has(file)){
-
-knownFiles.add(file)
-
-const url =
-supabaseUrl + "/storage/v1/object/public/party/" + file
-
-photos.unshift(url)
-queue.unshift(url)
-
-showNewPhotoBanner()
-flashQR()
-
-spotlightQueue.push(url)
-
-processSpotlightQueue()
-
-}
+handleNewPhoto(url)
 
 }
 )
-.subscribe((status)=>{
-console.log("realtime status:", status)
-})
+.subscribe()
 
 }
 
-/* QR CODE */
+/* -------------------------------- */
+/* QR */
+/* -------------------------------- */
 
 function createQR(){
 
-const uploadURL = window.location.origin + "/upload.html"
+const uploadURL=window.location.origin+"/upload.html"
 
 new QRCode(document.getElementById("qr"),{
 text:uploadURL,
@@ -356,65 +364,57 @@ height:150
 
 }
 
+/* -------------------------------- */
 /* QR FLASH */
+/* -------------------------------- */
 
 function flashQR(){
 
-const qr=document.getElementById("qr")
+const qr=document.getElementById("qrbox")
 
 qr.classList.remove("qr-flash")
 
-void qr.offsetWidth   // force reflow
+void qr.offsetWidth
 
 qr.classList.add("qr-flash")
 
 }
 
-/* INSTANT PHOTO LISTENER */
+/* -------------------------------- */
+/* INSTANT UPLOAD */
+/* -------------------------------- */
 
-photoChannel.onmessage = (event)=>{
+photoChannel.onmessage=(event)=>{
 
-const url = event.data
+const url=event.data
 
-console.log("instant photo:", url)
-
-if(!knownFiles.has(url)){
-
-knownFiles.add(url)
-
-photos.unshift(url)
-queue.unshift(url)
-
-showNewPhotoBanner()
-flashQR()
-
-spotlightQueue.push(url)
-
-processSpotlightQueue()
+handleNewPhoto(url)
 
 }
 
-}
-
-/* ORIENTATION SCALING */
+/* -------------------------------- */
+/* ORIENTATION */
+/* -------------------------------- */
 
 function applyOrientation(img){
 
-if(img.naturalHeight > img.naturalWidth){
+if(img.naturalHeight>img.naturalWidth){
 
-img.style.maxHeight = "85vh"
-img.style.maxWidth = "60vw"
+img.style.maxHeight="85vh"
+img.style.maxWidth="60vw"
 
 }else{
 
-img.style.maxHeight = "75vh"
-img.style.maxWidth = "85vw"
+img.style.maxHeight="75vh"
+img.style.maxWidth="85vw"
 
 }
 
 }
 
+/* -------------------------------- */
 /* START */
+/* -------------------------------- */
 
 async function start(){
 

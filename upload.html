@@ -19,10 +19,8 @@ padding:20px;
 text-align:center;
 }
 
-input{margin-top:20px;font-size:18px;}
-
 button{
-margin-top:20px;
+margin-top:16px;
 padding:16px 28px;
 font-size:18px;
 background:#333;
@@ -69,20 +67,38 @@ transition:width .2s;
 <body>
 
 <h1>📸 Upload je foto's</h1>
-
 <p>Maak een foto of kies uit je galerij</p>
+
+<!-- verborgen inputs -->
 
 <input
 type="file"
-id="fileInput"
+id="cameraInput"
 accept="image/*"
 capture="environment"
 multiple
+style="display:none"
 >
+
+<input
+type="file"
+id="galleryInput"
+accept="image/*"
+multiple
+style="display:none"
+>
+
+<!-- knoppen -->
+
+<button onclick="openCamera()">📷 Maak een foto</button>
+
+<br>
+
+<button onclick="openGallery()">🖼 Kies uit galerij</button>
 
 <div class="preview" id="preview"></div>
 
-<button onclick="startUpload()">Upload foto's</button>
+<button onclick="startUpload()">⬆ Upload naar de fotomuur</button>
 
 <div class="progress">
 <div class="progress-bar" id="progressBar"></div>
@@ -109,14 +125,24 @@ const supabaseClient = supabase.createClient(
 )
 
 /* -------------------------
-PREVIEW
+FILE SELECTIE
 ------------------------- */
 
-fileInput.addEventListener("change", function(){
+let selectedFiles=[]
 
-preview.innerHTML=""
+function openCamera(){
+document.getElementById("cameraInput").click()
+}
 
-for(const file of this.files){
+function openGallery(){
+document.getElementById("galleryInput").click()
+}
+
+function handleFiles(files){
+
+for(const file of files){
+
+selectedFiles.push(file)
 
 const img=document.createElement("img")
 img.src=URL.createObjectURL(file)
@@ -125,13 +151,18 @@ preview.appendChild(img)
 
 }
 
+}
+
+cameraInput.addEventListener("change",function(){
+handleFiles(this.files)
+})
+
+galleryInput.addEventListener("change",function(){
+handleFiles(this.files)
 })
 
 /* -------------------------
 IMAGE PROCESSING
-HEIC → JPEG
-ROTATION FIX
-COMPRESSION
 ------------------------- */
 
 async function processImage(file){
@@ -172,24 +203,25 @@ canvas.width=width
 canvas.height=height
 
 if(orientation===6){
-canvas.width = height
-canvas.height = width
+canvas.width=height
+canvas.height=width
 ctx.rotate(90*Math.PI/180)
 ctx.translate(0,-height)
 ctx.drawImage(img,0,0,width,height)
 }
 else if(orientation===8){
-canvas.width = height
-canvas.height = width
+canvas.width=height
+canvas.height=width
 ctx.rotate(-90*Math.PI/180)
 ctx.translate(-width,0)
 ctx.drawImage(img,0,0,width,height)
 }
 else if(orientation===3){
-canvas.width = width
-canvas.height = height
 ctx.rotate(Math.PI)
 ctx.translate(-width,-height)
+ctx.drawImage(img,0,0,width,height)
+}
+else{
 ctx.drawImage(img,0,0,width,height)
 }
 
@@ -218,9 +250,9 @@ UPLOAD
 
 async function uploadSingle(file){
 
-const processed = await processImage(file)
+const processed=await processImage(file)
 
-const fileName = crypto.randomUUID()+".jpg"
+const fileName=crypto.randomUUID()+".jpg"
 
 const { error } = await supabaseClient.storage
 .from("party")
@@ -231,19 +263,16 @@ console.log(error)
 throw error
 }
 
-/* PUBLIC URL MAKEN */
+const publicURL=
+supabaseUrl+"/storage/v1/object/public/party/"+fileName
 
-const publicURL =
-supabaseUrl + "/storage/v1/object/public/party/" + fileName
-
-/* FOTO DIRECT NAAR SLIDESHOW STUREN */
-
-const photoChannel = new BroadcastChannel("party-photos")
+const photoChannel=new BroadcastChannel("party-photos")
 photoChannel.postMessage(publicURL)
 
 }
+
 /* -------------------------
-SMART QUEUE
+QUEUE
 ------------------------- */
 
 async function runQueue(files,concurrency=3){
@@ -266,13 +295,9 @@ const file=files[current]
 status.innerText="Foto verwerken..."
 
 try{
-
 await uploadSingle(file)
-
 }catch(e){
-
 console.log(e)
-
 }
 
 completed++
@@ -287,9 +312,7 @@ Math.round((completed/files.length)*100)+"%"
 let workers=[]
 
 for(let i=0;i<concurrency;i++){
-
 workers.push(worker())
-
 }
 
 Promise.all(workers).then(resolve)
@@ -299,12 +322,12 @@ Promise.all(workers).then(resolve)
 }
 
 /* -------------------------
-START
+START UPLOAD
 ------------------------- */
 
 async function startUpload(){
 
-const files=[...fileInput.files]
+const files=selectedFiles
 const status=document.getElementById("status")
 
 if(files.length===0){
@@ -318,7 +341,7 @@ await runQueue(files,3)
 
 status.innerText="Foto's geüpload 🎉"
 
-fileInput.value=""
+selectedFiles=[]
 preview.innerHTML=""
 
 }
