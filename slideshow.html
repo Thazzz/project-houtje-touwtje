@@ -43,9 +43,7 @@ Chris10's PhotoWall
 
 console.log("photowall gestart")
 
-/* --------------------------
-SUPABASE
--------------------------- */
+/* SUPABASE */
 
 const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
 
@@ -56,34 +54,31 @@ supabaseUrl,
 supabaseKey
 )
 
-/* --------------------------
-DATA
--------------------------- */
+/* DATA */
 
 let photos=[]
 let knownFiles=new Set()
 
 let idleTimer
+let idleSlideshowTimer
 
 let slideshowRunning=false
-
-let idleSlideshowTimer
+let spotlightActive=false
+let lastIdlePhoto=null
 
 let wallZ = 10
 
-let lastIdlePhoto=null
-
-/* --------------------------
-CHANNEL
--------------------------- */
+/* LOCAL CHANNEL */
 
 const photoChannel=new BroadcastChannel("party-photos")
 
-/* --------------------------
-SPOTLIGHT
--------------------------- */
+/* SPOTLIGHT */
 
 function showSpotlight(url,isNew=true){
+
+if(spotlightActive) return
+
+spotlightActive=true
 
 const container=document.getElementById("spotlight")
 
@@ -100,8 +95,6 @@ setTimeout(()=>{
 img.classList.add("show")
 },50)
 
-/* na 3 seconden */
-
 setTimeout(()=>{
 
 img.classList.remove("show")
@@ -109,6 +102,8 @@ img.classList.remove("show")
 setTimeout(()=>{
 
 container.innerHTML=""
+
+spotlightActive=false
 
 if(isNew){
 addPhotoToWall(url)
@@ -120,76 +115,74 @@ addPhotoToWall(url)
 
 }
 
-/* --------------------------
-PHOTO WALL
--------------------------- */
+/* PHOTO WALL */
 
 function addPhotoToWall(url){
 
-const wall = document.getElementById("photowall")
+const wall=document.getElementById("photowall")
 
-const img = document.createElement("img")
+const img=document.createElement("img")
 
-img.src = url
-img.className = "wall-photo drop"
+img.src=url
+img.className="wall-photo drop"
 
-/* positie kiezen */
+/* random positie */
 
-const base = {
-left: 10 + Math.random()*75,
-top: 10 + Math.random()*75
+const base={
+left:10+Math.random()*75,
+top:10+Math.random()*75
 }
 
-/* kleine variatie */
+const offsetX=(Math.random()*18)-9
+const offsetY=(Math.random()*18)-9
 
-const offsetX = (Math.random()*18)-9
-const offsetY = (Math.random()*18)-9
+const finalLeft=(base.left+offsetX)
+const finalTop=(base.top+offsetY)
 
-const finalLeft = (base.left + offsetX)
-const finalTop = (base.top + offsetY)
+/* start midden */
 
-/* start in midden */
+img.style.left=(48+Math.random()*4)+"%"
+img.style.top=(48+Math.random()*4)+"%"
+img.style.transform="translate(-50%,-50%) rotate(0deg) scale(.6)"
+img.style.opacity="0"
 
-img.style.left = (48 + Math.random()*4) + "%"
-img.style.top = (48 + Math.random()*4) + "%"
-img.style.transform = "translate(-50%,-50%) rotate(0deg) scale(.6)"
-img.style.opacity = "0"
 /* rotatie */
 
 img.style.setProperty(
 "--r",
-(Math.random()*24 - 12) + "deg"
+(Math.random()*24-12)+"deg"
 )
 
-/* lichte schaduw variatie */
+/* schaduw */
 
-const shadowX = 18 + Math.random()*10
-const shadowY = 40 + Math.random()*30
-const shadowBlur = 60 + Math.random()*40
-const shadowOpacity = 0.65 + Math.random()*0.2
+const shadowX=18+Math.random()*10
+const shadowY=40+Math.random()*30
+const shadowBlur=60+Math.random()*40
+const shadowOpacity=0.65+Math.random()*0.2
 
 img.style.setProperty(
 "--shadow",
-`${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowOpacity}), 0 0 20px rgba(255,0,120,0.12)`
+`${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowOpacity})`
 )
 
+/* stapel */
 
-/* nieuwe foto bovenop stapel */
-
-img.style.zIndex = wallZ++
+img.style.zIndex=wallZ++
 
 wall.appendChild(img)
 
+/* glide animatie */
+
 requestAnimationFrame(()=>{
 
-img.style.transition =
+img.style.transition=
 "left 1s cubic-bezier(.25,.8,.25,1), top 1s cubic-bezier(.25,.8,.25,1), transform .6s ease"
 
-img.style.left = finalLeft + "%"
-img.style.top = finalTop + "%"
-img.style.opacity = "1"
+img.style.left=finalLeft+"%"
+img.style.top=finalTop+"%"
+img.style.opacity="1"
 
-img.style.transform =
+img.style.transform=
 "translate(-50%,-50%) rotate(var(--r)) scale(1)"
 
 })
@@ -198,10 +191,9 @@ setTimeout(()=>{
 img.classList.add("land")
 },900)
 
+/* max foto's */
 
-/* max 15 foto's */
-
-if(wall.children.length > 15){
+if(wall.children.length>15){
 
 wall.removeChild(wall.children[0])
 
@@ -209,9 +201,7 @@ wall.removeChild(wall.children[0])
 
 }
 
-/* --------------------------
-BANNER
--------------------------- */
+/* BANNER */
 
 function showNewPhotoBanner(){
 
@@ -225,9 +215,7 @@ banner.style.opacity=0
 
 }
 
-/* --------------------------
-QR FLASH
--------------------------- */
+/* QR FLASH */
 
 function flashQR(){
 
@@ -241,9 +229,7 @@ qr.classList.add("qr-flash")
 
 }
 
-/* --------------------------
-lichtpuls nieuwe foto
--------------------------- */
+/* TITLE PULSE */
 
 function pulseTitle(){
 
@@ -257,10 +243,7 @@ title.classList.add("title-pulse")
 
 }
 
-
-/* --------------------------
-HANDLE NEW PHOTO
--------------------------- */
+/* NEW PHOTO */
 
 function handleNewPhoto(url){
 
@@ -270,9 +253,10 @@ knownFiles.add(url)
 
 photos.unshift(url)
 
-/* slideshow pauzeren */
+/* pause slideshow */
 
 clearTimeout(idleSlideshowTimer)
+
 slideshowRunning=false
 
 showNewPhotoBanner()
@@ -283,15 +267,13 @@ pulseTitle()
 
 showSpotlight(url,true)
 
-/* idle opnieuw starten */
+/* restart idle */
 
 resetIdleTimer()
 
 }
 
-/* --------------------------
-LOAD PHOTOS
--------------------------- */
+/* LOAD PHOTOS */
 
 async function loadPhotos(){
 
@@ -315,7 +297,7 @@ console.log(error)
 return
 }
 
-if(!data || data.length===0) break
+if(!data||data.length===0) break
 
 allFiles=allFiles.concat(data)
 
@@ -327,16 +309,17 @@ offset+=limit
 
 for(const file of allFiles){
 
-if(!file.name || file.name.endsWith("/")) continue
+if(!file.name||file.name.endsWith("/")) continue
 
-const url =
+const url=
 supabaseUrl+"/storage/v1/object/public/party/"+file.name
 
 knownFiles.add(url)
 photos.push(url)
 
 }
-/* start muur met laatste foto's */
+
+/* start muur */
 
 for(const url of photos.slice(0,15)){
 addPhotoInstant(url)
@@ -344,9 +327,7 @@ addPhotoInstant(url)
 
 }
 
-/* --------------------------
-REALTIME
--------------------------- */
+/* REALTIME */
 
 function subscribeRealtime(){
 
@@ -377,9 +358,7 @@ handleNewPhoto(url)
 
 }
 
-/* --------------------------
-BROADCAST
--------------------------- */
+/* BROADCAST */
 
 function subscribeBroadcast(){
 
@@ -396,9 +375,7 @@ handleNewPhoto(url)
 
 }
 
-/* --------------------------
-LOCAL CHANNEL
--------------------------- */
+/* LOCAL CHANNEL */
 
 photoChannel.onmessage=(event)=>{
 
@@ -406,9 +383,7 @@ handleNewPhoto(event.data)
 
 }
 
-/* --------------------------
-QR
--------------------------- */
+/* QR */
 
 function createQR(){
 
@@ -422,9 +397,7 @@ height:150
 
 }
 
-/* --------------------------
-IDLE TIMER
--------------------------- */
+/* IDLE TIMER */
 
 function resetIdleTimer(){
 
@@ -452,12 +425,13 @@ function showNextIdlePhoto(){
 
 if(!slideshowRunning) return
 if(photos.length===0) return
+if(spotlightActive) return
 
 let url
 
 do{
 
-url = photos[Math.floor(Math.random()*photos.length)]
+url=photos[Math.floor(Math.random()*photos.length)]
 
 }while(photos.length>1 && url===lastIdlePhoto)
 
@@ -469,9 +443,7 @@ idleSlideshowTimer=setTimeout(showNextIdlePhoto,6000)
 
 }
 
-/* --------------------------
-START
--------------------------- */
+/* START */
 
 async function start(){
 
@@ -487,25 +459,23 @@ resetIdleTimer()
 
 }
 
-/* --------------------------
-PHOTO WALL
--------------------------- */
+/* START WALL */
 
 function addPhotoInstant(url){
 
-const wall = document.getElementById("photowall")
+const wall=document.getElementById("photowall")
 
-const img = document.createElement("img")
+const img=document.createElement("img")
 
-img.src = url
-img.className = "wall-photo"
+img.src=url
+img.className="wall-photo"
 
-img.style.left = (10 + Math.random()*75) + "%"
-img.style.top = (10 + Math.random()*75) + "%"
+img.style.left=(10+Math.random()*75)+"%"
+img.style.top=(10+Math.random()*75)+"%"
 
-img.style.setProperty("--r",(Math.random()*24 - 12)+"deg")
+img.style.setProperty("--r",(Math.random()*24-12)+"deg")
 
-img.style.zIndex = wallZ++
+img.style.zIndex=wallZ++
 
 wall.appendChild(img)
 
@@ -517,4 +487,3 @@ start()
 
 </body>
 </html>
-
