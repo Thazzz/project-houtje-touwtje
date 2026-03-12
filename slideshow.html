@@ -64,11 +64,10 @@ let photos=[]
 let knownFiles=new Set()
 
 let idleTimer
-let slideshowIndex=0
+
 let slideshowRunning=false
 
 let wallZ = 10
-let wallPositionIndex = 0
 
 /* --------------------------
 CHANNEL
@@ -121,30 +120,6 @@ addPhotoToWall(url)
 PHOTO WALL
 -------------------------- */
 
-const wallPositions = [
-
-{left:10, top:10},
-{left:30, top:8},
-{left:50, top:10},
-{left:70, top:12},
-
-{left:20, top:28},
-{left:40, top:25},
-{left:60, top:30},
-
-{left:8, top:45},
-{left:30, top:48},
-{left:50, top:45},
-{left:72, top:50},
-
-{left:22, top:65},
-{left:42, top:68},
-{left:62, top:65},
-
-{left:40, top:82}
-
-]
-
 function addPhotoToWall(url){
 
 const wall = document.getElementById("photowall")
@@ -156,17 +131,25 @@ img.className = "wall-photo drop"
 
 /* positie kiezen */
 
-const base = wallPositions[wallPositionIndex % wallPositions.length]
-wallPositionIndex++
+const base = {
+left: 10 + Math.random()*75,
+top: 10 + Math.random()*75
+}
 
 /* kleine variatie */
 
 const offsetX = (Math.random()*18)-9
 const offsetY = (Math.random()*18)-9
 
-img.style.left = (base.left + offsetX) + "%"
-img.style.top = (base.top + offsetY) + "%"
+const finalLeft = (base.left + offsetX)
+const finalTop = (base.top + offsetY)
 
+/* start in midden */
+
+img.style.left = (48 + Math.random()*4) + "%"
+img.style.top = (48 + Math.random()*4) + "%"
+img.style.transform = "translate(-50%,-50%) rotate(0deg) scale(.6)"
+img.style.opacity = "0"
 /* rotatie */
 
 img.style.setProperty(
@@ -186,16 +169,31 @@ img.style.setProperty(
 `${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowOpacity}), 0 0 20px rgba(255,0,120,0.12)`
 )
 
-/* lichte schaal */
-
-const scale = 0.9 + Math.random()*0.2
-img.style.transform += " scale(" + scale + ")"
 
 /* nieuwe foto bovenop stapel */
 
 img.style.zIndex = wallZ++
 
 wall.appendChild(img)
+
+requestAnimationFrame(()=>{
+
+img.style.transition =
+"left 1s cubic-bezier(.25,.8,.25,1), top 1s cubic-bezier(.25,.8,.25,1), transform .6s ease"
+
+img.style.left = finalLeft + "%"
+img.style.top = finalTop + "%"
+img.style.opacity = "1"
+
+img.style.transform =
+"translate(-50%,-50%) rotate(var(--r)) scale(1)"
+
+})
+
+setTimeout(()=>{
+img.classList.add("land")
+},900)
+
 
 /* max 15 foto's */
 
@@ -318,18 +316,19 @@ offset+=limit
 
 for(const file of allFiles){
 
-const url=
+if(!file.name || file.name.endsWith("/")) continue
+
+const url =
 supabaseUrl+"/storage/v1/object/public/party/"+file.name
 
 knownFiles.add(url)
 photos.push(url)
 
 }
-
 /* start muur met laatste foto's */
 
 for(const url of photos.slice(0,15)){
-addPhotoToWall(url)
+addPhotoInstant(url)
 }
 
 }
@@ -351,6 +350,8 @@ table:"objects",
 filter:"bucket_id=eq.party"
 },
 (payload)=>{
+
+if(!payload.new.name) return
 
 const file=payload.new.name
 
@@ -437,12 +438,9 @@ showNextIdlePhoto()
 function showNextIdlePhoto(){
 
 if(!slideshowRunning) return
-
 if(photos.length===0) return
 
-const url=photos[slideshowIndex%photos.length]
-
-slideshowIndex++
+const url = photos[Math.floor(Math.random()*photos.length)]
 
 showSpotlight(url,true)
 
@@ -468,9 +466,34 @@ resetIdleTimer()
 
 }
 
+/* --------------------------
+PHOTO WALL
+-------------------------- */
+
+function addPhotoInstant(url){
+
+const wall = document.getElementById("photowall")
+
+const img = document.createElement("img")
+
+img.src = url
+img.className = "wall-photo"
+
+img.style.left = (10 + Math.random()*75) + "%"
+img.style.top = (10 + Math.random()*75) + "%"
+
+img.style.setProperty("--r",(Math.random()*24 - 12)+"deg")
+
+img.style.zIndex = wallZ++
+
+wall.appendChild(img)
+
+}
+
 start()
 
 </script>
 
 </body>
 </html>
+

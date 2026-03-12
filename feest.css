@@ -287,9 +287,7 @@ box-shadow: var(--shadow);
 
 transform:rotate(var(--r));
 
-transition:
-transform .6s ease,
-opacity .6s ease;
+transition:all 1s cubic-bezier(.25,.8,.25,1);
 
 z-index:1;
 
@@ -429,4 +427,29 @@ box-shadow:0 0 30px rgba(255,255,255,0.9);
 transform:scale(1);
 box-shadow:0 0 0 rgba(255,255,255,0);
 }
+}
+
+/* =================================
+   FOTO LANDING BOUNCE
+================================= */
+
+@keyframes photoBounce{
+
+0%{
+transform:translate(-50%,-50%) scale(0.6) rotate(var(--r));
+}
+
+70%{
+transform:translate(-50%,-50%) scale(1.05) rotate(var(--r));
+}
+
+100%{
+transform:translate(-50%,-50%) scale(1) rotate(var(--r));
+}
+
+}
+
+.wall-photo.land{
+
+animation:photoBounce .45s ease-out;
 }
