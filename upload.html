@@ -266,7 +266,7 @@ reader.readAsDataURL(file)
 
 img.onload=function(){
 
-EXIF.getData(img,function(){
+EXIF.getData(file,function(){
 
 let orientation=EXIF.getTag(this,"Orientation")
 
