@@ -1,5 +1,15 @@
+/* =================================
+   BASIS
+================================= */
+
 body{
-background:#111;
+
+background:
+radial-gradient(circle at top,
+rgba(255,0,120,0.08),
+transparent 60%),
+#111;
+
 color:#eaeaea;
 font-family:'Inter', sans-serif;
 
@@ -9,11 +19,18 @@ align-items:center;
 
 height:100vh;
 margin:0;
+
+overflow:hidden;
+
 }
 
-/* container */
+
+/* =================================
+   CONTAINER
+================================= */
 
 #container{
+
 display:flex;
 justify-content:center;
 align-items:center;
@@ -22,13 +39,18 @@ height:100vh;
 width:100vw;
 
 position:relative;
+
 }
 
-/* header */
+
+/* =================================
+   HEADER / TITLE
+================================= */
 
 #overlay{
 
 position:absolute;
+
 top:30px;
 left:50%;
 transform:translateX(-50%);
@@ -38,37 +60,76 @@ text-align:center;
 font-size:32px;
 
 z-index:20;
+
+text-shadow:
+0 0 10px rgba(255,255,255,0.4),
+0 0 30px rgba(255,0,120,0.2);
+
 }
 
 #sub{
+
 font-size:16px;
 opacity:.8;
 margin-top:6px;
+
 }
 
-/* slideshow foto */
 
-#slide{
+/* =================================
+   PHOTO WALL
+================================= */
 
-box-shadow:0 20px 60px rgba(0,0,0,0.8);
+#photowall{
 
-max-width:85vw;
-max-height:85vh;
+position:absolute;
 
-object-fit:contain;
+top:120px;
+left:50%;
 
-display:block;
-margin:120px auto 0 auto;
+transform:translateX(-50%);
 
-opacity:0;
-transition:opacity 1s ease;
+width:85vw;
+height:75vh;
+
+pointer-events:none;
+
 }
 
-/* nieuwe foto banner */
+.wall-photo{
+
+position:absolute;
+
+max-width:320px;
+max-height:240px;
+
+object-fit:cover;
+
+border-radius:6px;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,0.8),
+0 0 20px rgba(255,0,120,0.15);
+
+transform:rotate(var(--r));
+
+transition:
+transform .6s ease,
+opacity .6s ease;
+
+z-index:1;
+
+}
+
+
+/* =================================
+   NIEUWE FOTO BANNER
+================================= */
 
 #newphoto{
 
 position:absolute;
+
 bottom:60px;
 left:50%;
 
@@ -82,12 +143,17 @@ border-radius:8px;
 font-size:24px;
 
 opacity:0;
+
 transition:opacity .6s;
 
 z-index:11;
+
 }
 
-/* glow effect */
+
+/* =================================
+   FOTO HIGHLIGHT GLOW
+================================= */
 
 .newphoto-glow{
 
@@ -97,7 +163,10 @@ box-shadow:
 
 }
 
-/* polaroid effect */
+
+/* =================================
+   POLAROID DROP ANIMATION
+================================= */
 
 .polaroid{
 animation:polaroidDrop 1.2s ease forwards;
@@ -122,11 +191,15 @@ opacity:1;
 
 }
 
-/* QR box */
+
+/* =================================
+   QR BOX
+================================= */
 
 #qrbox{
 
 position:absolute;
+
 right:30px;
 bottom:30px;
 
@@ -138,12 +211,16 @@ border-radius:10px;
 
 text-align:center;
 
+z-index:15;
+
 }
 
 #qr{
+
 background:white;
 padding:6px;
 border-radius:6px;
+
 }
 
 #qrtext{
@@ -153,6 +230,11 @@ font-size:14px;
 opacity:.9;
 
 }
+
+
+/* =================================
+   QR FLASH ANIMATION
+================================= */
 
 .qr-flash{
 animation:qrFlash 0.9s ease;
@@ -176,6 +258,11 @@ box-shadow:0 0 0 rgba(255,255,255,0);
 }
 
 }
+
+
+/* =================================
+   POLAROID STACK
+================================= */
 
 #polaroidStack{
 

@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Chrissie's fotomuur</title>
+<title>Chris10's PhotoWall</title>
 
 <link rel="stylesheet" href="feest.css">
 
@@ -17,7 +17,7 @@
 <div id="container">
 
 <div id="overlay">
-Chrissie's fotomuur
+Chris10's PhotoWall
 <div id="sub">
 📸 Scan de QR code en upload je foto
 </div>
@@ -25,7 +25,7 @@ Chrissie's fotomuur
 
 <div id="newphoto">Nieuwe foto! 📸</div>
 
-<img id="slide">
+<div id="photowall"></div>
 
 <div id="polaroidStack"></div>
 
@@ -41,7 +41,7 @@ Chrissie's fotomuur
 
 <script>
 
-console.log("slideshow gestart")
+console.log("photowall gestart")
 
 /* SUPABASE */
 
@@ -57,35 +57,44 @@ supabaseKey
 /* DATA */
 
 let photos=[]
-let queue=[]
 let knownFiles=new Set()
 
-let slideshowTimer
-
-let spotlightQueue=[]
-let spotlightRunning=false
-
-/* INSTANT CHANNEL */
+/* CHANNEL */
 
 const photoChannel = new BroadcastChannel("party-photos")
 
 /* -------------------------------- */
-/* HIGHLIGHT */
+/* PHOTO WALL */
 /* -------------------------------- */
 
-function highlightNewPhoto(img){
+function addPhotoToWall(url){
 
-img.classList.remove("polaroid")
-img.classList.remove("newphoto-glow")
+const wall=document.getElementById("photowall")
 
-void img.offsetWidth
+const img=document.createElement("img")
 
-img.classList.add("polaroid")
-img.classList.add("newphoto-glow")
+img.src=url
+img.className="wall-photo"
 
-setTimeout(()=>{
-img.classList.remove("newphoto-glow")
-},4000)
+img.style.setProperty(
+"--r",
+(Math.random()*10-5)+"deg"
+)
+
+img.style.left=(10+Math.random()*70)+"%"
+img.style.top=(10+Math.random()*60)+"%"
+
+wall.appendChild(img)
+
+if(wall.children.length>15){
+
+const randomIndex=Math.floor(
+Math.random()*wall.children.length
+)
+
+wall.removeChild(wall.children[randomIndex])
+
+}
 
 }
 
@@ -119,7 +128,7 @@ stack.removeChild(stack.children[0])
 }
 
 /* -------------------------------- */
-/* BANNER */
+/* NEW PHOTO BANNER */
 /* -------------------------------- */
 
 function showNewPhotoBanner(){
@@ -135,111 +144,7 @@ banner.style.opacity=0
 }
 
 /* -------------------------------- */
-/* SHUFFLE */
-/* -------------------------------- */
-
-function shuffle(array){
-
-for(let i=array.length-1;i>0;i--){
-
-let j=Math.floor(Math.random()*(i+1))
-
-let temp=array[i]
-array[i]=array[j]
-array[j]=temp
-
-}
-
-return array
-
-}
-
-/* -------------------------------- */
-/* PRELOAD */
-/* -------------------------------- */
-
-function preloadNext(){
-
-if(queue.length===0) return
-
-const img=new Image()
-img.src=queue[0]
-
-}
-
-/* -------------------------------- */
-/* SLIDESHOW */
-/* -------------------------------- */
-
-function showNext(){
-
-if(photos.length===0) return
-
-const img=document.getElementById("slide")
-
-if(queue.length===0){
-queue=shuffle([...photos])
-}
-
-const nextPhoto=queue.shift()
-
-if(!nextPhoto) return
-
-img.style.opacity=0
-
-setTimeout(()=>{
-
-img.src=nextPhoto
-
-img.onload=()=>{
-
-highlightNewPhoto(img)
-
-img.style.opacity=1
-
-}
-
-preloadNext()
-
-},400)
-
-}
-
-/* -------------------------------- */
-/* SPOTLIGHT */
-/* -------------------------------- */
-
-function processSpotlightQueue(){
-
-if(spotlightRunning) return
-if(spotlightQueue.length===0) return
-
-spotlightRunning=true
-
-const url=spotlightQueue.shift()
-
-addPolaroidToStack(url)
-
-clearInterval(slideshowTimer)
-
-queue.unshift(url)
-
-showNext()
-
-setTimeout(()=>{
-
-slideshowTimer=setInterval(showNext,5000)
-
-spotlightRunning=false
-
-processSpotlightQueue()
-
-},3000)
-
-}
-
-/* -------------------------------- */
-/* NIEUWE FOTO HANDLER */
+/* HANDLE NEW PHOTO */
 /* -------------------------------- */
 
 function handleNewPhoto(url){
@@ -249,19 +154,17 @@ if(knownFiles.has(url)) return
 knownFiles.add(url)
 
 photos.unshift(url)
-queue.unshift(url)
 
 showNewPhotoBanner()
 flashQR()
 
-spotlightQueue.push(url)
-
-processSpotlightQueue()
+addPhotoToWall(url)
+addPolaroidToStack(url)
 
 }
 
 /* -------------------------------- */
-/* FOTO'S LADEN */
+/* LOAD EXISTING PHOTOS */
 /* -------------------------------- */
 
 async function loadPhotos(){
@@ -304,19 +207,22 @@ const url =
 supabaseUrl+"/storage/v1/object/public/party/"+file.name
 
 knownFiles.add(url)
-
 photos.push(url)
 
 }
 
-queue=shuffle([...photos])
-
 console.log("gevonden foto's:",photos.length)
+
+/* eerste foto's op muur */
+
+for(const url of photos.slice(0,15)){
+addPhotoToWall(url)
+}
 
 }
 
 /* -------------------------------- */
-/* REALTIME */
+/* REALTIME SUPABASE */
 /* -------------------------------- */
 
 function subscribeRealtime(){
@@ -347,7 +253,40 @@ handleNewPhoto(url)
 }
 
 /* -------------------------------- */
-/* QR */
+/* BROADCAST EVENTS */
+/* -------------------------------- */
+
+function subscribeBroadcast(){
+
+supabaseClient
+.channel("party-live")
+.on("broadcast",{event:"new-photo"},(payload)=>{
+
+const url = payload.payload.url
+
+console.log("broadcast foto:", url)
+
+handleNewPhoto(url)
+
+})
+.subscribe()
+
+}
+
+/* -------------------------------- */
+/* LOCAL BROADCAST */
+/* -------------------------------- */
+
+photoChannel.onmessage=(event)=>{
+
+const url=event.data
+
+handleNewPhoto(url)
+
+}
+
+/* -------------------------------- */
+/* QR CODE */
 /* -------------------------------- */
 
 function createQR(){
@@ -379,19 +318,6 @@ qr.classList.add("qr-flash")
 }
 
 /* -------------------------------- */
-/* INSTANT UPLOAD */
-/* -------------------------------- */
-
-photoChannel.onmessage=(event)=>{
-
-const url=event.data
-
-handleNewPhoto(url)
-
-}
-
-
-/* -------------------------------- */
 /* START */
 /* -------------------------------- */
 
@@ -401,30 +327,9 @@ createQR()
 
 await loadPhotos()
 
-showNext()
-
-slideshowTimer=setInterval(showNext,5000)
-
 subscribeRealtime()
 
 subscribeBroadcast()
-
-}
-
-function subscribeBroadcast(){
-
-supabaseClient
-.channel("party-live")
-.on("broadcast",{event:"new-photo"},(payload)=>{
-
-const url = payload.payload.url
-
-console.log("broadcast foto:", url)
-
-handleNewPhoto(url)
-
-})
-.subscribe()
 
 }
 
