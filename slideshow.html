@@ -66,6 +66,10 @@ let slideshowTimer
 let spotlightQueue = []
 let spotlightRunning = false
 
+/* INSTANT PHOTO CHANNEL */
+
+const photoChannel = new BroadcastChannel("party-photos")
+
 /* HIGHLIGHT */
 
 function highlightNewPhoto(img){
@@ -363,6 +367,32 @@ qr.classList.remove("qr-flash")
 void qr.offsetWidth   // force reflow
 
 qr.classList.add("qr-flash")
+
+}
+
+/* INSTANT PHOTO LISTENER */
+
+photoChannel.onmessage = (event)=>{
+
+const url = event.data
+
+console.log("instant photo:", url)
+
+if(!knownFiles.has(url)){
+
+knownFiles.add(url)
+
+photos.unshift(url)
+queue.unshift(url)
+
+showNewPhotoBanner()
+flashQR()
+
+spotlightQueue.push(url)
+
+processSpotlightQueue()
+
+}
 
 }
 

@@ -172,24 +172,24 @@ canvas.width=width
 canvas.height=height
 
 if(orientation===6){
-canvas.width=height
-canvas.height=width
+canvas.width = height
+canvas.height = width
 ctx.rotate(90*Math.PI/180)
-ctx.drawImage(img,0,-height,width,height)
+ctx.translate(0,-height)
+ctx.drawImage(img,0,0,width,height)
 }
 else if(orientation===8){
-canvas.width=height
-canvas.height=width
+canvas.width = height
+canvas.height = width
 ctx.rotate(-90*Math.PI/180)
-ctx.drawImage(img,-width,0,width,height)
+ctx.translate(-width,0)
+ctx.drawImage(img,0,0,width,height)
 }
 else if(orientation===3){
-canvas.width=width
-canvas.height=height
+canvas.width = width
+canvas.height = height
 ctx.rotate(Math.PI)
-ctx.drawImage(img,-width,-height,width,height)
-}
-else{
+ctx.translate(-width,-height)
 ctx.drawImage(img,0,0,width,height)
 }
 
@@ -231,8 +231,17 @@ console.log(error)
 throw error
 }
 
-}
+/* PUBLIC URL MAKEN */
 
+const publicURL =
+supabaseUrl + "/storage/v1/object/public/party/" + fileName
+
+/* FOTO DIRECT NAAR SLIDESHOW STUREN */
+
+const photoChannel = new BroadcastChannel("party-photos")
+photoChannel.postMessage(publicURL)
+
+}
 /* -------------------------
 SMART QUEUE
 ------------------------- */
