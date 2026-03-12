@@ -50,31 +50,79 @@ position:relative;
 #overlay{
 
 position:absolute;
-
 top:30px;
 left:50%;
 transform:translateX(-50%);
 
 text-align:center;
 
-font-size:32px;
+font-size:48px;
+font-weight:700;
+letter-spacing:3px;
 
 z-index:20;
 
+color:#ffffff;
+
+/* neon glow */
+
 text-shadow:
-0 0 10px rgba(255,255,255,0.4),
-0 0 30px rgba(255,0,120,0.2);
+0 0 5px #fff,
+0 0 10px #fff,
+0 0 20px #ff0080,
+0 0 40px #ff0080,
+0 0 80px #ff0080;
+
+/* subtiele neon flicker */
+
+animation:neonFlicker 4s infinite alternate;
 
 }
+
+/* subtitel */
 
 #sub{
 
-font-size:16px;
-opacity:.8;
-margin-top:6px;
+font-size:18px;
+margin-top:8px;
+
+opacity:.9;
+
+color:#8affff;
+
+text-shadow:
+0 0 5px #8affff,
+0 0 15px #00e5ff,
+0 0 25px rgba(0,229,255,0.5);
 
 }
 
+/* neon flicker animatie */
+
+@keyframes neonFlicker{
+
+0%{
+opacity:1;
+
+text-shadow:
+0 0 5px #fff,
+0 0 10px #fff,
+0 0 20px #ff0080,
+0 0 40px #ff0080,
+0 0 80px #ff0080;
+}
+
+48%{opacity:1;}
+
+50%{opacity:.85;}
+
+52%{opacity:1;}
+
+100%{
+opacity:.95;
+}
+
+}
 
 /* =========================
    SPOTLIGHT FOTO
@@ -132,6 +180,46 @@ transform:scale(1);
 
 }
 
+
+/* =================================
+   TITLE PULSE BIJ NIEUWE FOTO
+================================= */
+
+.title-pulse{
+animation:titlePulse 1.4s ease;
+}
+
+@keyframes titlePulse{
+
+0%{
+text-shadow:
+0 0 5px #fff,
+0 0 10px #fff,
+0 0 20px #ff0080,
+0 0 40px #ff0080,
+0 0 80px #ff0080;
+}
+
+40%{
+text-shadow:
+0 0 10px #fff,
+0 0 20px #fff,
+0 0 40px #ff0080,
+0 0 80px #ff0080,
+0 0 140px #ff0080,
+0 0 200px #ff0080;
+}
+
+100%{
+text-shadow:
+0 0 5px #fff,
+0 0 10px #fff,
+0 0 20px #ff0080,
+0 0 40px #ff0080,
+0 0 80px #ff0080;
+}
+
+}
 
 /* =================================
    PHOTO WALL

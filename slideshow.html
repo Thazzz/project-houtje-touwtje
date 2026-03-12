@@ -239,6 +239,23 @@ qr.classList.add("qr-flash")
 }
 
 /* --------------------------
+lichtpuls nieuwe foto
+-------------------------- */
+
+function pulseTitle(){
+
+const title=document.getElementById("overlay")
+
+title.classList.remove("title-pulse")
+
+void title.offsetWidth
+
+title.classList.add("title-pulse")
+
+}
+
+
+/* --------------------------
 HANDLE NEW PHOTO
 -------------------------- */
 
@@ -253,6 +270,8 @@ photos.unshift(url)
 showNewPhotoBanner()
 
 flashQR()
+
+pulseTitle()
 
 showSpotlight(url,true)
 
@@ -400,7 +419,7 @@ clearTimeout(idleTimer)
 
 slideshowRunning=false
 
-idleTimer=setTimeout(startIdleSlideshow,15000)
+idleTimer=setTimeout(startIdleSlideshow,6000)
 
 }
 
