@@ -29,8 +29,6 @@ Chris10's PhotoWall
 
 <div id="photowall"></div>
 
-<div id="polaroidStack"></div>
-
 <div id="qrbox">
 <div id="qr"></div>
 <div id="qrtext">Scan om foto's te uploaden</div>
@@ -142,35 +140,6 @@ addPhotoToWall(url)
 
 
 /* -------------------------------- */
-/* POLAROID STACK */
-/* -------------------------------- */
-
-function addPolaroidToStack(url){
-
-const stack=document.getElementById("polaroidStack")
-
-const img=document.createElement("img")
-
-img.src=url
-img.className="polaroid-item"
-
-img.style.setProperty(
-"--r",
-(Math.random()*20-10)+"deg"
-)
-
-img.style.left=Math.random()*120+"px"
-img.style.top=Math.random()*120+"px"
-
-stack.appendChild(img)
-
-if(stack.children.length>8){
-stack.removeChild(stack.children[0])
-}
-
-}
-
-/* -------------------------------- */
 /* NEW PHOTO BANNER */
 /* -------------------------------- */
 
@@ -200,10 +169,6 @@ photos.unshift(url)
 
 showNewPhotoBanner()
 flashQR()
-
-addPolaroidToStack(url)
-
-/* spotlight tonen */
 
 showSpotlight(url)
 

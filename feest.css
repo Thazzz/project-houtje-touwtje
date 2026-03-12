@@ -245,58 +245,6 @@ z-index:18;
 }
 
 
-/* =================================
-   POLAROID STACK
-================================= */
-
-#polaroidStack{
-
-position:absolute;
-
-left:40px;
-bottom:40px;
-
-width:300px;
-height:300px;
-
-pointer-events:none;
-
-z-index:5;
-
-}
-
-.polaroid-item{
-
-position:absolute;
-
-width:120px;
-
-box-shadow:0 10px 30px rgba(0,0,0,0.6);
-
-border:8px solid white;
-border-bottom:28px solid white;
-
-background:white;
-
-transform:rotate(var(--r));
-
-animation:polaroidStackDrop 1s ease forwards;
-
-}
-
-@keyframes polaroidStackDrop{
-
-0%{
-transform:translateY(-200px) rotate(var(--r)) scale(.8);
-opacity:0;
-}
-
-100%{
-transform:translateY(0) rotate(var(--r)) scale(1);
-opacity:1;
-}
-
-}
 
 
 /* =================================
