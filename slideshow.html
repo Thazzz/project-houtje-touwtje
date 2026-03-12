@@ -161,8 +161,8 @@ wallPositionIndex++
 
 /* kleine variatie */
 
-const offsetX = (Math.random()*10)-5
-const offsetY = (Math.random()*10)-5
+const offsetX = (Math.random()*18)-9
+const offsetY = (Math.random()*18)-9
 
 img.style.left = (base.left + offsetX) + "%"
 img.style.top = (base.top + offsetY) + "%"
@@ -171,7 +171,7 @@ img.style.top = (base.top + offsetY) + "%"
 
 img.style.setProperty(
 "--r",
-(Math.random()*14 - 7) + "deg"
+(Math.random()*24 - 12) + "deg"
 )
 
 /* lichte schaduw variatie */
@@ -188,7 +188,7 @@ img.style.setProperty(
 
 /* lichte schaal */
 
-const scale = 0.95 + Math.random()*0.1
+const scale = 0.9 + Math.random()*0.2
 img.style.transform += " scale(" + scale + ")"
 
 /* nieuwe foto bovenop stapel */
@@ -444,7 +444,7 @@ const url=photos[slideshowIndex%photos.length]
 
 slideshowIndex++
 
-showSpotlight(url,false)
+showSpotlight(url,true)
 
 setTimeout(showNextIdlePhoto,6000)
 
