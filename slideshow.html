@@ -68,6 +68,7 @@ let slideshowIndex=0
 let slideshowRunning=false
 
 let wallZ = 10
+let wallPositionIndex = 0
 
 /* --------------------------
 CHANNEL
@@ -155,8 +156,8 @@ img.className = "wall-photo drop"
 
 /* positie kiezen */
 
-const index = wall.children.length % wallPositions.length
-const base = wallPositions[index]
+const base = wallPositions[wallPositionIndex % wallPositions.length]
+wallPositionIndex++
 
 /* kleine variatie */
 
@@ -445,7 +446,7 @@ slideshowIndex++
 
 showSpotlight(url,false)
 
-setTimeout(showNextIdlePhoto,15000)
+setTimeout(showNextIdlePhoto,6000)
 
 }
 
