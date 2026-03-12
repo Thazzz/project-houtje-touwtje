@@ -251,24 +251,17 @@ handleFiles(this.files)
 })
 
 /* -------------------------
-IMAGE PROCESSING
+IMAGE PROCESSING (MINIMAL)
 ------------------------- */
 
 async function processImage(file){
 
 return new Promise(resolve=>{
 
-const reader = new FileReader()
 const img = new Image()
-
-reader.onload = e => img.src = e.target.result
-reader.readAsDataURL(file)
+const url = URL.createObjectURL(file)
 
 img.onload = function(){
-
-EXIF.getData(img,function(){
-
-let orientation = EXIF.getTag(this,"Orientation") || 1
 
 let width = img.width
 let height = img.height
@@ -290,52 +283,14 @@ height = max
 const canvas = document.createElement("canvas")
 const ctx = canvas.getContext("2d")
 
-/* orientation fix */
-
-if(orientation === 6){
-
-canvas.width = height
-canvas.height = width
-
-ctx.translate(height,0)
-ctx.rotate(Math.PI/2)
-
-}
-
-else if(orientation === 8){
-
-canvas.width = height
-canvas.height = width
-
-ctx.translate(0,width)
-ctx.rotate(-Math.PI/2)
-
-}
-
-else if(orientation === 3){
-
 canvas.width = width
 canvas.height = height
-
-ctx.translate(width,height)
-ctx.rotate(Math.PI)
-
-}
-
-else{
-
-canvas.width = width
-canvas.height = height
-
-}
-
-/* draw image */
 
 ctx.drawImage(img,0,0,width,height)
 
-/* export */
-
 canvas.toBlob(blob=>{
+
+URL.revokeObjectURL(url)
 
 if(!blob){
 resolve(file)
@@ -344,16 +299,15 @@ return
 
 resolve(blob)
 
-},"image/jpeg",0.75)
+},"image/jpeg",0.85)
+
+}
+
+img.src = url
 
 })
 
 }
-
-})
-
-}
-
 /* -------------------------
 LOCAL BROADCAST
 ------------------------- */
