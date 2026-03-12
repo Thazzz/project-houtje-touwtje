@@ -183,6 +183,12 @@ canvas.height=width
 ctx.rotate(-90*Math.PI/180)
 ctx.drawImage(img,-width,0,width,height)
 }
+else if(orientation===3){
+canvas.width=width
+canvas.height=height
+ctx.rotate(Math.PI)
+ctx.drawImage(img,-width,-height,width,height)
+}
 else{
 ctx.drawImage(img,0,0,width,height)
 }

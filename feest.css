@@ -154,6 +154,29 @@ opacity:.9;
 
 }
 
+.qr-flash{
+animation:qrFlash 0.9s ease;
+}
+
+@keyframes qrFlash{
+
+0%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(255,255,255,0);
+}
+
+50%{
+transform:scale(1.15);
+box-shadow:0 0 30px rgba(255,255,255,0.9);
+}
+
+100%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(255,255,255,0);
+}
+
+}
+
 #polaroidStack{
 
 position:absolute;

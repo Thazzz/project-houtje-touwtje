@@ -319,7 +319,11 @@ knownFiles.add(file)
 const url =
 supabaseUrl + "/storage/v1/object/public/party/" + file
 
-photos.push(url)
+/* nieuw bovenop dataset */
+photos.unshift(url)
+
+/* nieuw bovenop slideshow */
+queue.unshift(url)
 
 showNewPhotoBanner()
 flashQR()
@@ -356,13 +360,13 @@ height:150
 
 function flashQR(){
 
-const qr = document.getElementById("qrbox")
+const qr=document.getElementById("qr")
 
 qr.classList.remove("qr-flash")
 
-requestAnimationFrame(()=>{
+void qr.offsetWidth   // force reflow
+
 qr.classList.add("qr-flash")
-})
 
 }
 
