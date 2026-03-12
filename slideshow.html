@@ -300,16 +300,16 @@ supabaseClient
 .on(
 "postgres_changes",
 {
-event:"INSERT",
-schema:"storage",
-table:"objects",
-filter:"bucket_id=eq.party"
+event: "INSERT",
+schema: "storage",
+table: "objects",
+filter: "bucket_id=eq.party"
 },
-payload=>{
+(payload)=>{
 
-console.log("realtime upload:",payload)
+console.log("realtime upload:", payload)
 
-const file=payload.new.name
+const file = payload.new.name
 
 if(!knownFiles.has(file)){
 
@@ -332,10 +332,11 @@ processSpotlightQueue()
 
 }
 )
-.subscribe()
+.subscribe((status)=>{
+console.log("realtime status:", status)
+})
 
 }
-
 
 /* QR CODE */
 
