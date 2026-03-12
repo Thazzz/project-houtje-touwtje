@@ -158,11 +158,15 @@ z-index:2;
 .wall-photo{
 
 position:absolute;
+image-orientation: from-image;
 
 max-width:320px;
-max-height:240px;
+max-height:320px;
 
-object-fit:cover;
+width:auto;
+height:auto;
+
+object-fit:contain;
 
 border-radius:6px;
 
@@ -172,10 +176,13 @@ box-shadow:
 
 transform:rotate(var(--r));
 
+transition:
+transform .6s ease,
+opacity .6s ease;
+
 z-index:1;
 
 }
-
 
 /* =================================
    FOTO VALT OP TAFEL ANIMATIE
