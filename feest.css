@@ -98,11 +98,13 @@ align-items:center;
 
 pointer-events:none;
 
-z-index:10;
+z-index:15;
 
 }
 
 .spotlight-photo{
+
+position:relative;
 
 max-width:100%;
 max-height:100%;
@@ -126,10 +128,10 @@ transform .6s ease;
 .spotlight-photo.show{
 
 opacity:1;
-
 transform:scale(1);
 
 }
+
 
 /* =================================
    PHOTO WALL
@@ -148,6 +150,8 @@ width:85vw;
 height:75vh;
 
 pointer-events:none;
+
+z-index:2;
 
 }
 
@@ -168,11 +172,46 @@ box-shadow:
 
 transform:rotate(var(--r));
 
-transition:
-transform .6s ease,
-opacity .6s ease;
-
 z-index:1;
+
+}
+
+
+/* =================================
+   FOTO VALT OP TAFEL ANIMATIE
+================================= */
+
+.wall-photo.drop{
+
+animation:photoDrop 0.9s cubic-bezier(.25,.8,.25,1);
+
+}
+
+@keyframes photoDrop{
+
+0%{
+transform:
+translateY(-300px)
+scale(.7)
+rotate(-12deg);
+opacity:0;
+}
+
+60%{
+transform:
+translateY(20px)
+scale(1.03)
+rotate(3deg);
+opacity:1;
+}
+
+100%{
+transform:
+translateY(0)
+scale(1)
+rotate(var(--r));
+opacity:1;
+}
 
 }
 
@@ -201,116 +240,7 @@ opacity:0;
 
 transition:opacity .6s;
 
-z-index:11;
-
-}
-
-
-/* =================================
-   FOTO HIGHLIGHT GLOW
-================================= */
-
-.newphoto-glow{
-
-box-shadow:
-0 0 0 4px rgba(0,255,120,0.7),
-0 0 30px rgba(0,255,120,0.6);
-
-}
-
-
-/* =================================
-   POLAROID DROP ANIMATION
-================================= */
-
-.polaroid{
-animation:polaroidDrop 1.2s ease forwards;
-}
-
-@keyframes polaroidDrop{
-
-0%{
-transform:translateY(-120px) rotate(-12deg) scale(.8);
-opacity:0;
-}
-
-60%{
-transform:translateY(20px) rotate(4deg) scale(1.03);
-opacity:1;
-}
-
-100%{
-transform:translateY(0) rotate(0deg) scale(1);
-opacity:1;
-}
-
-}
-
-
-/* =================================
-   QR BOX
-================================= */
-
-#qrbox{
-
-position:absolute;
-
-right:30px;
-bottom:30px;
-
-background:rgba(0,0,0,0.7);
-
-padding:12px;
-
-border-radius:10px;
-
-text-align:center;
-
-z-index:15;
-
-}
-
-#qr{
-
-background:white;
-padding:6px;
-border-radius:6px;
-
-}
-
-#qrtext{
-
-margin-top:8px;
-font-size:14px;
-opacity:.9;
-
-}
-
-
-/* =================================
-   QR FLASH ANIMATION
-================================= */
-
-.qr-flash{
-animation:qrFlash 0.9s ease;
-}
-
-@keyframes qrFlash{
-
-0%{
-transform:scale(1);
-box-shadow:0 0 0 rgba(255,255,255,0);
-}
-
-50%{
-transform:scale(1.15);
-box-shadow:0 0 30px rgba(255,255,255,0.9);
-}
-
-100%{
-transform:scale(1);
-box-shadow:0 0 0 rgba(255,255,255,0);
-}
+z-index:18;
 
 }
 
@@ -330,6 +260,8 @@ width:300px;
 height:300px;
 
 pointer-events:none;
+
+z-index:5;
 
 }
 
@@ -364,4 +296,71 @@ transform:translateY(0) rotate(var(--r)) scale(1);
 opacity:1;
 }
 
+}
+
+
+/* =================================
+   QR BOX
+================================= */
+
+#qrbox{
+
+position:absolute;
+
+right:30px;
+bottom:30px;
+
+background:rgba(0,0,0,0.7);
+
+padding:12px;
+
+border-radius:10px;
+
+text-align:center;
+
+z-index:10;
+
+}
+
+#qr{
+
+background:white;
+padding:6px;
+border-radius:6px;
+
+}
+
+#qrtext{
+
+margin-top:8px;
+font-size:14px;
+opacity:.9;
+
+}
+
+
+/* =================================
+   QR FLASH
+================================= */
+
+.qr-flash{
+animation:qrFlash 0.9s ease;
+}
+
+@keyframes qrFlash{
+
+0%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(255,255,255,0);
+}
+
+50%{
+transform:scale(1.15);
+box-shadow:0 0 30px rgba(255,255,255,0.9);
+}
+
+100%{
+transform:scale(1);
+box-shadow:0 0 0 rgba(255,255,255,0);
+}
 }
