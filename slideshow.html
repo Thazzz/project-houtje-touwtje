@@ -67,7 +67,11 @@ let idleTimer
 
 let slideshowRunning=false
 
+let idleSlideshowTimer
+
 let wallZ = 10
+
+let lastIdlePhoto=null
 
 /* --------------------------
 CHANNEL
@@ -266,6 +270,11 @@ knownFiles.add(url)
 
 photos.unshift(url)
 
+/* slideshow pauzeren */
+
+clearTimeout(idleSlideshowTimer)
+slideshowRunning=false
+
 showNewPhotoBanner()
 
 flashQR()
@@ -273,6 +282,8 @@ flashQR()
 pulseTitle()
 
 showSpotlight(url,true)
+
+/* idle opnieuw starten */
 
 resetIdleTimer()
 
@@ -429,6 +440,8 @@ function startIdleSlideshow(){
 
 if(photos.length===0) return
 
+clearTimeout(idleSlideshowTimer)
+
 slideshowRunning=true
 
 showNextIdlePhoto()
@@ -440,11 +453,19 @@ function showNextIdlePhoto(){
 if(!slideshowRunning) return
 if(photos.length===0) return
 
-const url = photos[Math.floor(Math.random()*photos.length)]
+let url
+
+do{
+
+url = photos[Math.floor(Math.random()*photos.length)]
+
+}while(photos.length>1 && url===lastIdlePhoto)
+
+lastIdlePhoto=url
 
 showSpotlight(url,true)
 
-setTimeout(showNextIdlePhoto,6000)
+idleSlideshowTimer=setTimeout(showNextIdlePhoto,6000)
 
 }
 
