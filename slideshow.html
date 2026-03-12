@@ -169,8 +169,6 @@ img.style.setProperty(
 
 img.style.zIndex=wallZ++
 
-wall.appendChild(img)
-
 /* glide animatie */
 
 requestAnimationFrame(()=>{
@@ -193,11 +191,22 @@ img.classList.add("land")
 
 /* max foto's */
 
-if(wall.children.length>15){
+if(wall.children.length>=15){
 
-wall.removeChild(wall.children[0])
+const old=wall.children[0]
+
+old.style.transition="opacity .6s"
+old.style.opacity="0"
+
+setTimeout(()=>{
+if(old.parentNode){
+old.parentNode.removeChild(old)
+}
+},600)
 
 }
+
+wall.appendChild(img)
 
 }
 
@@ -253,11 +262,17 @@ knownFiles.add(url)
 
 photos.unshift(url)
 
-/* pause slideshow */
+/* slideshow pauzeren */
 
 clearTimeout(idleSlideshowTimer)
-
 slideshowRunning=false
+
+/* lopende spotlight stoppen */
+
+spotlightActive=false
+
+const container=document.getElementById("spotlight")
+container.innerHTML=""
 
 showNewPhotoBanner()
 
@@ -267,7 +282,7 @@ pulseTitle()
 
 showSpotlight(url,true)
 
-/* restart idle */
+/* idle opnieuw starten */
 
 resetIdleTimer()
 
