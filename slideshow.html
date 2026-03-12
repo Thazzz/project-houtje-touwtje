@@ -428,6 +428,25 @@ slideshowTimer=setInterval(showNext,5000)
 
 subscribeRealtime()
 
+subscribeBroadcast()
+
+}
+
+function subscribeBroadcast(){
+
+supabaseClient
+.channel("party-live")
+.on("broadcast",{event:"new-photo"},(payload)=>{
+
+const url = payload.payload.url
+
+console.log("broadcast foto:", url)
+
+handleNewPhoto(url)
+
+})
+.subscribe()
+
 }
 
 start()

@@ -250,9 +250,9 @@ UPLOAD
 
 async function uploadSingle(file){
 
-const processed=await processImage(file)
+const processed = await processImage(file)
 
-const fileName=crypto.randomUUID()+".jpg"
+const fileName = crypto.randomUUID()+".jpg"
 
 const { error } = await supabaseClient.storage
 .from("party")
@@ -263,11 +263,23 @@ console.log(error)
 throw error
 }
 
-const publicURL=
-supabaseUrl+"/storage/v1/object/public/party/"+fileName
+const publicURL =
+supabaseUrl + "/storage/v1/object/public/party/" + fileName
 
-const photoChannel=new BroadcastChannel("party-photos")
+/* instant lokaal */
+
+const photoChannel = new BroadcastChannel("party-photos")
 photoChannel.postMessage(publicURL)
+
+/* realtime naar alle schermen */
+
+await supabaseClient
+.channel("party-live")
+.send({
+type:"broadcast",
+event:"new-photo",
+payload:{url:publicURL}
+})
 
 }
 
