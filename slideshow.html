@@ -43,7 +43,9 @@ Chris10's PhotoWall
 
 console.log("photowall gestart")
 
-/* SUPABASE */
+/* --------------------------
+SUPABASE
+-------------------------- */
 
 const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
 
@@ -54,18 +56,67 @@ supabaseUrl,
 supabaseKey
 )
 
-/* DATA */
+/* --------------------------
+DATA
+-------------------------- */
 
 let photos=[]
 let knownFiles=new Set()
 
-/* CHANNEL */
+let idleTimer
+let slideshowIndex=0
+let slideshowRunning=false
 
-const photoChannel = new BroadcastChannel("party-photos")
+/* --------------------------
+CHANNEL
+-------------------------- */
 
-/* -------------------------------- */
-/* PHOTO WALL */
-/* -------------------------------- */
+const photoChannel=new BroadcastChannel("party-photos")
+
+/* --------------------------
+SPOTLIGHT
+-------------------------- */
+
+function showSpotlight(url,isNew=true){
+
+const container=document.getElementById("spotlight")
+
+container.innerHTML=""
+
+const img=document.createElement("img")
+
+img.src=url
+img.className="spotlight-photo"
+
+container.appendChild(img)
+
+setTimeout(()=>{
+img.classList.add("show")
+},50)
+
+/* na 3 seconden */
+
+setTimeout(()=>{
+
+img.classList.remove("show")
+
+setTimeout(()=>{
+
+container.innerHTML=""
+
+if(isNew){
+addPhotoToWall(url)
+}
+
+},600)
+
+},3000)
+
+}
+
+/* --------------------------
+PHOTO WALL
+-------------------------- */
 
 function addPhotoToWall(url){
 
@@ -88,60 +139,15 @@ wall.appendChild(img)
 
 if(wall.children.length>15){
 
-const randomIndex=Math.floor(
-Math.random()*wall.children.length
-)
-
-wall.removeChild(wall.children[randomIndex])
+wall.removeChild(wall.children[0])
 
 }
 
 }
 
-/* -------------------------------- */
-/* spotlight*/
-/* -------------------------------- */
-
-
-function showSpotlight(url){
-
-const container=document.getElementById("spotlight")
-
-container.innerHTML=""
-
-const img=document.createElement("img")
-
-img.src=url
-img.className="spotlight-photo"
-
-container.appendChild(img)
-
-setTimeout(()=>{
-img.classList.add("show")
-},50)
-
-/* na 3 seconden naar muur */
-
-setTimeout(()=>{
-
-img.classList.remove("show")
-
-setTimeout(()=>{
-
-container.innerHTML=""
-
-addPhotoToWall(url)
-
-},600)
-
-},3000)
-
-}
-
-
-/* -------------------------------- */
-/* NEW PHOTO BANNER */
-/* -------------------------------- */
+/* --------------------------
+BANNER
+-------------------------- */
 
 function showNewPhotoBanner(){
 
@@ -155,9 +161,25 @@ banner.style.opacity=0
 
 }
 
-/* -------------------------------- */
-/* HANDLE NEW PHOTO */
-/* -------------------------------- */
+/* --------------------------
+QR FLASH
+-------------------------- */
+
+function flashQR(){
+
+const qr=document.getElementById("qrbox")
+
+qr.classList.remove("qr-flash")
+
+void qr.offsetWidth
+
+qr.classList.add("qr-flash")
+
+}
+
+/* --------------------------
+HANDLE NEW PHOTO
+-------------------------- */
 
 function handleNewPhoto(url){
 
@@ -168,19 +190,20 @@ knownFiles.add(url)
 photos.unshift(url)
 
 showNewPhotoBanner()
+
 flashQR()
 
-showSpotlight(url)
+showSpotlight(url,true)
+
+resetIdleTimer()
 
 }
 
-/* -------------------------------- */
-/* LOAD EXISTING PHOTOS */
-/* -------------------------------- */
+/* --------------------------
+LOAD PHOTOS
+-------------------------- */
 
 async function loadPhotos(){
-
-console.log("foto's laden...")
 
 let allFiles=[]
 let offset=0
@@ -188,7 +211,7 @@ const limit=100
 
 while(true){
 
-const { data,error } = await supabaseClient
+const {data,error}=await supabaseClient
 .storage
 .from("party")
 .list("",{
@@ -214,7 +237,7 @@ offset+=limit
 
 for(const file of allFiles){
 
-const url =
+const url=
 supabaseUrl+"/storage/v1/object/public/party/"+file.name
 
 knownFiles.add(url)
@@ -222,9 +245,7 @@ photos.push(url)
 
 }
 
-console.log("gevonden foto's:",photos.length)
-
-/* eerste foto's op muur */
+/* start muur met laatste foto's */
 
 for(const url of photos.slice(0,15)){
 addPhotoToWall(url)
@@ -232,9 +253,9 @@ addPhotoToWall(url)
 
 }
 
-/* -------------------------------- */
-/* REALTIME SUPABASE */
-/* -------------------------------- */
+/* --------------------------
+REALTIME
+-------------------------- */
 
 function subscribeRealtime(){
 
@@ -263,9 +284,9 @@ handleNewPhoto(url)
 
 }
 
-/* -------------------------------- */
-/* BROADCAST EVENTS */
-/* -------------------------------- */
+/* --------------------------
+BROADCAST
+-------------------------- */
 
 function subscribeBroadcast(){
 
@@ -273,9 +294,7 @@ supabaseClient
 .channel("party-live")
 .on("broadcast",{event:"new-photo"},(payload)=>{
 
-const url = payload.payload.url
-
-console.log("broadcast foto:", url)
+const url=payload.payload.url
 
 handleNewPhoto(url)
 
@@ -284,21 +303,19 @@ handleNewPhoto(url)
 
 }
 
-/* -------------------------------- */
-/* LOCAL BROADCAST */
-/* -------------------------------- */
+/* --------------------------
+LOCAL CHANNEL
+-------------------------- */
 
 photoChannel.onmessage=(event)=>{
 
-const url=event.data
-
-handleNewPhoto(url)
+handleNewPhoto(event.data)
 
 }
 
-/* -------------------------------- */
-/* QR CODE */
-/* -------------------------------- */
+/* --------------------------
+QR
+-------------------------- */
 
 function createQR(){
 
@@ -312,25 +329,49 @@ height:150
 
 }
 
-/* -------------------------------- */
-/* QR FLASH */
-/* -------------------------------- */
+/* --------------------------
+IDLE TIMER
+-------------------------- */
 
-function flashQR(){
+function resetIdleTimer(){
 
-const qr=document.getElementById("qrbox")
+clearTimeout(idleTimer)
 
-qr.classList.remove("qr-flash")
+slideshowRunning=false
 
-void qr.offsetWidth
-
-qr.classList.add("qr-flash")
+idleTimer=setTimeout(startIdleSlideshow,15000)
 
 }
 
-/* -------------------------------- */
-/* START */
-/* -------------------------------- */
+function startIdleSlideshow(){
+
+if(photos.length===0) return
+
+slideshowRunning=true
+
+showNextIdlePhoto()
+
+}
+
+function showNextIdlePhoto(){
+
+if(!slideshowRunning) return
+
+if(photos.length===0) return
+
+const url=photos[slideshowIndex%photos.length]
+
+slideshowIndex++
+
+showSpotlight(url,false)
+
+setTimeout(showNextIdlePhoto,5000)
+
+}
+
+/* --------------------------
+START
+-------------------------- */
 
 async function start(){
 
@@ -341,6 +382,8 @@ await loadPhotos()
 subscribeRealtime()
 
 subscribeBroadcast()
+
+resetIdleTimer()
 
 }
 
