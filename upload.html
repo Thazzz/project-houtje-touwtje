@@ -288,30 +288,37 @@ width*=max/height
 height=max
 }
 
-canvas.width=width
-canvas.height=height
+canvas.width = width
+canvas.height = height
 
-if(orientation===6){
-canvas.width=height
-canvas.height=width
+if(orientation === 6){
+
+canvas.width = height
+canvas.height = width
+
 ctx.rotate(90*Math.PI/180)
-ctx.translate(0,-height)
-ctx.drawImage(img,0,0,width,height)
+ctx.drawImage(img,0,-height,width,height)
+
 }
-else if(orientation===8){
-canvas.width=height
-canvas.height=width
+else if(orientation === 8){
+
+canvas.width = height
+canvas.height = width
+
 ctx.rotate(-90*Math.PI/180)
-ctx.translate(-width,0)
-ctx.drawImage(img,0,0,width,height)
+ctx.drawImage(img,-width,0,width,height)
+
 }
-else if(orientation===3){
+else if(orientation === 3){
+
 ctx.rotate(Math.PI)
-ctx.translate(-width,-height)
-ctx.drawImage(img,0,0,width,height)
+ctx.drawImage(img,-width,-height,width,height)
+
 }
 else{
+
 ctx.drawImage(img,0,0,width,height)
+
 }
 
 canvas.toBlob(blob=>{
