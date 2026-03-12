@@ -167,7 +167,7 @@ if(queue.length===0){
 queue=shuffle([...photos])
 }
 
-const nextPhoto=queue.pop()
+const nextPhoto=queue.shift()
 
 if(!nextPhoto) return
 
@@ -214,7 +214,7 @@ queue.unshift(url)
 
 showNext()
 
-spotlightActive = true
+spotlightActive = false
 
 setTimeout(()=>{
 
