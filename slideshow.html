@@ -67,6 +67,8 @@ let idleTimer
 let slideshowIndex=0
 let slideshowRunning=false
 
+let wallZ = 10
+
 /* --------------------------
 CHANNEL
 -------------------------- */
@@ -169,6 +171,18 @@ img.style.top = (base.top + offsetY) + "%"
 img.style.setProperty(
 "--r",
 (Math.random()*14 - 7) + "deg"
+)
+
+/* lichte schaduw variatie */
+
+const shadowX = 18 + Math.random()*10
+const shadowY = 40 + Math.random()*30
+const shadowBlur = 60 + Math.random()*40
+const shadowOpacity = 0.65 + Math.random()*0.2
+
+img.style.setProperty(
+"--shadow",
+`${shadowX}px ${shadowY}px ${shadowBlur}px rgba(0,0,0,${shadowOpacity}), 0 0 20px rgba(255,0,120,0.12)`
 )
 
 /* lichte schaal */
