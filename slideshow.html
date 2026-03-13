@@ -88,6 +88,8 @@ const photoChannel=new BroadcastChannel("party-photos")
 
 /* SPOTLIGHT */
 
+/* SPOTLIGHT */
+
 function showSpotlight(url,isNew=true){
 
 return new Promise(resolve=>{
@@ -102,12 +104,8 @@ spotlightActive=true
 const container=document.getElementById("spotlight")
 const caption=document.getElementById("caption")
 
-/* spotlight leegmaken maar caption behouden */
-
 container.innerHTML=""
 container.appendChild(caption)
-
-/* foto maken */
 
 const img=document.createElement("img")
 
@@ -120,11 +118,11 @@ container.appendChild(img)
 
 const fileName=url.split("/").pop()
 
-console.log("caption:", captions[fileName])
+const text=captions[fileName]
 
-setTimeout(()=>{
-showCaption(captions[fileName])
-},200)
+if(text){
+showCaption(text)
+}
 
 /* foto fade-in */
 
@@ -140,16 +138,9 @@ img.classList.remove("show")
 
 setTimeout(()=>{
 
-/* caption verbergen */
-
 caption.classList.remove("show")
 
-/* container leegmaken */
-
 container.innerHTML=""
-
-/* caption terugplaatsen voor volgende spotlight */
-
 container.appendChild(caption)
 
 spotlightActive=false
@@ -404,14 +395,13 @@ title.classList.add("title-pulse")
 async function handleNewPhoto(url){
 
 if(knownFiles.has(url)) return
-if(photos.includes(url)) return
 
 knownFiles.add(url)
 photos.push(url)
 
 const fileName = url.split("/").pop()
 
-/* fallback caption ophalen */
+/* fallback caption uit database */
 
 if(!captions[fileName]){
 
@@ -453,6 +443,7 @@ enqueueSpotlight(url,true)
 resetIdleTimer()
 
 }
+
 
 /* LOAD PHOTOS */
 
