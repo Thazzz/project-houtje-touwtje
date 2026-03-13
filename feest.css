@@ -24,6 +24,68 @@ overflow:hidden;
 
 }
 
+/* =================================
+   NEON
+================================= */
+
+#overlay{
+
+position:absolute;
+top:30px;
+left:50%;
+transform:translateX(-50%);
+
+text-align:center;
+
+font-family:'Neon Tubes', cursive;
+
+font-size:clamp(36px,5vw,64px);
+font-weight:700;
+
+letter-spacing:3px;
+
+z-index:1000;
+
+color:#ff4fd8;
+
+/* neon glow */
+
+text-shadow:
+0 0 4px #fff,
+0 0 10px #fff,
+0 0 20px #ff0080,
+0 0 40px #ff0080,
+0 0 80px #ff0080;
+
+/* performance */
+
+will-change: transform;
+
+/* animaties */
+
+animation:
+neonColorShift 10s ease-in-out infinite,
+neonPulse 5s ease-in-out infinite,
+neonFlicker 6s linear infinite;
+
+}
+
+
+/* =================================
+   NEON FLICKER
+================================= */
+
+@keyframes neonFlicker{
+
+0%,18%,22%,25%,53%,57%,100%{
+opacity:1;
+}
+
+20%,24%,55%{
+opacity:.7;
+}
+
+}
 
 /* =================================
    CONTAINER
@@ -130,25 +192,6 @@ text-shadow:
 
 }
 
-/* =================================
-   NEON PULSE
-================================= */
-
-@keyframes neonPulse{
-
-0%{
-transform:translateX(-50%) scale(1);
-}
-
-50%{
-transform:translateX(-50%) scale(1.03);
-}
-
-100%{
-transform:translateX(-50%) scale(1);
-}
-
-}
 /* =========================
    SPOTLIGHT FOTO
 ========================= */
