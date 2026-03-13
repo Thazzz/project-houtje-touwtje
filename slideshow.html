@@ -162,9 +162,7 @@ img.remove()
 
 spotlightActive=false
 
-if(isNew){
 addPhotoToWall(url)
-}
 
 resolve()
 
@@ -636,7 +634,7 @@ attempts++
 
 }while(
 photos.length>1 &&
-(url===lastIdlePhoto || photoAlreadyOnWall(url)) &&
+(url===lastIdlePhoto) &&
 attempts<20
 )
 
