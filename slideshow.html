@@ -68,6 +68,15 @@ let lastIdlePhoto=null
 
 let wallZ = 10
 
+const MAX_WALL_PHOTOS = 15
+const WALL_COLS = 5
+const WALL_ROWS = 3
+
+let spotlightQueue=[]
+let spotlightBusy=false
+
+const SPOTLIGHT_DURATION = 3000
+
 /* LOCAL CHANNEL */
 
 const photoChannel=new BroadcastChannel("party-photos")
@@ -76,7 +85,12 @@ const photoChannel=new BroadcastChannel("party-photos")
 
 function showSpotlight(url,isNew=true){
 
-if(spotlightActive) return
+return new Promise(resolve=>{
+
+if(spotlightActive){
+resolve()
+return
+}
 
 spotlightActive=true
 
@@ -109,9 +123,40 @@ if(isNew){
 addPhotoToWall(url)
 }
 
+resolve()
+
 },600)
 
-},3000)
+},SPOTLIGHT_DURATION)
+
+})
+
+}
+
+/* SPOTLIGHT QUEUE */
+
+function enqueueSpotlight(url,isNew=true){
+
+spotlightQueue.push({url,isNew})
+
+processSpotlightQueue()
+
+}
+
+async function processSpotlightQueue(){
+
+if(spotlightBusy) return
+if(spotlightQueue.length===0) return
+
+spotlightBusy=true
+
+const item = spotlightQueue.shift()
+
+await showSpotlight(item.url,item.isNew)
+
+spotlightBusy=false
+
+processSpotlightQueue()
 
 }
 
@@ -126,6 +171,30 @@ if(img.src===url) return true
 }
 
 return false
+
+}
+
+/* GRID POSITION */
+
+function getGridPosition(){
+
+const cellW = 80 / WALL_COLS
+const cellH = 70 / WALL_ROWS
+
+const col = Math.floor(Math.random()*WALL_COLS)
+const row = Math.floor(Math.random()*WALL_ROWS)
+
+/* basispositie */
+
+let left = 10 + col * cellW
+let top = 10 + row * cellH
+
+/* kleine random offset */
+
+left += (Math.random()*cellW*0.6)
+top += (Math.random()*cellH*0.6)
+
+return {left,top}
 
 }
 
@@ -145,16 +214,10 @@ img.className="wall-photo drop"
 
 /* random positie */
 
-const base={
-left:10+Math.random()*75,
-top:10+Math.random()*75
-}
+const pos = getGridPosition()
 
-const offsetX=(Math.random()*18)-9
-const offsetY=(Math.random()*18)-9
-
-const finalLeft=(base.left+offsetX)
-const finalTop=(base.top+offsetY)
+const finalLeft = pos.left
+const finalTop = pos.top
 
 /* start midden */
 
@@ -208,7 +271,7 @@ img.classList.add("land")
 
 /* max foto's */
 
-if(wall.children.length>=15){
+if(wall.children.length>=MAX_WALL_PHOTOS){
 
 const old=wall.children[0]
 
@@ -277,7 +340,7 @@ if(knownFiles.has(url)) return
 
 knownFiles.add(url)
 
-photos.unshift(url)
+photos.push(url)
 
 /* slideshow pauzeren */
 
@@ -286,18 +349,13 @@ slideshowRunning=false
 
 /* lopende spotlight stoppen */
 
-spotlightActive=false
-
-const container=document.getElementById("spotlight")
-container.innerHTML=""
-
 showNewPhotoBanner()
 
 flashQR()
 
 pulseTitle()
 
-showSpotlight(url,true)
+enqueueSpotlight(url,true)
 
 /* idle opnieuw starten */
 
@@ -457,7 +515,7 @@ function showNextIdlePhoto(){
 
 if(!slideshowRunning) return
 if(photos.length===0) return
-if(spotlightActive) return
+if(spotlightBusy) return
 
 let url
 let attempts=0
@@ -475,7 +533,7 @@ attempts<20
 
 lastIdlePhoto=url
 
-showSpotlight(url,true)
+enqueueSpotlight(url,false)
 
 idleSlideshowTimer=setTimeout(showNextIdlePhoto,6000)
 

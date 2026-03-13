@@ -212,6 +212,8 @@ FILE SELECTIE
 
 let selectedFiles=[]
 
+const MAX_UPLOAD_FILES = 3
+
 const preview = document.getElementById("preview")
 
 function openCamera(){
@@ -222,9 +224,21 @@ function openGallery(){
 document.getElementById("galleryInput").click()
 }
 
+if(selectedFiles.length >= MAX_UPLOAD_FILES){
+alert("Maximaal 3 foto's per keer")
+return
+}
+
 function handleFiles(files){
 
 for(const file of files){
+
+if(selectedFiles.length >= MAX_UPLOAD_FILES){
+
+alert("Maximaal 3 foto's per keer uploaden 📸")
+break
+
+}
 
 selectedFiles.push(file)
 
@@ -238,7 +252,6 @@ preview.appendChild(img)
 }
 
 }
-
 const cameraInput = document.getElementById("cameraInput")
 const galleryInput = document.getElementById("galleryInput")
 
@@ -246,12 +259,13 @@ cameraInput.addEventListener("change",function(){
 handleFiles(this.files)
 })
 
+
 galleryInput.addEventListener("change",function(){
 handleFiles(this.files)
 })
 
 /* -------------------------
-IMAGE PROCESSING (MINIMAL)
+IMAGE PROCESSING (PRINT SAFE)
 ------------------------- */
 
 async function processImage(file){
@@ -266,9 +280,11 @@ img.onload = function(){
 let width = img.width
 let height = img.height
 
-const max = 1400
+/* maximale resolutie */
 
-/* resize */
+const max = 2200
+
+/* resize lange zijde */
 
 if(width > height && width > max){
 height = height * (max / width)
@@ -280,6 +296,8 @@ width = width * (max / height)
 height = max
 }
 
+/* canvas */
+
 const canvas = document.createElement("canvas")
 const ctx = canvas.getContext("2d")
 
@@ -287,6 +305,8 @@ canvas.width = width
 canvas.height = height
 
 ctx.drawImage(img,0,0,width,height)
+
+/* compressie */
 
 canvas.toBlob(blob=>{
 
@@ -299,7 +319,7 @@ return
 
 resolve(blob)
 
-},"image/jpeg",0.85)
+},"image/jpeg",0.90)
 
 }
 
@@ -307,8 +327,7 @@ img.src = url
 
 })
 
-}
-/* -------------------------
+}/* -------------------------
 LOCAL BROADCAST
 ------------------------- */
 
@@ -322,7 +341,8 @@ async function uploadSingle(file){
 
 const processed = await processImage(file)
 
-const fileName = crypto.randomUUID()+".jpg"
+const fileName =
+Date.now() + "-" + crypto.randomUUID() + ".jpg"
 
 const { error } = await supabaseClient.storage
 .from("party")
@@ -340,15 +360,6 @@ supabaseUrl + "/storage/v1/object/public/party/" + fileName
 
 photoChannel.postMessage(publicURL)
 
-/* realtime naar alle schermen */
-
-await supabaseClient
-.channel("party-live")
-.send({
-type:"broadcast",
-event:"new-photo",
-payload:{url:publicURL}
-})
 
 }
 /* -------------------------
@@ -413,6 +424,11 @@ const uploadButton = document.querySelector('button[onclick="startUpload()"]')
 
 if(files.length===0){
 status.innerText="Kies eerst foto's"
+return
+}
+
+if(files.length > MAX_UPLOAD_FILES){
+status.innerText="Maximaal 3 foto's tegelijk"
 return
 }
 
