@@ -243,6 +243,16 @@ transform .6s ease;
 
 }
 
+.spotlight-photo.show{
+opacity:1;
+transform:scale(1);
+}
+
+
+#spotlight img{
+display:block;
+}
+
 /* =================================
    TITLE PULSE BIJ NIEUWE FOTO
 ================================= */
@@ -359,6 +369,10 @@ transition:opacity .4s ease;
 
 pointer-events:none;
 
+}
+
+#caption.show{
+opacity:1;
 }
 
 /* =================================
