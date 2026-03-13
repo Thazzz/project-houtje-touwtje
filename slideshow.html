@@ -509,23 +509,22 @@ addPhotoInstant(url)
 function subscribeRealtime(){
 
 supabaseClient
-.channel("party-upload")
+.channel("storage-changes")
 .on(
 "postgres_changes",
 {
 event:"INSERT",
 schema:"storage",
-table:"objects",
-filter:"bucket_id=eq.party"
+table:"objects"
 },
 (payload)=>{
 
-if(!payload.new.name) return
+if(!payload.new || payload.new.bucket_id !== "party") return
 
-const file=payload.new.name
+const file = payload.new.name
 
-const url=
-supabaseUrl+"/storage/v1/object/public/party/"+file
+const url =
+supabaseUrl + "/storage/v1/object/public/party/" + file
 
 handleNewPhoto(url)
 

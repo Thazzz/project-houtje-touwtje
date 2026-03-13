@@ -394,24 +394,31 @@ throw error
 const publicURL =
 supabaseUrl + "/storage/v1/object/public/party/" + fileName
 
+/* caption opslaan */
+
 const { error:dbError } = await supabaseClient
 .from("photos")
-.insert({
+.insert([{
 filename:fileName,
 caption:caption
-})
+}])
 
 if(dbError){
 console.log("caption insert error:",dbError)
 }
 
+/* broadcast naar slideshow */
 
-/* instant lokaal */
-
-photoChannel.postMessage(publicURL)
-
+await supabaseClient
+.channel("party-live")
+.send({
+type:"broadcast",
+event:"new-photo",
+payload:{url:publicURL}
+})
 
 }
+
 /* -------------------------
 QUEUE
 ------------------------- */
