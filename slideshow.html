@@ -120,6 +120,8 @@ container.appendChild(img)
 
 const fileName=url.split("/").pop()
 
+console.log("caption:", captions[fileName])
+
 setTimeout(()=>{
 showCaption(captions[fileName])
 },200)
