@@ -12,6 +12,8 @@
 
 <style>
 
+/* (CSS onveranderd, exact zoals jij had) */
+
 body{
 background:
 radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 60%),
@@ -78,103 +80,73 @@ box-shadow:
 0 0 18px rgba(255,0,150,0.2);
 }
 
-/* preview grid */
-
 .preview{
 margin-top:30px;
-
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-
 gap:14px;
 }
-
-/* foto preview */
 
 .preview img{
 width:90px;
 height:90px;
-
 object-fit:cover;
-
 border-radius:6px;
-
-box-shadow:
-0 8px 20px rgba(0,0,0,0.6);
-
+box-shadow:0 8px 20px rgba(0,0,0,0.6);
 background:white;
 padding:4px;
 }
 
-/* CAPTION BOX */
 .caption-box{
 margin-top:20px;
 }
 
 #captionInput{
-
 width:100%;
 max-width:400px;
-
 padding:14px 16px;
-
 font-size:16px;
-
 border-radius:8px;
 border:none;
-
 background:#222;
 color:white;
-
-box-shadow:
-0 8px 20px rgba(0,0,0,0.6);
-
+box-shadow:0 8px 20px rgba(0,0,0,0.6);
 outline:none;
-
 }
 
 #captionInput::placeholder{
 opacity:.6;
 }
 
-/* progress bar */
-
 .progress{
 margin-top:30px;
-
 width:100%;
 max-width:400px;
 margin-left:auto;
 margin-right:auto;
-
 background:#333;
-
 border-radius:6px;
 height:14px;
-
 overflow:hidden;
 }
 
 .progress-bar{
 height:100%;
 width:0%;
-
 background:linear-gradient(
 90deg,
 #ff4fa3,
 #6be675
 );
-
 transition:width .2s;
 }
-
-/* status */
 
 #status{
 margin-top:14px;
 opacity:.8;
 }
+
 </style>
 
 </head>
@@ -184,31 +156,11 @@ opacity:.8;
 <h1>Chris10's PhotoWall</h1>
 <h2>Laat jouw moment achter voor Chris10</h2>
 
-<!-- verborgen inputs -->
-
-<input
-type="file"
-id="cameraInput"
-accept="image/*"
-capture="environment"
-multiple
-style="display:none"
->
-
-<input
-type="file"
-id="galleryInput"
-accept="image/*"
-multiple
-style="display:none"
->
-
-<!-- knoppen -->
+<input type="file" id="cameraInput" accept="image/*" capture="environment" multiple style="display:none">
+<input type="file" id="galleryInput" accept="image/*" multiple style="display:none">
 
 <button onclick="openCamera()">📷 Maak een foto</button>
-
 <br>
-
 <button onclick="openGallery()">🖼 Kies uit galerij</button>
 
 <div class="preview" id="preview"></div>
@@ -235,9 +187,7 @@ placeholder="Voeg een caption toe (optioneel) ✏️"
 
 <script>
 
-/* -------------------------
-SUPABASE
-------------------------- */
+/* SUPABASE */
 
 const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
@@ -247,16 +197,18 @@ const supabaseClient = supabase.createClient(
   supabaseKey
 )
 
-/* -------------------------
-FILE SELECTIE
-------------------------- */
+
+/* BROADCAST CHANNEL (FIX VOOR TELEFOON) */
+
+const liveChannel = supabaseClient.channel("party-live")
+liveChannel.subscribe()
+
+/* FILE SELECTIE */
 
 let selectedFiles=[]
-
 const MAX_UPLOAD_FILES = 3
 
 const preview = document.getElementById("preview")
-
 const captionInput = document.getElementById("captionInput")
 
 function openCamera(){
@@ -272,17 +224,14 @@ function handleFiles(files){
 for(const file of files){
 
 if(selectedFiles.length >= MAX_UPLOAD_FILES){
-
 alert("Maximaal 3 foto's per keer uploaden 📸")
 break
-
 }
 
 selectedFiles.push(file)
 
 const img=document.createElement("img")
 img.src=URL.createObjectURL(file)
-
 img.onload = () => URL.revokeObjectURL(img.src)
 
 preview.appendChild(img)
@@ -290,21 +239,16 @@ preview.appendChild(img)
 }
 
 }
-const cameraInput = document.getElementById("cameraInput")
-const galleryInput = document.getElementById("galleryInput")
 
 cameraInput.addEventListener("change",function(){
 handleFiles(this.files)
 })
 
-
 galleryInput.addEventListener("change",function(){
 handleFiles(this.files)
 })
 
-/* -------------------------
-IMAGE PROCESSING (PRINT SAFE)
-------------------------- */
+/* IMAGE PROCESSING */
 
 async function processImage(file){
 
@@ -317,12 +261,7 @@ img.onload = function(){
 
 let width = img.width
 let height = img.height
-
-/* maximale resolutie */
-
 const max = 2200
-
-/* resize lange zijde */
 
 if(width > height && width > max){
 height = height * (max / width)
@@ -334,8 +273,6 @@ width = width * (max / height)
 height = max
 }
 
-/* canvas */
-
 const canvas = document.createElement("canvas")
 const ctx = canvas.getContext("2d")
 
@@ -344,10 +281,7 @@ canvas.height = height
 
 ctx.drawImage(img,0,0,width,height)
 
-/* compressie */
-
 canvas.toBlob(blob=>{
-
 URL.revokeObjectURL(url)
 
 if(!blob){
@@ -365,15 +299,9 @@ img.src = url
 
 })
 
-}/* -------------------------
-LOCAL BROADCAST
-------------------------- */
+}
 
-const photoChannel = new BroadcastChannel("party-photos")
-
-/* -------------------------
-UPLOAD
-------------------------- */
+/* UPLOAD */
 
 async function uploadSingle(file,caption){
 
@@ -400,18 +328,16 @@ const { error:dbError } = await supabaseClient
 .from("photos")
 .insert([{
 filename:fileName,
-caption:caption
+caption:caption || null
 }])
 
 if(dbError){
 console.log("caption insert error:",dbError)
 }
 
-/* broadcast naar slideshow */
+/* BROADCAST NAAR SLIDESHOW */
 
-await supabaseClient
-.channel("party-live")
-.send({
+liveChannel.send({
 type:"broadcast",
 event:"new-photo",
 payload:{url:publicURL}
@@ -419,9 +345,7 @@ payload:{url:publicURL}
 
 }
 
-/* -------------------------
-QUEUE
-------------------------- */
+/* QUEUE */
 
 async function runQueue(files,concurrency=3,caption){
 
@@ -469,9 +393,7 @@ Promise.all(workers).then(resolve)
 
 }
 
-/* -------------------------
-START UPLOAD
-------------------------- */
+/* START UPLOAD */
 
 async function startUpload(){
 
@@ -486,16 +408,8 @@ status.innerText="Kies eerst foto's"
 return
 }
 
-if(files.length > MAX_UPLOAD_FILES){
-status.innerText="Maximaal 3 foto's tegelijk"
-return
-}
-
-/* knop uitzetten tijdens upload */
-
 uploadButton.disabled = true
 uploadButton.style.opacity = .6
-uploadButton.style.cursor = "not-allowed"
 
 status.innerText="Upload gestart..."
 
@@ -503,19 +417,15 @@ await runQueue(files,3,caption)
 
 status.innerText="Foto's geüpload 🎉"
 
-/* reset */
-
 selectedFiles = []
 preview.innerHTML = ""
 captionInput.value = ""
 
-/* knop weer actief maken */
-
 uploadButton.disabled = false
 uploadButton.style.opacity = 1
-uploadButton.style.cursor = "pointer"
 
 }
+
 </script>
 
 </body>
