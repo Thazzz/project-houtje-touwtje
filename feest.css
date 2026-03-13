@@ -374,7 +374,9 @@ height:75vh;
 
 pointer-events:none;
 
-z-index:2;
+/* onder slideshow */
+
+z-index:1;
 
 }
 
@@ -625,20 +627,14 @@ linear-gradient(
 #ff0080
 ) 1;
 
-/* fade naar binnen */
+/* zachte fade naar binnen */
 
-mask-image:
-linear-gradient(
-to bottom,
-black 0px,
-black 40px,
-rgba(0,0,0,.8) 60px,
-rgba(0,0,0,.4) 80px,
-transparent 120px
-);
+box-shadow:
+inset 0 0 80px rgba(0,0,0,0.6),
+inset 0 0 140px rgba(0,0,0,0.4),
+inset 0 0 200px rgba(0,0,0,0.2);
 
 }
-
 /* =================================
    WARHOL FRAME COLOR SHIFT
 ================================= */
