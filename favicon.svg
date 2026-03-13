@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+
+<defs>
+<filter id="neon">
+<feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+<feMerge>
+<feMergeNode in="coloredBlur"/>
+<feMergeNode in="SourceGraphic"/>
+</feMerge>
+</filter>
+</defs>
+
+<path
+d="M50 85
+L20 55
+C5 40 10 20 28 20
+C40 20 50 30 50 30
+C50 30 60 20 72 20
+C90 20 95 40 80 55
+Z"
+fill="none"
+stroke="#ff3ea5"
+stroke-width="6"
+filter="url(#neon)"
+/>
+
+</svg>
