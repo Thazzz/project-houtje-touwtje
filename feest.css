@@ -395,10 +395,11 @@ transform:rotate(var(--r));
 
 transition:left 1s, top 1s, opacity .6s;
 
-z-index:1;
+/* lager dan slideshow */
+
+z-index:0;
 
 }
-
 
 /* =================================
    CAPTION
@@ -594,7 +595,7 @@ box-shadow:0 0 0 rgba(255,255,255,0);
 
 
 /* =================================
-   WARHOL FRAME HARD EDGE + SOFT FADE
+   WARHOL FRAME HARD EDGE + FADE
 ================================= */
 
 body::before{
@@ -611,9 +612,9 @@ pointer-events:none;
 
 z-index:2000;
 
-/* harde rand (±1 cm) */
+/* harde rand */
 
-border:40px solid transparent;
+border:40px solid;
 
 border-image:
 linear-gradient(
@@ -624,13 +625,62 @@ linear-gradient(
 #ff0080
 ) 1;
 
-/* zachte fade naar binnen (±2 cm) */
+/* fade naar binnen */
 
-box-shadow:
-inset 0 0 80px rgba(255,255,255,0.25),
-inset 0 0 120px rgba(0,0,0,0.6);
+mask-image:
+linear-gradient(
+to bottom,
+black 0px,
+black 40px,
+rgba(0,0,0,.8) 60px,
+rgba(0,0,0,.4) 80px,
+transparent 120px
+);
 
 }
+
+/* =================================
+   WARHOL FRAME COLOR SHIFT
+================================= */
+
+body::after{
+
+content:"";
+
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+
+pointer-events:none;
+
+z-index:2001;
+
+/* harde rand */
+
+border:40px solid;
+
+border-image:
+linear-gradient(
+90deg,
+#ff0080,
+#ffcc00,
+#00ffee,
+#ff0080
+) 1;
+
+/* alleen rand zichtbaar */
+
+background:transparent;
+
+/* kleurverschuiving */
+
+animation:warholColorShift 20s linear infinite;
+
+}
+
+
 /* =================================
    LAVA LAMP MOTION
 ================================= */
@@ -704,6 +754,22 @@ filter:blur(6px) hue-rotate(0deg);
 
 100%{
 filter:blur(6px) hue-rotate(360deg);
+}
+
+}
+
+/* =================================
+   WARHOL  COLOR SHIFT
+================================= */
+
+@keyframes warholColorShift{
+
+0%{
+filter:hue-rotate(0deg);
+}
+
+100%{
+filter:hue-rotate(360deg);
 }
 
 }
