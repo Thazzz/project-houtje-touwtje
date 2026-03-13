@@ -88,8 +88,6 @@ const photoChannel=new BroadcastChannel("party-photos")
 
 /* SPOTLIGHT */
 
-/* SPOTLIGHT */
-
 function showSpotlight(url,isNew=true){
 
 return new Promise(resolve=>{
@@ -116,13 +114,28 @@ container.appendChild(img)
 
 /* caption tonen */
 
-const fileName=url.split("/").pop()
+const fileName = url.split("/").pop()
 
-const text=captions[fileName]
+let attempts = 0
+
+function tryCaption(){
+
+const text = captions[fileName]
 
 if(text){
 showCaption(text)
+return
 }
+
+attempts++
+
+if(attempts < 10){
+setTimeout(tryCaption,100)
+}
+
+}
+
+tryCaption()
 
 /* foto fade-in */
 
@@ -401,7 +414,7 @@ photos.push(url)
 
 const fileName = url.split("/").pop()
 
-/* fallback caption uit database */
+/* caption ophalen indien nodig */
 
 if(!captions[fileName]){
 
@@ -434,7 +447,7 @@ showNewPhotoBanner()
 flashQR()
 pulseTitle()
 
-/* spotlight */
+/* spotlight pas nu starten */
 
 enqueueSpotlight(url,true)
 
@@ -443,7 +456,6 @@ enqueueSpotlight(url,true)
 resetIdleTimer()
 
 }
-
 
 /* LOAD PHOTOS */
 
@@ -521,35 +533,6 @@ addPhotoInstant(url)
 
 }
 
-/* REALTIME */
-
-function subscribeRealtime(){
-
-supabaseClient
-.channel("storage-changes")
-.on(
-"postgres_changes",
-{
-event:"INSERT",
-schema:"storage",
-table:"objects"
-},
-(payload)=>{
-
-if(!payload.new || payload.new.bucket_id !== "party") return
-
-const file = payload.new.name
-
-const url =
-supabaseUrl + "/storage/v1/object/public/party/" + file
-
-handleNewPhoto(url)
-
-}
-)
-.subscribe()
-
-}
 
 /* BROADCAST */
 
@@ -564,9 +547,7 @@ const caption = payload.payload.caption
 
 const fileName = url.split("/").pop()
 
-if(caption){
-captions[fileName] = caption
-}
+captions[fileName] = caption || null
 
 handleNewPhoto(url)
 
@@ -657,8 +638,6 @@ async function start(){
 createQR()
 
 await loadPhotos()
-
-subscribeRealtime()
 
 subscribeBroadcast()
 
