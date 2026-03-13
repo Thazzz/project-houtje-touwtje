@@ -243,6 +243,8 @@ transition:
 opacity .6s ease,
 transform .6s ease;
 
+z-index:17;
+
 }
 
 .spotlight-photo.show{
@@ -412,7 +414,7 @@ opacity:0;
 
 pointer-events:none;
 
-z-index:16;
+z-index:18;
 
 }
 
@@ -425,14 +427,17 @@ animation:photoFlash .45s ease;
 
 0%{
 opacity:0;
+transform:translate(-50%,-50%) scale(.6);
 }
 
-25%{
+35%{
 opacity:1;
+transform:translate(-50%,-50%) scale(1);
 }
 
 100%{
 opacity:0;
+transform:translate(-50%,-50%) scale(1.4);
 }
 
 }
