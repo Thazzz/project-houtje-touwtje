@@ -667,11 +667,11 @@ inset:0;
 pointer-events:none;
 z-index:2000;
 
-/* regenboog */
+/* regenboog band */
 
 background:
-conic-gradient(
-from 0deg,
+linear-gradient(
+90deg,
 #ff0040,
 #ff7a00,
 #ffe600,
@@ -682,6 +682,10 @@ from 0deg,
 #ff0040
 );
 
+/* groter maken zodat kleuren kunnen schuiven */
+
+background-size:300% 300%;
+
 /* frame vorm */
 
 mask:
@@ -690,20 +694,19 @@ linear-gradient(#000 0 0);
 
 mask-composite:exclude;
 
-/* rand breedte */
+/* breedte rand */
 
-padding:14px;
-opacity:.65;
-filter:blur(8px);
+padding:16px;
 
 /* zachte glow */
 
 filter:blur(6px) brightness(1.2);
 
-opacity:.85;
+opacity:.8;
 
-animation:rainbowFrame 25s linear infinite;
-filter:blur(10px) saturate(1.6);
+/* animatie */
+
+animation:rainbowShift 25s linear infinite;
 
 }
 
@@ -772,14 +775,14 @@ filter:blur(140px) hue-rotate(360deg);
    WARHOL FRAME COLOR SHIFT
 ================================= */
 
-@keyframes rainbowFrame{
+@keyframes rainbowShift{
 
 0%{
-transform:rotate(0deg);
+background-position:0% 50%;
 }
 
 100%{
-transform:rotate(360deg);
+background-position:300% 50%;
 }
 
 }
