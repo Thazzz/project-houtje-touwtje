@@ -399,7 +399,7 @@ title.classList.add("title-pulse")
 
 /* NEW PHOTO */
 
-function handleNewPhoto(url){
+async function handleNewPhoto(url){
 
 if(knownFiles.has(url)) return
 
@@ -407,18 +407,38 @@ knownFiles.add(url)
 
 photos.push(url)
 
+/* caption ophalen */
+
+const fileName=url.split("/").pop()
+
+try{
+
+const {data,error}=await supabaseClient
+.from("photos")
+.select("caption")
+.eq("filename",fileName)
+.single()
+
+if(!error && data){
+captions[fileName]=data.caption
+}
+
+}catch(e){
+console.log("caption fetch error",e)
+}
+
 /* slideshow pauzeren */
 
 clearTimeout(idleSlideshowTimer)
 slideshowRunning=false
 
-/* lopende spotlight stoppen */
+/* visuele feedback */
 
 showNewPhotoBanner()
-
 flashQR()
-
 pulseTitle()
+
+/* spotlight */
 
 enqueueSpotlight(url,true)
 
