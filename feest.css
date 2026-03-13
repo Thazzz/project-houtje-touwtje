@@ -338,7 +338,7 @@ box-shadow: var(--shadow);
 
 transform:rotate(var(--r));
 
-transition:all 1s cubic-bezier(.25,.8,.25,1);
+transition:left 1s, top 1s, opacity .6s;
 
 z-index:1;
 
@@ -457,7 +457,7 @@ animation:photoDrop 0.9s cubic-bezier(.25,.8,.25,1);
 
 0%{
 transform:
-translateY(-300px)
+translate(-50%,-350%)
 scale(.7)
 rotate(-12deg);
 opacity:0;
@@ -465,15 +465,15 @@ opacity:0;
 
 60%{
 transform:
-translateY(20px)
-scale(1.03)
+translate(-50%,-40%)
+scale(1.05)
 rotate(3deg);
 opacity:1;
 }
 
 100%{
 transform:
-translateY(0)
+translate(-50%,-50%)
 scale(1)
 rotate(var(--r));
 opacity:1;
