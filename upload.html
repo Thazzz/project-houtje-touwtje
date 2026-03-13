@@ -340,7 +340,10 @@ console.log("caption insert error:",dbError)
 liveChannel.send({
 type:"broadcast",
 event:"new-photo",
-payload:{url:publicURL}
+payload:{
+url:publicURL,
+caption:caption || null
+}
 })
 
 }

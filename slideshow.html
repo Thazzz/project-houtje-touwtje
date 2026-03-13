@@ -402,42 +402,33 @@ title.classList.add("title-pulse")
 async function handleNewPhoto(url){
 
 if(knownFiles.has(url)) return
+if(photos.includes(url)) return
 
 knownFiles.add(url)
-
 photos.push(url)
-
-/* caption ophalen */
 
 const fileName = url.split("/").pop()
 
-let caption = null
+/* fallback caption ophalen */
 
-for(let i=0;i<5;i++){
+if(!captions[fileName]){
 
 try{
 
-const {data,error} = await supabaseClient
+const {data,error}=await supabaseClient
 .from("photos")
 .select("caption")
 .eq("filename",fileName)
-.single()
+.maybeSingle()
 
-if(!error && data){
-caption = data.caption
-break
+if(!error && data && data.caption){
+captions[fileName] = data.caption
 }
 
 }catch(e){
 console.log("caption fetch error",e)
 }
 
-await new Promise(r=>setTimeout(r,200))
-
-}
-
-if(caption){
-captions[fileName] = caption
 }
 
 /* slideshow pauzeren */
@@ -460,6 +451,7 @@ enqueueSpotlight(url,true)
 resetIdleTimer()
 
 }
+
 /* LOAD PHOTOS */
 
 async function loadPhotos(){
@@ -574,7 +566,14 @@ supabaseClient
 .channel("party-live")
 .on("broadcast",{event:"new-photo"},(payload)=>{
 
-const url=payload.payload.url
+const url = payload.payload.url
+const caption = payload.payload.caption
+
+const fileName = url.split("/").pop()
+
+if(caption){
+captions[fileName] = caption
+}
 
 handleNewPhoto(url)
 
