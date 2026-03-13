@@ -409,22 +409,35 @@ photos.push(url)
 
 /* caption ophalen */
 
-const fileName=url.split("/").pop()
+const fileName = url.split("/").pop()
+
+let caption = null
+
+for(let i=0;i<5;i++){
 
 try{
 
-const {data,error}=await supabaseClient
+const {data,error} = await supabaseClient
 .from("photos")
 .select("caption")
 .eq("filename",fileName)
 .single()
 
 if(!error && data){
-captions[fileName]=data.caption
+caption = data.caption
+break
 }
 
 }catch(e){
 console.log("caption fetch error",e)
+}
+
+await new Promise(r=>setTimeout(r,200))
+
+}
+
+if(caption){
+captions[fileName] = caption
 }
 
 /* slideshow pauzeren */
@@ -447,7 +460,6 @@ enqueueSpotlight(url,true)
 resetIdleTimer()
 
 }
-
 /* LOAD PHOTOS */
 
 async function loadPhotos(){
