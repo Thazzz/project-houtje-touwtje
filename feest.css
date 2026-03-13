@@ -293,6 +293,37 @@ z-index:1;
 
 }
 
+#caption{
+
+position:absolute;
+bottom:80px;
+left:50%;
+
+transform:translateX(-50%);
+
+font-size:5vh;
+font-weight:700;
+
+text-align:center;
+
+max-width:80vw;
+word-wrap:break-word;
+
+opacity:0;
+
+z-index:20;
+
+text-shadow:
+0 0 10px currentColor,
+0 0 20px currentColor,
+0 0 40px rgba(255,255,255,0.4);
+
+transition:opacity .4s ease;
+
+pointer-events:none;
+
+}
+
 /* =================================
    FOTO VALT OP TAFEL ANIMATIE
 ================================= */

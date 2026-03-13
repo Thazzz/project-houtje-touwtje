@@ -25,7 +25,9 @@ Chris10's PhotoWall
 </div>
 </div>
 
-<div id="spotlight"></div>
+<div id="spotlight">
+<div id="caption"></div>
+</div>
 
 <div id="newphoto">Nieuwe foto! 📸</div>
 
@@ -60,6 +62,7 @@ supabaseKey
 
 let photos=[]
 let knownFiles=new Set()
+let captions={}
 
 let idleTimer
 let idleSlideshowTimer
@@ -97,8 +100,14 @@ return
 spotlightActive=true
 
 const container=document.getElementById("spotlight")
+const caption=document.getElementById("caption")
+
+/* spotlight leegmaken maar caption behouden */
 
 container.innerHTML=""
+container.appendChild(caption)
+
+/* foto maken */
 
 const img=document.createElement("img")
 
@@ -107,9 +116,21 @@ img.className="spotlight-photo"
 
 container.appendChild(img)
 
+/* caption tonen */
+
+const fileName=url.split("/").pop()
+
+setTimeout(()=>{
+showCaption(captions[fileName])
+},200)
+
+/* foto fade-in */
+
 setTimeout(()=>{
 img.classList.add("show")
 },50)
+
+/* spotlight duur */
 
 setTimeout(()=>{
 
@@ -117,7 +138,17 @@ img.classList.remove("show")
 
 setTimeout(()=>{
 
+/* caption verbergen */
+
+caption.classList.remove("show")
+
+/* container leegmaken */
+
 container.innerHTML=""
+
+/* caption terugplaatsen voor volgende spotlight */
+
+container.appendChild(caption)
 
 spotlightActive=false
 
@@ -132,6 +163,38 @@ resolve()
 },SPOTLIGHT_DURATION)
 
 })
+
+}
+/* CAPTION */
+
+function showCaption(text){
+
+if(!text) return
+
+const el=document.getElementById("caption")
+
+el.innerText=text
+
+const colors=[
+"#ff3cac",
+"#ff8a00",
+"#00ffd5",
+"#ffe600",
+"#ff4f81",
+"#7cff00"
+]
+
+const color=colors[Math.floor(Math.random()*colors.length)]
+
+el.style.color=color
+
+el.classList.remove("show")
+void el.offsetWidth
+el.classList.add("show")
+
+setTimeout(()=>{
+el.classList.remove("show")
+},3000)
 
 }
 
@@ -373,6 +436,26 @@ let allFiles=[]
 let offset=0
 const limit=100
 
+/* captions eerst laden */
+
+try{
+
+const {data:rows,error}=await supabaseClient
+.from("photos")
+.select("filename,caption")
+
+if(!error && rows){
+for(const row of rows){
+captions[row.filename]=row.caption
+}
+}
+
+}catch(e){
+console.log("caption load error",e)
+}
+
+/* daarna storage foto's ophalen */
+
 while(true){
 
 const {data,error}=await supabaseClient
@@ -389,28 +472,37 @@ console.log(error)
 return
 }
 
-if(!data||data.length===0) break
+if(!data || data.length===0) break
 
 allFiles=allFiles.concat(data)
 
-if(data.length<limit) break
+if(data.length < limit) break
 
 offset+=limit
 
 }
 
+/* urls maken */
+
 for(const file of allFiles){
 
-if(!file.name||file.name.endsWith("/")) continue
+if(!file.name || file.name.endsWith("/")) continue
 
-const url=
-supabaseUrl+"/storage/v1/object/public/party/"+file.name
+const url =
+supabaseUrl + "/storage/v1/object/public/party/" + file.name
 
 knownFiles.add(url)
 photos.push(url)
 
 }
 
+/* muur starten */
+
+for(const url of photos.slice(0,15)){
+addPhotoInstant(url)
+}
+
+}
 /* start muur */
 
 for(const url of photos.slice(0,15)){
