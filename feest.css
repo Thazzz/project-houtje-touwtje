@@ -593,7 +593,7 @@ box-shadow:0 0 0 rgba(255,255,255,0);
 
 
 /* =================================
-   WARHOL FRAME
+   WARHOL FRAME (SOFT FADE)
 ================================= */
 
 body::before{
@@ -607,34 +607,34 @@ right:0;
 bottom:0;
 
 pointer-events:none;
+
 z-index:2000;
 
-border:16px solid;
+/* zachte rand */
 
-border-image:
+background:
+radial-gradient(
+circle at center,
+transparent 70%,
+rgba(255,0,120,0.25) 85%,
+rgba(255,0,120,0.6) 100%
+),
+
 linear-gradient(
 90deg,
-#ff0080,
-#ffcc00,
-#00ffee,
-#ff0080
-) 1;
+rgba(255,0,120,0.5),
+rgba(255,204,0,0.5),
+rgba(0,255,255,0.5),
+rgba(255,0,120,0.5)
+);
 
-box-shadow:
-0 0 40px rgba(255,0,120,0.6),
-inset 0 0 80px rgba(0,0,0,0.7);
+mix-blend-mode:screen;
 
-animation:warholFrame 8s linear infinite;
+animation:warholFrame 12s linear infinite;
 
-}
-
-@keyframes warholFrame{
-
-0%{filter:hue-rotate(0deg)}
-100%{filter:hue-rotate(360deg)}
+filter:blur(6px);
 
 }
-
 
 /* =================================
    LAVA LAMP MOTION
@@ -693,6 +693,22 @@ filter:blur(140px) hue-rotate(120deg);
 
 100%{
 filter:blur(140px) hue-rotate(360deg);
+}
+
+}
+
+/* =================================
+   WARHOL FRAME COLOR SHIFT
+================================= */
+
+@keyframes warholFrame{
+
+0%{
+filter:blur(6px) hue-rotate(0deg);
+}
+
+100%{
+filter:blur(6px) hue-rotate(360deg);
 }
 
 }
