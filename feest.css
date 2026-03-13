@@ -328,6 +328,34 @@ transform:translateY(-50%) scale(1.08);
 
 
 /* =================================
+   SLIDESHOW FOTO
+================================= */
+
+#slide{
+
+position:relative;
+
+display:block;
+
+margin-top:120px;
+
+max-width:85vw;
+max-height:75vh;
+
+object-fit:contain;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,0.8);
+
+opacity:0;
+
+transition:opacity 1s ease;
+
+z-index:10;
+
+}
+
+/* =================================
    PHOTO WALL
 ================================= */
 
