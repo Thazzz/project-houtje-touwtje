@@ -12,6 +12,8 @@
 
 <link rel="stylesheet" href="feest.css">
 
+<link href="https://fonts.googleapis.com/css2?family=Neon+Tubes&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -26,6 +28,9 @@ Chris10's PhotoWall
 </div>
 
 <div id="spotlight">
+
+<div id="photo-flash"></div>
+
 <div id="caption"></div>
 </div>
 
@@ -102,8 +107,7 @@ spotlightActive=true
 const container=document.getElementById("spotlight")
 const caption=document.getElementById("caption")
 
-container.innerHTML=""
-container.appendChild(caption)
+container.querySelectorAll("img").forEach(img=>img.remove())
 
 const img=document.createElement("img")
 
@@ -141,6 +145,7 @@ tryCaption()
 
 setTimeout(()=>{
 img.classList.add("show")
+photoFlash()
 },50)
 
 /* spotlight duur */
@@ -171,6 +176,21 @@ resolve()
 })
 
 }
+
+/* photoflash */
+function photoFlash(){
+
+const flash=document.getElementById("photo-flash")
+
+flash.classList.remove("photo-flash")
+
+void flash.offsetWidth
+
+flash.classList.add("photo-flash")
+
+}
+
+
 /* CAPTION */
 
 function showCaption(text){
