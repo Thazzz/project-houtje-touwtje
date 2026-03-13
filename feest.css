@@ -179,8 +179,10 @@ z-index:15;
 
 position:relative;
 
-max-width:100%;
-max-height:100%;
+max-width:60vw;
+max-height:60vh;
+
+object-fit:contain;
 
 border-radius:8px;
 
@@ -190,21 +192,13 @@ box-shadow:
 
 opacity:0;
 
-transform:scale(.9);
+transform:scale(.85);
 
 transition:
 opacity .6s ease,
 transform .6s ease;
 
 }
-
-.spotlight-photo.show{
-
-opacity:1;
-transform:scale(1);
-
-}
-
 
 /* =================================
    TITLE PULSE BIJ NIEUWE FOTO
@@ -296,7 +290,7 @@ z-index:1;
 #caption{
 
 position:absolute;
-bottom:80px;
+bottom:12vh;
 left:50%;
 
 transform:translateX(-50%);
