@@ -107,6 +107,37 @@ background:white;
 padding:4px;
 }
 
+/* CAPTION BOX */
+.caption-box{
+margin-top:20px;
+}
+
+#captionInput{
+
+width:100%;
+max-width:400px;
+
+padding:14px 16px;
+
+font-size:16px;
+
+border-radius:8px;
+border:none;
+
+background:#222;
+color:white;
+
+box-shadow:
+0 8px 20px rgba(0,0,0,0.6);
+
+outline:none;
+
+}
+
+#captionInput::placeholder{
+opacity:.6;
+}
+
 /* progress bar */
 
 .progress{
@@ -182,6 +213,15 @@ style="display:none"
 
 <div class="preview" id="preview"></div>
 
+<div class="caption-box">
+<input
+type="text"
+id="captionInput"
+maxlength="60"
+placeholder="Voeg een caption toe (optioneel) ✏️"
+>
+</div>
+
 <button onclick="startUpload()">⬆ Voeg toe aan de PhotoWall</button>
 
 <div class="progress">
@@ -216,6 +256,8 @@ let selectedFiles=[]
 const MAX_UPLOAD_FILES = 3
 
 const preview = document.getElementById("preview")
+
+const captionInput = document.getElementById("captionInput")
 
 function openCamera(){
 document.getElementById("cameraInput").click()
@@ -333,7 +375,7 @@ const photoChannel = new BroadcastChannel("party-photos")
 UPLOAD
 ------------------------- */
 
-async function uploadSingle(file){
+async function uploadSingle(file,caption){
 
 const processed = await processImage(file)
 
@@ -352,6 +394,18 @@ throw error
 const publicURL =
 supabaseUrl + "/storage/v1/object/public/party/" + fileName
 
+const { error:dbError } = await supabaseClient
+.from("photos")
+.insert({
+filename:fileName,
+caption:caption
+})
+
+if(dbError){
+console.log("caption insert error:",dbError)
+}
+
+
 /* instant lokaal */
 
 photoChannel.postMessage(publicURL)
@@ -362,7 +416,7 @@ photoChannel.postMessage(publicURL)
 QUEUE
 ------------------------- */
 
-async function runQueue(files,concurrency=3){
+async function runQueue(files,concurrency=3,caption){
 
 let index=0
 let completed=0
@@ -382,7 +436,7 @@ const file=files[current]
 status.innerText="Foto verwerken..."
 
 try{
-await uploadSingle(file)
+await uploadSingle(file,caption)
 }catch(e){
 console.log(e)
 }
@@ -415,6 +469,8 @@ START UPLOAD
 async function startUpload(){
 
 const files = selectedFiles
+const caption = captionInput.value.trim() || null
+
 const status = document.getElementById("status")
 const uploadButton = document.querySelector('button[onclick="startUpload()"]')
 
@@ -436,7 +492,7 @@ uploadButton.style.cursor = "not-allowed"
 
 status.innerText="Upload gestart..."
 
-await runQueue(files,3)
+await runQueue(files,3,caption)
 
 status.innerText="Foto's geüpload 🎉"
 
@@ -444,6 +500,7 @@ status.innerText="Foto's geüpload 🎉"
 
 selectedFiles = []
 preview.innerHTML = ""
+captionInput.value = ""
 
 /* knop weer actief maken */
 
