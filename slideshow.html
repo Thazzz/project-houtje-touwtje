@@ -52,6 +52,10 @@ Chris10's PhotoWall
 
 console.log("photowall gestart")
 
+window.addEventListener("error", e=>{
+console.log("GLOBAL ERROR:", e.message)
+})
+
 /* SUPABASE */
 
 const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
@@ -112,6 +116,21 @@ container.querySelectorAll("img").forEach(img=>img.remove())
 const img=document.createElement("img")
 
 img.src=url
+
+img.onerror = () => {
+
+console.log("❌ spotlight broken:", url)
+
+photos = photos.filter(p => p !== url)
+knownFiles.delete(url)
+
+img.remove()
+
+spotlightActive=false
+resolve()
+
+}
+
 img.className="spotlight-photo"
 
 container.appendChild(img)
@@ -226,24 +245,35 @@ function enqueueSpotlight(url,isNew=true){
 
 spotlightQueue.push({url,isNew})
 
+if(!spotlightBusy){
 processSpotlightQueue()
+}
 
 }
 
 async function processSpotlightQueue(){
 
 if(spotlightBusy) return
-if(spotlightQueue.length===0) return
 
-spotlightBusy=true
+spotlightBusy = true
+
+while(spotlightQueue.length > 0){
 
 const item = spotlightQueue.shift()
 
+try{
+
 await showSpotlight(item.url,item.isNew)
 
-spotlightBusy=false
+}catch(e){
 
-processSpotlightQueue()
+console.log("spotlight error",e)
+
+}
+
+}
+
+spotlightBusy = false
 
 }
 
@@ -297,6 +327,25 @@ const wall=document.getElementById("photowall")
 const img=document.createElement("img")
 
 img.src=url
+
+img.onerror = () => {
+
+console.log("❌ broken image:", url)
+
+/* verwijder uit arrays */
+
+photos = photos.filter(p => p !== url)
+
+knownFiles.delete(url)
+
+/* verwijder element indien al geplaatst */
+
+if(img.parentNode){
+img.parentNode.removeChild(img)
+}
+
+}
+
 img.className="wall-photo drop"
 
 /* random positie */
@@ -536,10 +585,12 @@ if(!file.name || file.name.endsWith("/")) continue
 const url =
 supabaseUrl + "/storage/v1/object/public/party/" + file.name
 
+if(!knownFiles.has(url)){
+
 knownFiles.add(url)
 photos.push(url)
 
-}
+}}
 
 /* muur starten */
 
@@ -622,8 +673,13 @@ function showNextIdlePhoto(){
 
 if(!slideshowRunning) return
 if(photos.length===0) return
-if(spotlightBusy) return
+if(spotlightBusy){
 
+idleSlideshowTimer=setTimeout(showNextIdlePhoto,2000)
+
+return
+
+}
 let url
 let attempts=0
 
