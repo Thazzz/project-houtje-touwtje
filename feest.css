@@ -65,7 +65,7 @@ opacity:.55;
 
 mix-blend-mode:screen;
 
-z-index:0;
+z-index:-1;
 
 will-change:transform, filter;
 
@@ -351,7 +351,7 @@ opacity:0;
 
 transition:opacity 1s ease;
 
-z-index:10;
+z-index:20;
 
 }
 
@@ -593,7 +593,7 @@ box-shadow:0 0 0 rgba(255,255,255,0);
 
 
 /* =================================
-   WARHOL FRAME (SOFT FADE)
+   WARHOL FRAME SOFT FADE
 ================================= */
 
 body::before{
@@ -610,29 +610,14 @@ pointer-events:none;
 
 z-index:2000;
 
-/* zachte rand */
+/* zachte fade naar binnen */
 
-background:
-radial-gradient(
-circle at center,
-transparent 70%,
-rgba(255,0,120,0.25) 85%,
-rgba(255,0,120,0.6) 100%
-),
+box-shadow:
 
-linear-gradient(
-90deg,
-rgba(255,0,120,0.5),
-rgba(255,204,0,0.5),
-rgba(0,255,255,0.5),
-rgba(255,0,120,0.5)
-);
-
-mix-blend-mode:screen;
-
-animation:warholFrame 12s linear infinite;
-
-filter:blur(6px);
+inset 0 0 120px rgba(255,0,120,0.35),
+inset 0 0 220px rgba(255,204,0,0.25),
+inset 0 0 320px rgba(0,255,255,0.2),
+inset 0 0 420px rgba(0,0,0,0.9);
 
 }
 
