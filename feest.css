@@ -25,69 +25,6 @@ overflow:hidden;
 }
 
 /* =================================
-   NEON
-================================= */
-
-#overlay{
-
-position:absolute;
-top:30px;
-left:50%;
-transform:translateX(-50%);
-
-text-align:center;
-
-font-family:'Neon Tubes', cursive;
-
-font-size:clamp(36px,5vw,64px);
-font-weight:700;
-
-letter-spacing:3px;
-
-z-index:1000;
-
-color:#ff4fd8;
-
-/* neon glow */
-
-text-shadow:
-0 0 4px #fff,
-0 0 10px #fff,
-0 0 20px #ff0080,
-0 0 40px #ff0080,
-0 0 80px #ff0080;
-
-/* performance */
-
-will-change: transform;
-
-/* animaties */
-
-animation:
-neonColorShift 10s ease-in-out infinite,
-neonPulse 5s ease-in-out infinite,
-neonFlicker 6s linear infinite;
-
-}
-
-
-/* =================================
-   NEON FLICKER
-================================= */
-
-@keyframes neonFlicker{
-
-0%,18%,22%,25%,53%,57%,100%{
-opacity:1;
-}
-
-20%,24%,55%{
-opacity:.7;
-}
-
-}
-
-/* =================================
    CONTAINER
 ================================= */
 
@@ -104,9 +41,8 @@ position:relative;
 
 }
 
-
 /* =================================
-   HEADER / TITLE
+   HEADER / TITLE (NEON SIGN)
 ================================= */
 
 #overlay{
@@ -118,32 +54,69 @@ transform:translateX(-50%);
 
 text-align:center;
 
-font-size:48px;
+font-family:'Neon Tubes', cursive;
+font-size:clamp(36px,5vw,64px);
 font-weight:700;
-letter-spacing:2px;
+
+letter-spacing:3px;
 
 z-index:1000;
 
-/* basis kleur */
-
 color:#ff4fd8;
 
-/* neon glow */
-
 text-shadow:
-0 0 6px rgba(255,255,255,0.9),
-0 0 12px rgba(255,0,120,0.8),
-0 0 30px rgba(255,0,120,0.6);
+0 0 6px #fff,
+0 0 14px #fff,
+0 0 30px #ff0080,
+0 0 80px #ff0080,
+0 0 160px #ff0080,
+0 0 260px #ff0080;
 
-/* animaties */
+will-change:transform,opacity;
 
 animation:
 neonColorShift 10s ease-in-out infinite,
-neonPulse 5s ease-in-out infinite;
+neonPulse 6s ease-in-out infinite,
+neonFlicker 7s linear infinite,
+neonPowerPulse 12s ease-in-out infinite;
 
 }
 
-/* subtitel */
+/* =================================
+   NEON HALO ACHTER TITEL
+================================= */
+
+#overlay::before{
+
+content:"";
+
+position:absolute;
+left:50%;
+top:40%;
+
+transform:translate(-50%,-50%);
+
+width:600px;
+height:260px;
+
+background:radial-gradient(
+circle,
+rgba(255,0,120,0.35) 0%,
+rgba(255,0,120,0.15) 40%,
+transparent 70%
+);
+
+filter:blur(40px);
+
+z-index:-1;
+
+animation:neonAura 10s ease-in-out infinite;
+
+}
+
+/* =================================
+   SUBTITLE
+================================= */
 
 #sub{
 
@@ -161,33 +134,85 @@ text-shadow:
 }
 
 /* =================================
-   NEON COLOR SHIFT
+   NEON ANIMATIONS
 ================================= */
 
 @keyframes neonColorShift{
 
-0%{
-color:#ff4fd8;
-text-shadow:
-0 0 6px rgba(255,255,255,0.9),
-0 0 12px rgba(255,0,120,0.8),
-0 0 30px rgba(255,0,120,0.6);
+0%,100%{color:#ff4fd8;}
+50%{color:#c86bff;}
+
+}
+
+@keyframes neonPulse{
+
+0%,100%{
+transform:translateX(-50%) scale(1);
 }
 
 50%{
-color:#c86bff;
+transform:translateX(-50%) scale(1.03);
+}
+
+}
+
+@keyframes neonFlicker{
+
+0%,18%,22%,25%,53%,57%,100%{
+opacity:1;
+}
+
+19%,21%,54%,56%{
+opacity:.85;
+}
+
+20%,55%{
+opacity:.6;
+}
+
+}
+
+@keyframes neonPowerPulse{
+
+0%{
 text-shadow:
-0 0 6px rgba(255,255,255,0.9),
-0 0 12px rgba(180,0,255,0.8),
-0 0 30px rgba(180,0,255,0.6);
+0 0 6px #fff,
+0 0 14px #fff,
+0 0 30px #ff0080,
+0 0 80px #ff0080,
+0 0 160px #ff0080;
+}
+
+40%{
+text-shadow:
+0 0 10px #fff,
+0 0 20px #fff,
+0 0 60px #ff0080,
+0 0 120px #ff0080,
+0 0 260px #ff0080;
 }
 
 100%{
-color:#ff4fd8;
 text-shadow:
-0 0 6px rgba(255,255,255,0.9),
-0 0 12px rgba(255,0,120,0.8),
-0 0 30px rgba(255,0,120,0.6);
+0 0 6px #fff,
+0 0 14px #fff,
+0 0 30px #ff0080,
+0 0 80px #ff0080,
+0 0 160px #ff0080;
+}
+
+}
+
+@keyframes neonAura{
+
+0%,100%{
+opacity:.6;
+transform:translate(-50%,-50%) scale(1);
+}
+
+50%{
+opacity:.9;
+transform:translate(-50%,-50%) scale(1.08);
 }
 
 }
@@ -252,51 +277,6 @@ opacity:1;
 transform:scale(1);
 }
 
-
-#spotlight img{
-display:block;
-}
-
-/* =================================
-   TITLE PULSE BIJ NIEUWE FOTO
-================================= */
-
-.title-pulse{
-animation:titlePulse 1.4s ease;
-}
-
-@keyframes titlePulse{
-
-0%{
-text-shadow:
-0 0 5px #fff,
-0 0 10px #fff,
-0 0 20px #ff0080,
-0 0 40px #ff0080,
-0 0 80px #ff0080;
-}
-
-40%{
-text-shadow:
-0 0 10px #fff,
-0 0 20px #fff,
-0 0 40px #ff0080,
-0 0 80px #ff0080,
-0 0 140px #ff0080,
-0 0 200px #ff0080;
-}
-
-100%{
-text-shadow:
-0 0 5px #fff,
-0 0 10px #fff,
-0 0 20px #ff0080,
-0 0 40px #ff0080,
-0 0 80px #ff0080;
-}
-
-}
-
 /* =================================
    PHOTO WALL
 ================================= */
@@ -327,14 +307,11 @@ image-orientation: from-image;
 max-width:320px;
 max-height:320px;
 
-width:auto;
-height:auto;
-
 object-fit:contain;
 
 border-radius:6px;
 
-box-shadow: var(--shadow);
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
 
 transform:rotate(var(--r));
 
@@ -343,6 +320,10 @@ transition:left 1s, top 1s, opacity .6s;
 z-index:1;
 
 }
+
+/* =================================
+   CAPTION
+================================= */
 
 #caption{
 
@@ -358,7 +339,6 @@ font-weight:700;
 text-align:center;
 
 max-width:80vw;
-word-wrap:break-word;
 
 opacity:0;
 
@@ -377,18 +357,14 @@ pointer-events:none;
 
 #caption.show{
 opacity:1;
-
 transform:
 translateX(-50%)
 translateY(-10px);
-
 }
 
-
-
-/* =========================
+/* =================================
    PHOTO FLASH
-========================= */
+================================= */
 
 #photo-flash{
 
@@ -419,7 +395,6 @@ z-index:18;
 }
 
 .photo-flash{
-
 animation:photoFlash .45s ease;
 }
 
@@ -442,48 +417,8 @@ transform:translate(-50%,-50%) scale(1.4);
 
 }
 
-
 /* =================================
-   FOTO VALT OP TAFEL ANIMATIE
-================================= */
-
-.wall-photo.drop{
-
-animation:photoDrop 0.9s cubic-bezier(.25,.8,.25,1);
-
-}
-
-@keyframes photoDrop{
-
-0%{
-transform:
-translate(-50%,-350%)
-scale(.7)
-rotate(-12deg);
-opacity:0;
-}
-
-60%{
-transform:
-translate(-50%,-40%)
-scale(1.05)
-rotate(3deg);
-opacity:1;
-}
-
-100%{
-transform:
-translate(-50%,-50%)
-scale(1)
-rotate(var(--r));
-opacity:1;
-}
-
-}
-
-
-/* =================================
-   NIEUWE FOTO BANNER
+   NEW PHOTO BANNER
 ================================= */
 
 #newphoto{
@@ -510,9 +445,6 @@ z-index:18;
 
 }
 
-
-
-
 /* =================================
    QR BOX
 ================================= */
@@ -537,11 +469,9 @@ z-index:10;
 }
 
 #qr{
-
 background:white;
 padding:6px;
 border-radius:6px;
-
 }
 
 #qrtext{
@@ -551,7 +481,6 @@ font-size:14px;
 opacity:.9;
 
 }
-
 
 /* =================================
    QR FLASH
@@ -577,36 +506,12 @@ box-shadow:0 0 30px rgba(255,255,255,0.9);
 transform:scale(1);
 box-shadow:0 0 0 rgba(255,255,255,0);
 }
+
 }
 
 /* =================================
-   FOTO LANDING BOUNCE
+   PAGE FRAME (WARHOL STYLE)
 ================================= */
-
-@keyframes photoBounce{
-
-0%{
-transform:translate(-50%,-50%) scale(0.6) rotate(var(--r));
-}
-
-70%{
-transform:translate(-50%,-50%) scale(1.05) rotate(var(--r));
-}
-
-100%{
-transform:translate(-50%,-50%) scale(1) rotate(var(--r));
-}
-
-}
-
-.wall-photo.land{
-
-animation:photoBounce .45s ease-out;
-}
-
-/* =========================
-   PAGE FRAME
-========================= */
 
 body::before{
 
@@ -646,4 +551,3 @@ animation:warholFrame 8s linear infinite;
 100%{filter:hue-rotate(360deg)}
 
 }
-
