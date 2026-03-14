@@ -693,27 +693,25 @@ linear-gradient(
 
 background-size:300% 300%;
 
-/* randdikte */
+/* frame dikte */
 
 padding:17px;
 
-/* radius */
+/* 🔹 kleine buitenradius */
 
-border-radius:22px;
+border-radius:10px;
 
-/* frame uitsnijden */
+/* 🔹 mask met grotere binnenradius */
 
 -webkit-mask:
-linear-gradient(#000 0 0) content-box,
+radial-gradient(circle at top left, transparent 0 26px,#000 27px) top left,
+radial-gradient(circle at top right, transparent 0 26px,#000 27px) top right,
+radial-gradient(circle at bottom left, transparent 0 26px,#000 27px) bottom left,
+radial-gradient(circle at bottom right, transparent 0 26px,#000 27px) bottom right,
 linear-gradient(#000 0 0);
 
--webkit-mask-composite:xor;
-
-mask:
-linear-gradient(#000 0 0) content-box,
-linear-gradient(#000 0 0);
-
-mask-composite:exclude;
+-webkit-mask-size:51% 51%;
+-webkit-mask-repeat:no-repeat;
 
 /* glow */
 
