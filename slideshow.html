@@ -73,6 +73,9 @@ let photos=[]
 let knownFiles=new Set()
 let captions={}
 
+let shuffledPhotos=[]
+let shuffleIndex=0
+
 let idleTimer
 let idleSlideshowTimer
 
@@ -291,6 +294,20 @@ return false
 
 }
 
+/* RANDOM OLD PHOTOS */
+
+function shuffle(array){
+
+for(let i=array.length-1;i>0;i--){
+
+const j=Math.floor(Math.random()*(i+1))
+
+;[array[i],array[j]]=[array[j],array[i]]
+
+}
+
+}
+
 /* GRID POSITION */
 
 function getGridPosition(){
@@ -368,6 +385,8 @@ img.style.setProperty(
 "--r",
 (Math.random()*24-12)+"deg"
 )
+
+img.style.setProperty("--i", Math.random()*20)
 
 /* schaduw */
 
@@ -477,6 +496,10 @@ if(knownFiles.has(url)) return
 knownFiles.add(url)
 photos.push(url)
 
+if(photos.length > 300){
+photos.shift()
+}
+
 const fileName = url.split("/").pop()
 
 /* caption ophalen indien nodig */
@@ -528,7 +551,7 @@ async function loadPhotos(){
 
 let allFiles=[]
 let offset=0
-const limit=100
+const limit=500
 
 /* captions eerst laden */
 
@@ -588,16 +611,19 @@ supabaseUrl + "/storage/v1/object/public/party/" + file.name
 if(!knownFiles.has(url)){
 
 knownFiles.add(url)
-photos.push(url)
 
-}}
+if(photos.length < 300){
+photos.push(url)
+}
+
+}
+
+}
 
 /* muur starten */
 
 for(const url of photos.slice(0,15)){
 addPhotoInstant(url)
-}
-
 }
 
 
@@ -685,7 +711,23 @@ let attempts=0
 
 do{
 
-url=photos[Math.floor(Math.random()*photos.length)]
+if(shuffledPhotos.length !== photos.length){
+shuffledPhotos = [...photos]
+shuffle(shuffledPhotos)
+shuffleIndex = 0
+}
+
+if(shuffleIndex >= shuffledPhotos.length){
+shuffle(shuffledPhotos)
+shuffleIndex = 0
+}
+
+url = shuffledPhotos[shuffleIndex++]
+
+if(photoAlreadyOnWall(url)){
+continue
+}
+
 attempts++
 
 }while(

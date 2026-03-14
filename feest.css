@@ -786,3 +786,36 @@ background-position:300% 50%;
 }
 
 }
+
+/* =================================
+    subtiele tafel-drift 
+================================= */
+
+@keyframes tableDrift {
+
+0%{
+transform:translate(-50%,-50%) rotate(var(--r)) translate(0px,0px);
+}
+
+25%{
+transform:translate(-50%,-50%) rotate(var(--r)) translate(2px,-2px);
+}
+
+50%{
+transform:translate(-50%,-50%) rotate(var(--r)) translate(-2px,1px);
+}
+
+75%{
+transform:translate(-50%,-50%) rotate(var(--r)) translate(1px,2px);
+}
+
+100%{
+transform:translate(-50%,-50%) rotate(var(--r)) translate(0px,0px);
+}
+
+}
+
+.wall-photo.land{
+animation:tableDrift 25s ease-in-out infinite;
+animation-delay: calc(-1s * var(--i));
+}
