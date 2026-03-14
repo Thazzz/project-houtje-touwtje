@@ -676,7 +676,7 @@ inset:0;
 pointer-events:none;
 z-index:2000;
 
-/* regenboog band */
+/* regenboog */
 
 background:
 linear-gradient(
@@ -691,11 +691,23 @@ linear-gradient(
 #ff0040
 );
 
-/* groter maken zodat kleuren kunnen schuiven */
-
 background-size:300% 300%;
 
-/* frame vorm */
+/* randdikte */
+
+padding:17px;
+
+/* radius */
+
+border-radius:22px;
+
+/* frame uitsnijden */
+
+-webkit-mask:
+linear-gradient(#000 0 0) content-box,
+linear-gradient(#000 0 0);
+
+-webkit-mask-composite:xor;
 
 mask:
 linear-gradient(#000 0 0) content-box,
@@ -703,21 +715,15 @@ linear-gradient(#000 0 0);
 
 mask-composite:exclude;
 
-/* breedte rand */
-
-padding:16px;
-
-/* zachte glow */
+/* glow */
 
 filter:blur(6px) brightness(1.2);
-
 opacity:.8;
-
-/* animatie */
 
 animation:rainbowShift 25s linear infinite;
 
 }
+
 
 /* =================================
    LAVA LAMP MOTION
