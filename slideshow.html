@@ -381,8 +381,8 @@ const finalTop = pos.top
 
 /* start midden */
 
-img.style.left=(48+Math.random()*4)+"%"
-img.style.top=(40+Math.random()*4)+"%"
+img.style.left=finalLeft+"%"
+img.style.top="-20%"
 img.style.transform="translate(-50%,-50%)"
 img.style.opacity="0"
 
@@ -416,7 +416,7 @@ img.style.zIndex=wallZ++
 requestAnimationFrame(()=>{
 
 img.style.transition=
-"left 1s cubic-bezier(.25,.8,.25,1), top 1s cubic-bezier(.25,.8,.25,1), transform .6s ease"
+"top 1.2s cubic-bezier(.22,1.4,.36,1), transform .8s ease"
 
 img.style.left=finalLeft+"%"
 img.style.top=finalTop+"%"

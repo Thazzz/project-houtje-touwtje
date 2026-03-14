@@ -333,7 +333,6 @@ transform:translateY(-50%) scale(1.08);
 .spotlight-photo{
 
 position:fixed;
-
 top:50%;
 left:50%;
 
@@ -343,6 +342,8 @@ max-width:70vw;
 max-height:70vh;
 
 object-fit:contain;
+
+border-radius:6px;
 
 box-shadow:
 0 40px 120px rgba(0,0,0,0.95);
@@ -358,6 +359,7 @@ transform .8s ease;
 z-index:1400;
 
 }
+
 
 .spotlight-photo.show{
 
@@ -452,9 +454,14 @@ border-radius:6px;
 
 box-shadow:0 10px 30px rgba(0,0,0,0.6);
 
+transform-origin:center top;
+
 transform:rotate(var(--r));
 
-transition:left 1s, top 1s, opacity .6s;
+transition:
+top 1.2s cubic-bezier(.22,1.4,.36,1),
+transform .8s ease,
+opacity .6s;
 
 /* lager dan slideshow */
 
