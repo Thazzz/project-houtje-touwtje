@@ -407,6 +407,8 @@ opacity:0;
 
 transition:opacity 1s ease;
 
+border-radius:6px;
+
 /* absoluut boven de tafel */
 
 z-index:1500;

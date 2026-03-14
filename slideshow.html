@@ -180,13 +180,20 @@ setTimeout(()=>{
 
 caption.classList.remove("show")
 
-img.remove()
-
-spotlightActive=false
-
+/* foto eerst naar muur */
 addPhotoToWall(url)
 
+/* spotlight foto rustig weg */
+img.style.transition="opacity .6s ease"
+img.style.opacity="0"
+
+setTimeout(()=>{
+
+img.remove()
+spotlightActive=false
 resolve()
+
+},600)
 
 },900)
 
@@ -375,7 +382,7 @@ const finalTop = pos.top
 /* start midden */
 
 img.style.left=(48+Math.random()*4)+"%"
-img.style.top=(48+Math.random()*4)+"%"
+img.style.top=(40+Math.random()*4)+"%"
 img.style.transform="translate(-50%,-50%)"
 img.style.opacity="0"
 
