@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /upload
+Disallow: /slideshow
+Disallow: /hj60
+
+Sitemap: https://houtjetouwtjeproducties.nl/sitemap.xml
