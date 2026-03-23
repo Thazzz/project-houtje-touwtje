@@ -51,6 +51,19 @@ color:#d2d2d2;
 line-height:1.4;
 }
 
+.steps{
+margin:16px 0 0 0;
+padding-left:24px;
+max-width:760px;
+color:#dddddd;
+font-size:clamp(15px,1.5vw,19px);
+line-height:1.55;
+}
+
+.steps li + li{
+margin-top:6px;
+}
+
 .status{
 margin-top:14px;
 display:inline-block;
@@ -96,6 +109,7 @@ position:relative;
 display:grid;
 place-items:center;
 min-height:0;
+max-height:min(56vh,680px);
 overflow:hidden;
 border-radius:28px;
 background:rgba(255,255,255,0.04);
@@ -197,7 +211,12 @@ height:72px;
   <header class="topbar">
     <div class="intro">
       <h1>Photo Booth</h1>
-      <p>Scan de QR, maak een foto, upload en zie hem hier terug.</p>
+      <p>Volg deze stappen en zie je foto hier terug.</p>
+      <ol class="steps">
+        <li>Scan de QR met jouw eigen telefoon.</li>
+        <li>Maak een foto of kies een foto uit je galerij.</li>
+        <li>Upload de foto en zie hem hier verschijnen.</li>
+      </ol>
       <div class="status" id="status">Wachten op nieuwe foto's</div>
     </div>
     <div class="qrbox">
