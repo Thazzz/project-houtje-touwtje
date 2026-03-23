@@ -178,8 +178,8 @@ position:relative;
 display:flex;
 align-items:center;
 justify-content:center;
-width:max-content;
-height:max-content;
+width:auto;
+height:auto;
 max-width:100%;
 max-height:100%;
 }
@@ -193,7 +193,7 @@ display:block;
 object-fit:contain;
 border-radius:18px;
 box-shadow:0 22px 55px rgba(0,0,0,0.35);
-flex:0 1 auto;
+flex:0 0 auto;
 }
 
 .caption{
@@ -341,6 +341,7 @@ const IDLE_REFRESH_MS = 10 * 60 * 1000
 
 const heroPhoto = document.getElementById("heroPhoto")
 const heroWrap = document.getElementById("heroWrap")
+const heroFrame = document.getElementById("heroFrame")
 const placeholder = document.getElementById("placeholder")
 const caption = document.getElementById("caption")
 const stack = document.getElementById("stack")
@@ -376,6 +377,31 @@ function scheduleIdleRefresh(){
   idleRefreshTimer = setTimeout(() => {
     window.location.reload()
   }, IDLE_REFRESH_MS)
+}
+
+function layoutHeroPhoto(){
+  if(heroWrap.hidden || !heroPhoto.naturalWidth || !heroPhoto.naturalHeight){
+    return
+  }
+
+  const availableWidth = heroWrap.clientWidth
+  const availableHeight = heroWrap.clientHeight
+
+  if(!availableWidth || !availableHeight){
+    return
+  }
+
+  const widthScale = availableWidth / heroPhoto.naturalWidth
+  const heightScale = availableHeight / heroPhoto.naturalHeight
+  const scale = Math.min(widthScale, heightScale)
+
+  const displayWidth = Math.max(1, Math.floor(heroPhoto.naturalWidth * scale))
+  const displayHeight = Math.max(1, Math.floor(heroPhoto.naturalHeight * scale))
+
+  heroFrame.style.width = displayWidth + "px"
+  heroFrame.style.height = displayHeight + "px"
+  heroPhoto.style.width = displayWidth + "px"
+  heroPhoto.style.height = displayHeight + "px"
 }
 
 function showFlash(){
@@ -509,6 +535,9 @@ function subscribeBroadcast(){
     })
     .subscribe()
 }
+
+heroPhoto.addEventListener("load", layoutHeroPhoto)
+window.addEventListener("resize", layoutHeroPhoto)
 
 async function start(){
   createQR()
