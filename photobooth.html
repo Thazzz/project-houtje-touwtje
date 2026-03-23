@@ -26,16 +26,22 @@ overflow:hidden;
 #app{
 height:100vh;
 display:grid;
-grid-template-rows:auto minmax(0,1fr) 96px;
-gap:16px;
-padding:24px;
+grid-template-rows:minmax(0,82%) minmax(0,18%);
+gap:0;
+padding:16px;
 }
 
-.topbar{
+.top-section{
 display:grid;
-grid-template-columns:minmax(0,1fr) minmax(140px,180px) auto;
-gap:20px;
-align-items:start;
+grid-template-columns:15% 1fr 10%;
+gap:24px;
+min-height:0;
+padding-bottom:14px;
+}
+
+.intro{
+min-width:0;
+padding-top:8px;
 }
 
 .intro h1{
@@ -83,13 +89,16 @@ opacity:1;
 }
 
 .qrbox{
-width:min(26vw,220px);
+width:100%;
+max-width:180px;
 padding:14px;
 border-radius:18px;
 background:rgba(255,255,255,0.08);
 border:1px solid rgba(255,255,255,0.08);
 text-align:center;
 box-shadow:0 16px 40px rgba(0,0,0,0.28);
+align-self:start;
+justify-self:end;
 }
 
 #qr{
@@ -97,6 +106,14 @@ display:inline-block;
 background:#fff;
 padding:10px;
 border-radius:12px;
+width:128px;
+}
+
+#qr img,
+#qr canvas{
+display:block;
+width:100%;
+height:auto;
 }
 
 .qrbox p{
@@ -105,39 +122,11 @@ font-size:14px;
 color:#d8d8d8;
 }
 
-.side-preview{
-height:220px;
-padding:10px;
-border-radius:22px;
-background:rgba(255,255,255,0.06);
-border:1px solid rgba(255,255,255,0.08);
-box-shadow:0 16px 40px rgba(0,0,0,0.22);
-display:grid;
-place-items:center;
-}
-
-.side-preview img{
-width:100%;
-height:100%;
-display:block;
-object-fit:contain;
-border-radius:16px;
-}
-
-.side-placeholder{
-text-align:center;
-font-size:14px;
-line-height:1.4;
-color:#cfcfcf;
-}
-
 .stage{
 position:relative;
-display:flex;
-flex-direction:column;
 min-height:0;
 height:100%;
-padding:20px;
+padding:0;
 overflow:hidden;
 border-radius:28px;
 background:rgba(255,255,255,0.04);
@@ -146,10 +135,10 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .placeholder{
-flex:1 1 auto;
+position:absolute;
+inset:24px;
 display:grid;
 place-items:center;
-min-height:0;
 padding:40px;
 text-align:center;
 color:#bdbdbd;
@@ -176,13 +165,12 @@ animation:flash .32s ease;
 }
 
 .hero-wrap{
-flex:1 1 auto;
-width:100%;
-min-height:0;
-display:grid;
-place-items:center;
+position:absolute;
+inset:24px;
 overflow:hidden;
-border-radius:22px;
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
 .hero-photo{
@@ -197,8 +185,10 @@ box-shadow:0 22px 55px rgba(0,0,0,0.35);
 }
 
 .caption{
-flex:0 0 auto;
-margin-top:14px;
+position:absolute;
+left:24px;
+right:24px;
+bottom:24px;
 padding:12px 16px;
 border-radius:14px;
 background:rgba(0,0,0,0.52);
@@ -219,6 +209,7 @@ gap:14px;
 overflow:hidden;
 align-items:center;
 min-height:0;
+padding-top:16px;
 }
 
 .thumb{
@@ -233,16 +224,26 @@ box-shadow:0 10px 24px rgba(0,0,0,0.22);
 }
 
 @media (max-width:900px){
-.topbar{
-grid-template-columns:1fr auto;
+.top-section{
+grid-template-columns:1fr 150px;
+grid-template-areas:
+"intro qr"
+"stage stage";
+grid-template-rows:auto 1fr;
+gap:16px;
+}
+
+.intro{
+grid-area:intro;
+}
+
+.stage{
+grid-area:stage;
 }
 
 .qrbox{
+grid-area:qr;
 width:fit-content;
-}
-
-.side-preview{
-display:none;
 }
 
 .thumb{
@@ -254,7 +255,7 @@ height:65px;
 </head>
 <body>
 <div id="app">
-  <header class="topbar">
+  <section class="top-section">
     <div class="intro">
       <h1>Photo Booth</h1>
       <p>Volg deze stappen en zie je foto hier terug.</p>
@@ -265,24 +266,21 @@ height:65px;
       </ol>
       <div class="status" id="status">Wachten op nieuwe foto's</div>
     </div>
-    <aside class="side-preview">
-      <div class="side-placeholder" id="sidePlaceholder">Nieuwste foto</div>
-      <img id="sidePhoto" alt="Laatste upload" hidden>
-    </aside>
+
+    <main class="stage">
+      <div class="flash" id="flash"></div>
+      <div class="placeholder" id="placeholder">Jouw foto verschijnt hier</div>
+      <div class="hero-wrap" id="heroWrap" hidden>
+        <img id="heroPhoto" class="hero-photo" alt="Nieuwste foto">
+      </div>
+      <div class="caption" id="caption"></div>
+    </main>
+
     <div class="qrbox">
       <div id="qr"></div>
       <p>Scan om foto's te uploaden</p>
     </div>
-  </header>
-
-  <main class="stage">
-    <div class="flash" id="flash"></div>
-    <div class="placeholder" id="placeholder">Jouw foto verschijnt hier</div>
-    <div class="hero-wrap" id="heroWrap" hidden>
-      <img id="heroPhoto" class="hero-photo" alt="Nieuwste foto">
-    </div>
-    <div class="caption" id="caption"></div>
-  </main>
+  </section>
 
   <section class="stack" id="stack"></section>
 </div>
@@ -303,8 +301,6 @@ const caption = document.getElementById("caption")
 const stack = document.getElementById("stack")
 const flash = document.getElementById("flash")
 const status = document.getElementById("status")
-const sidePhoto = document.getElementById("sidePhoto")
-const sidePlaceholder = document.getElementById("sidePlaceholder")
 
 const captions = {}
 const shownUrls = new Set()
@@ -314,8 +310,8 @@ function createQR(){
 
   new QRCode(document.getElementById("qr"), {
     text: uploadURL,
-    width: 160,
-    height: 160
+    width: 128,
+    height: 128
   })
 }
 
@@ -374,12 +370,7 @@ function showPhoto(url, text){
 
   placeholder.hidden = true
   heroWrap.hidden = false
-  heroPhoto.removeAttribute("width")
-  heroPhoto.removeAttribute("height")
   heroPhoto.src = url
-  sidePhoto.hidden = false
-  sidePhoto.src = url
-  sidePlaceholder.hidden = true
   showCaption(text)
   const existingHeroThumb = stack.querySelector(`[data-url="${url}"]`)
   if(existingHeroThumb){
