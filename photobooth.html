@@ -293,6 +293,7 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
 const MAX_STACK = 8
+const IDLE_REFRESH_MS = 10 * 60 * 1000
 
 const heroPhoto = document.getElementById("heroPhoto")
 const heroWrap = document.getElementById("heroWrap")
@@ -304,6 +305,7 @@ const status = document.getElementById("status")
 
 const captions = {}
 const shownUrls = new Set()
+let idleRefreshTimer
 
 function createQR(){
   const uploadURL = window.location.origin + "/upload.html"
@@ -323,6 +325,13 @@ function setStatus(text, hold = 2200){
   setStatus.timer = setTimeout(() => {
     status.classList.remove("show")
   }, hold)
+}
+
+function scheduleIdleRefresh(){
+  clearTimeout(idleRefreshTimer)
+  idleRefreshTimer = setTimeout(() => {
+    window.location.reload()
+  }, IDLE_REFRESH_MS)
 }
 
 function showFlash(){
@@ -382,6 +391,7 @@ function showPhoto(url, text){
   }
 
   addToStack(url)
+  scheduleIdleRefresh()
   showFlash()
   setStatus("Upload geslaagd")
 }
@@ -459,6 +469,7 @@ function subscribeBroadcast(){
 async function start(){
   createQR()
   setStatus("Verbinden...")
+  scheduleIdleRefresh()
   await fetchCaptions()
   await loadRecentPhotos()
   subscribeBroadcast()
