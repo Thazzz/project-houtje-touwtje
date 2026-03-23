@@ -133,11 +133,9 @@ color:#cfcfcf;
 
 .stage{
 position:relative;
-display:grid;
-place-items:center;
 min-height:0;
 max-height:min(56vh,680px);
-padding:20px 20px 78px 20px;
+padding:20px;
 overflow:hidden;
 border-radius:28px;
 background:rgba(255,255,255,0.04);
@@ -173,7 +171,7 @@ animation:flash .32s ease;
 
 .hero-wrap{
 position:absolute;
-inset:20px 20px 78px 20px;
+inset:20px 20px 88px 20px;
 display:grid;
 place-items:center;
 }
@@ -201,6 +199,7 @@ font-size:18px;
 line-height:1.35;
 text-align:center;
 opacity:0;
+pointer-events:none;
 }
 
 .caption.show{
@@ -365,6 +364,8 @@ function addToStack(url){
 function showPhoto(url, text){
   placeholder.hidden = true
   heroWrap.hidden = false
+  heroPhoto.removeAttribute("width")
+  heroPhoto.removeAttribute("height")
   heroPhoto.src = url
   sidePhoto.hidden = false
   sidePhoto.src = url
