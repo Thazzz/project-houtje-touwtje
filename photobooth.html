@@ -133,6 +133,8 @@ color:#cfcfcf;
 
 .stage{
 position:relative;
+display:grid;
+grid-template-rows:minmax(0,1fr) auto;
 min-height:0;
 max-height:min(56vh,680px);
 padding:20px;
@@ -144,6 +146,8 @@ box-shadow:inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .placeholder{
+grid-row:1;
+align-self:center;
 padding:40px;
 text-align:center;
 color:#bdbdbd;
@@ -170,10 +174,13 @@ animation:flash .32s ease;
 }
 
 .hero-wrap{
-position:absolute;
-inset:20px 20px 88px 20px;
+grid-row:1;
+align-self:stretch;
+justify-self:stretch;
+min-height:0;
 display:grid;
 place-items:center;
+overflow:hidden;
 }
 
 .hero-photo{
@@ -188,10 +195,8 @@ box-shadow:0 22px 55px rgba(0,0,0,0.35);
 }
 
 .caption{
-position:absolute;
-left:24px;
-right:24px;
-bottom:20px;
+grid-row:2;
+margin-top:14px;
 padding:12px 16px;
 border-radius:14px;
 background:rgba(0,0,0,0.52);
@@ -362,6 +367,8 @@ function addToStack(url){
 }
 
 function showPhoto(url, text){
+  const previousUrl = heroPhoto.getAttribute("src")
+
   placeholder.hidden = true
   heroWrap.hidden = false
   heroPhoto.removeAttribute("width")
@@ -375,6 +382,11 @@ function showPhoto(url, text){
   if(existingHeroThumb){
     existingHeroThumb.remove()
   }
+
+  if(previousUrl && previousUrl !== url){
+    addToStack(previousUrl)
+  }
+
   addToStack(url)
   showFlash()
   setStatus("Upload geslaagd")
