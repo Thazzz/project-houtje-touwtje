@@ -339,6 +339,18 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
 const MAX_STACK = 11
 const IDLE_REFRESH_MS = 10 * 60 * 1000
+const PHOTOBOOTH_MESSAGES = [
+  "Upload geslaagd",
+  "Nieuwe foto binnen",
+  "Yes, hij staat erop",
+  "Mooi moment",
+  "Nog eentje?",
+  "Top, gelukt",
+  "Jouw foto is toegevoegd",
+  "Deze is binnen",
+  "Lekker bezig",
+  "We hebben 'm"
+]
 
 const heroPhoto = document.getElementById("heroPhoto")
 const heroWrap = document.getElementById("heroWrap")
@@ -352,6 +364,7 @@ const status = document.getElementById("status")
 const captions = {}
 const shownUrls = new Set()
 let idleRefreshTimer
+let lastStatusMessage = ""
 
 function createQR(){
   const uploadURL = window.location.origin + "/upload.html"
@@ -378,6 +391,21 @@ function scheduleIdleRefresh(){
   idleRefreshTimer = setTimeout(() => {
     window.location.reload()
   }, IDLE_REFRESH_MS)
+}
+
+function pickStatusMessage(){
+  if(PHOTOBOOTH_MESSAGES.length === 1){
+    return PHOTOBOOTH_MESSAGES[0]
+  }
+
+  let message = PHOTOBOOTH_MESSAGES[Math.floor(Math.random() * PHOTOBOOTH_MESSAGES.length)]
+
+  while(message === lastStatusMessage){
+    message = PHOTOBOOTH_MESSAGES[Math.floor(Math.random() * PHOTOBOOTH_MESSAGES.length)]
+  }
+
+  lastStatusMessage = message
+  return message
 }
 
 function layoutHeroPhoto(){
@@ -464,7 +492,7 @@ function showPhoto(url, text){
   addToStack(url)
   scheduleIdleRefresh()
   showFlash()
-  setStatus("Upload geslaagd")
+  setStatus(pickStatusMessage())
 }
 
 async function fetchCaptions(){

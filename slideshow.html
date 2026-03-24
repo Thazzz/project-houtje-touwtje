@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-  
+
 <title>Chris10's PhotoWall</title>
 
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -98,6 +97,19 @@ let spotlightQueue=[]
 let spotlightBusy=false
 
 const SPOTLIGHT_DURATION = 3000
+const SLIDESHOW_MESSAGES = [
+"Nieuwe foto!",
+"Vers van de camera",
+"Nieuw moment in beeld",
+"De muur groeit",
+"Nog meer herinneringen",
+"Feest in beeld",
+"Weer een mooie erbij",
+"Dit wordt een mooie verzameling",
+"Binnengekomen!",
+"De tafel leeft"
+]
+let lastBannerMessage = ""
 
 /* LOCAL CHANNEL */
 
@@ -462,6 +474,17 @@ wall.appendChild(img)
 function showNewPhotoBanner(){
 
 const banner=document.getElementById("newphoto")
+
+let message = SLIDESHOW_MESSAGES[Math.floor(Math.random()*SLIDESHOW_MESSAGES.length)]
+
+if(SLIDESHOW_MESSAGES.length > 1){
+while(message === lastBannerMessage){
+message = SLIDESHOW_MESSAGES[Math.floor(Math.random()*SLIDESHOW_MESSAGES.length)]
+}
+}
+
+lastBannerMessage = message
+banner.innerText = message
 
 banner.style.opacity=1
 
