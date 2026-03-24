@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bedankt voor vanavond</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+*,
+*::before,
+*::after{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+height:100vh;
+overflow:hidden;
+font-family:Georgia,"Times New Roman",serif;
+background:
+radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 40%),
+linear-gradient(180deg, #151515, #0c0c0c 60%, #141414);
+color:#f5f1ea;
+}
+
+#app{
+height:100vh;
+padding:20px;
+display:grid;
+place-items:center;
+}
+
+.wall{
+width:100%;
+height:100%;
+display:grid;
+grid-template-columns:repeat(6, minmax(0, 1fr));
+grid-template-rows:repeat(3, minmax(0, 1fr));
+gap:14px;
+}
+
+.slot{
+position:relative;
+display:grid;
+place-items:center;
+min-width:0;
+min-height:0;
+}
+
+.slot.center{
+grid-column:3 / 5;
+grid-row:2 / 3;
+z-index:3;
+}
+
+.message{
+height:100%;
+width:100%;
+display:grid;
+place-items:center;
+padding:24px;
+text-align:center;
+border-radius:28px;
+background:rgba(18,18,18,0.72);
+border:1px solid rgba(255,255,255,0.08);
+box-shadow:
+0 25px 70px rgba(0,0,0,0.35),
+inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.message-inner{
+max-width:520px;
+}
+
+.message h1{
+margin:0;
+font-size:clamp(34px,4vw,62px);
+font-weight:400;
+letter-spacing:.02em;
+line-height:1.08;
+}
+
+.message p{
+margin:18px 0 0 0;
+font-size:clamp(18px,1.8vw,28px);
+line-height:1.35;
+color:#ddd7cc;
+}
+
+.polaroid{
+position:relative;
+width:min(100%, 200px);
+aspect-ratio:4 / 5;
+padding:9px 9px 24px 9px;
+background:#fbfaf7;
+border-radius:6px;
+box-shadow:
+0 14px 34px rgba(0,0,0,0.28),
+0 3px 10px rgba(0,0,0,0.16);
+transform:rotate(var(--r, 0deg));
+opacity:0;
+transition:opacity 1.2s ease, transform 1.2s ease;
+overflow:hidden;
+}
+
+.polaroid.show{
+opacity:1;
+}
+
+.polaroid img{
+display:block;
+width:100%;
+height:100%;
+object-fit:cover;
+border-radius:2px;
+background:#ece8e1;
+}
+
+.polaroid::after{
+content:"";
+position:absolute;
+left:50%;
+bottom:10px;
+transform:translateX(-50%);
+width:38%;
+height:4px;
+border-radius:999px;
+background:rgba(0,0,0,0.08);
+}
+
+.footer-heart{
+position:fixed;
+right:28px;
+bottom:20px;
+width:52px;
+height:52px;
+opacity:.88;
+filter:drop-shadow(0 0 10px rgba(255,62,165,0.28));
+}
+
+.footer-heart img{
+display:block;
+width:100%;
+height:100%;
+}
+
+@media (max-width:1200px){
+.wall{
+gap:12px;
+}
+
+.polaroid{
+width:min(100%, 170px);
+}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <main class="wall" id="wall"></main>
+</div>
+
+<div class="footer-heart" aria-hidden="true">
+  <img src="favicon.svg" alt="">
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
+const GRID_COLS = 6
+const GRID_ROWS = 3
+const SWAP_INTERVAL_MS = 9000
+const MESSAGE_VARIANTS = [
+  {
+    title: "Bedankt dat je er was",
+    text: "Tot snel, en voor straks: wel thuis."
+  },
+  {
+    title: "Dank voor deze mooie avond",
+    text: "Tot snel en kom goed thuis."
+  },
+  {
+    title: "Fijn dat je er was",
+    text: "Tot snel en wel thuis straks."
+  }
+]
+
+const wall = document.getElementById("wall")
+
+let allUrls = []
+let displayedUrls = new Set()
+let photoSlots = []
+let swapTimer
+let lastMessageIndex = -1
+
+function shuffle(array){
+  for(let i = array.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
+  }
+}
+
+function pickRandomRotation(){
+  return (Math.random() * 10 - 5).toFixed(2) + "deg"
+}
+
+function pickMessage(){
+  if(MESSAGE_VARIANTS.length === 1){
+    return MESSAGE_VARIANTS[0]
+  }
+
+  let index = Math.floor(Math.random() * MESSAGE_VARIANTS.length)
+
+  while(index === lastMessageIndex){
+    index = Math.floor(Math.random() * MESSAGE_VARIANTS.length)
+  }
+
+  lastMessageIndex = index
+  return MESSAGE_VARIANTS[index]
+}
+
+function createMessageCard(){
+  const slot = document.createElement("section")
+  slot.className = "slot center"
+
+  const card = document.createElement("div")
+  card.className = "message"
+
+  const inner = document.createElement("div")
+  inner.className = "message-inner"
+
+  const message = pickMessage()
+
+  const title = document.createElement("h1")
+  title.textContent = message.title
+
+  const text = document.createElement("p")
+  text.textContent = message.text
+
+  inner.appendChild(title)
+  inner.appendChild(text)
+  card.appendChild(inner)
+  slot.appendChild(card)
+
+  return slot
+}
+
+function buildGrid(){
+  wall.innerHTML = ""
+  photoSlots = []
+
+  for(let row = 1; row <= GRID_ROWS; row++){
+    for(let col = 1; col <= GRID_COLS; col++){
+      const isCenter = row === 2 && col >= 3 && col <= 4
+
+      if(isCenter){
+        if(row === 2 && col === 3){
+          wall.appendChild(createMessageCard())
+        }
+        continue
+      }
+
+      const slot = document.createElement("section")
+      slot.className = "slot"
+      slot.dataset.row = String(row)
+      slot.dataset.col = String(col)
+
+      photoSlots.push(slot)
+      wall.appendChild(slot)
+    }
+  }
+}
+
+function getUnusedUrls(excludeUrl){
+  return allUrls.filter(url => !displayedUrls.has(url) && url !== excludeUrl)
+}
+
+function setSlotPhoto(slot, url){
+  const existing = slot.querySelector(".polaroid")
+  if(existing){
+    existing.remove()
+  }
+
+  const card = document.createElement("article")
+  card.className = "polaroid"
+  card.style.setProperty("--r", pickRandomRotation())
+
+  const img = document.createElement("img")
+  img.src = url
+  img.alt = "Feestfoto"
+
+  card.appendChild(img)
+  slot.appendChild(card)
+  slot.dataset.url = url
+
+  requestAnimationFrame(() => {
+    card.classList.add("show")
+  })
+}
+
+function fillInitialPhotos(){
+  if(allUrls.length === 0){
+    return
+  }
+
+  displayedUrls.clear()
+
+  const pool = [...allUrls]
+  shuffle(pool)
+
+  for(const slot of photoSlots){
+    const url = pool.pop()
+    if(!url) break
+
+    displayedUrls.add(url)
+    setSlotPhoto(slot, url)
+  }
+}
+
+function swapOnePhoto(){
+  if(photoSlots.length === 0 || allUrls.length <= displayedUrls.size){
+    return
+  }
+
+  const slot = photoSlots[Math.floor(Math.random() * photoSlots.length)]
+  const currentUrl = slot.dataset.url || ""
+  const availableUrls = getUnusedUrls(currentUrl)
+
+  if(availableUrls.length === 0){
+    return
+  }
+
+  const nextUrl = availableUrls[Math.floor(Math.random() * availableUrls.length)]
+
+  if(currentUrl){
+    displayedUrls.delete(currentUrl)
+  }
+
+  displayedUrls.add(nextUrl)
+  setSlotPhoto(slot, nextUrl)
+}
+
+async function loadAllPhotos(){
+  let files = []
+  let offset = 0
+  const limit = 500
+
+  while(true){
+    const { data, error } = await supabaseClient.storage
+      .from("party")
+      .list("", {
+        limit,
+        offset,
+        sortBy: { column: "name", order: "desc" }
+      })
+
+    if(error){
+      console.log("photo load error", error)
+      break
+    }
+
+    if(!data || data.length === 0){
+      break
+    }
+
+    files = files.concat(data.filter(file => file.name && !file.name.endsWith("/")))
+
+    if(data.length < limit){
+      break
+    }
+
+    offset += limit
+  }
+
+  allUrls = files.map(file => (
+    supabaseUrl + "/storage/v1/object/public/party/" + file.name
+  ))
+}
+
+function startSwapping(){
+  clearInterval(swapTimer)
+  swapTimer = setInterval(swapOnePhoto, SWAP_INTERVAL_MS)
+}
+
+async function start(){
+  buildGrid()
+  await loadAllPhotos()
+  fillInitialPhotos()
+  startSwapping()
+}
+
+start()
+</script>
+</body>
+</html>
