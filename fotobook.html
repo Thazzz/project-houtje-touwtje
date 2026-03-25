@@ -165,7 +165,7 @@ async function bootstrap(){
 }
 
 function unlockBook(code){
-  if(code.toLowerCase() !== ACCESS_CODE){
+  if(code !== ACCESS_CODE){
     gateError.textContent = "Deze code klopt nog niet."
     return
   }
