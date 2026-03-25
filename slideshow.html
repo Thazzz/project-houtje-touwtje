@@ -99,8 +99,6 @@ let spotlightBusy=false
 const SPOTLIGHT_DURATION = 3000
 const GOODNIGHT_SWITCH_HOUR = 0
 const GOODNIGHT_SWITCH_MINUTE = 35
-const GOODNIGHT_END_HOUR = 6
-const GOODNIGHT_END_MINUTE = 0
 const GOODNIGHT_PATH = "/goodnight"
 const SLIDESHOW_MESSAGES = [
 "Nieuwe foto!",
@@ -515,54 +513,11 @@ window.location.href = window.location.origin + GOODNIGHT_PATH
 
 }
 
-function shouldSwitchToGoodnight(now = new Date()){
-
-const currentMinutes =
-now.getHours() * 60 + now.getMinutes()
-
-const startMinutes =
-GOODNIGHT_SWITCH_HOUR * 60 + GOODNIGHT_SWITCH_MINUTE
-
-const endMinutes =
-GOODNIGHT_END_HOUR * 60 + GOODNIGHT_END_MINUTE
-
-if(startMinutes <= endMinutes){
-return currentMinutes >= startMinutes && currentMinutes < endMinutes
-}
-
-return currentMinutes >= startMinutes || currentMinutes < endMinutes
-
-}
-
 function scheduleGoodnightSwitch(){
-
-if(shouldSwitchToGoodnight()){
-goToGoodnight()
-return
-}
 
 const now = new Date()
 
 const target = new Date(now)
-const currentMinutes =
-now.getHours() * 60 + now.getMinutes()
-
-const startMinutes =
-GOODNIGHT_SWITCH_HOUR * 60 + GOODNIGHT_SWITCH_MINUTE
-
-const endMinutes =
-GOODNIGHT_END_HOUR * 60 + GOODNIGHT_END_MINUTE
-
-const crossesMidnight = startMinutes > endMinutes
-
-if(crossesMidnight && currentMinutes < endMinutes){
-target.setHours(
-GOODNIGHT_END_HOUR,
-GOODNIGHT_END_MINUTE,
-0,
-0
-)
-}else{
 target.setHours(
 GOODNIGHT_SWITCH_HOUR,
 GOODNIGHT_SWITCH_MINUTE,
@@ -572,7 +527,6 @@ GOODNIGHT_SWITCH_MINUTE,
 
 if(target <= now){
 target.setDate(target.getDate() + 1)
-}
 }
 
 const delay = target.getTime() - now.getTime()
