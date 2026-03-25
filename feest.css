@@ -6,7 +6,7 @@ body{
 
 background:
 radial-gradient(circle at top,
-rgba(255,0,120,0.08),
+rgba(255,0,120,0.12),
 transparent 60%),
 #111;
 
@@ -61,7 +61,7 @@ pointer-events:none;
 
 filter:blur(140px);
 
-opacity:.55;
+opacity:.68;
 
 mix-blend-mode:screen;
 
@@ -130,7 +130,7 @@ pointer-events:none;
 
 filter:blur(150px);
 
-opacity:.45;
+opacity:.58;
 
 mix-blend-mode:screen;
 
@@ -208,8 +208,8 @@ height:220px;
 
 background:radial-gradient(
 circle,
-rgba(255,0,120,0.35) 0%,
-rgba(255,0,120,0.15) 40%,
+rgba(255,0,120,0.44) 0%,
+rgba(255,0,120,0.22) 40%,
 transparent 70%
 );
 
@@ -580,7 +580,7 @@ left:50%;
 
 transform:translateX(-50%);
 
-background:rgba(0,0,0,0.75);
+background:rgba(0,0,0,0.58);
 
 padding:12px 22px;
 border-radius:8px;
@@ -607,7 +607,7 @@ position:absolute;
 right:30px;
 bottom:30px;
 
-background:rgba(0,0,0,0.7);
+background:rgba(0,0,0,0.56);
 
 padding:12px;
 
