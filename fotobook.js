@@ -10,14 +10,16 @@ const PARTY_TITLE = "Christie's Afterparty Pop";
 const PARTY_INTRO = "Van binnenkomst tot laatste ronde, in het tempo waarin de foto's zijn binnengekomen.";
 const TIME_ZONE = "Europe/Amsterdam";
 const EMPTY_CAPTION = "Geen caption toegevoegd.";
+const PREPARTY_CUTOFF = "2026-04-04T23:59:59+02:00";
+const PARTY_START = "2026-04-05T00:01:00+02:00";
 
 const CHAPTER_RULES = [
-  { startHour: 20, endHour: 21, title: "Binnenkomst", mood: "De eerste blikken, eerste drankjes en nog frisse energie." },
-  { startHour: 21, endHour: 22, title: "Op gang", mood: "De avond komt los en de eerste verhalen beginnen te vliegen." },
-  { startHour: 22, endHour: 23, title: "Warmgedraaid", mood: "De kamer leeft, de kleuren worden feller en de glimlachen losser." },
-  { startHour: 23, endHour: 24, title: "Piek", mood: "Hier zit de avond vol in zijn ritme." },
-  { startHour: 0, endHour: 1, title: "Nachtwerk", mood: "Licht waziger, nog steeds prachtig." },
-  { startHour: 1, endHour: 4, title: "Laatste rondes", mood: "De zachte afterglow richting het einde van de nacht." }
+  { id: "preparty", title: "Preparty", rangeLabel: "Tot 4 april 23:59", mood: "De aanloop, eerste uploads en de opbouw naar de avond." },
+  { id: "binnenkomst", title: "Binnenkomst", rangeLabel: "20:00-21:00", mood: "De eerste blikken, eerste drankjes en nog frisse energie." },
+  { id: "komt-lekker-los", title: "Komt lekker los", rangeLabel: "21:00-22:00", mood: "De avond komt los en de eerste verhalen beginnen te vliegen." },
+  { id: "voetjes-van-de-vloer", title: "Voetjes van de vloer", rangeLabel: "22:00-23:00", mood: "De kamer leeft, de kleuren worden feller en de glimlachen losser." },
+  { id: "nachtwerk", title: "Nachtwerk", rangeLabel: "23:00-00:30", mood: "Hier zit de avond vol in zijn ritme." },
+  { id: "laatste-ronde", title: "Laatste Ronde", rangeLabel: "00:30+", mood: "De zachte afterglow richting het einde van de nacht." }
 ];
 
 const gateView = document.getElementById("gateView");
@@ -192,36 +194,41 @@ function mergePhotoData(storageEntries, captionRows){
 
 function assignChapter(timestamp){
   const date = timestamp ? new Date(timestamp) : null;
-  const localHour = date && !Number.isNaN(date.getTime()) ? getLocalHour(date) : null;
-
-  if(localHour !== null){
-    const matchingRule = CHAPTER_RULES.find(function(rule){
-      if(rule.startHour < rule.endHour){
-        return localHour >= rule.startHour && localHour < rule.endHour;
-      }
-
-      return localHour >= rule.startHour || localHour < rule.endHour;
-    });
-
-    if(matchingRule){
-      return {
-        id: (matchingRule.startHour + "-" + matchingRule.endHour + "-" + matchingRule.title).toLowerCase().replace(/\s+/g, "-"),
-        title: matchingRule.title,
-        rangeLabel: formatRange(matchingRule.startHour, matchingRule.endHour),
-        mood: matchingRule.mood
-      };
-    }
+  if(!date || Number.isNaN(date.getTime())){
+    return CHAPTER_RULES[0];
   }
 
-  const fallbackHour = localHour === null ? 20 : localHour;
-  const nextHour = (fallbackHour + 1) % 24;
+  const prepartyCutoff = new Date(PREPARTY_CUTOFF);
+  const partyStart = new Date(PARTY_START);
 
-  return {
-    id: "uur-" + fallbackHour,
-    title: "Later die nacht",
-    rangeLabel: formatRange(fallbackHour, nextHour),
-    mood: "Nog een moment uit dezelfde nacht."
-  };
+  if(date <= prepartyCutoff){
+    return CHAPTER_RULES[0];
+  }
+
+  if(date < partyStart){
+    return CHAPTER_RULES[1];
+  }
+
+  const localParts = getLocalParts(date);
+  const minutesSinceMidnight = (localParts.hour * 60) + localParts.minute;
+
+  if(minutesSinceMidnight >= 1200 && minutesSinceMidnight < 1260){
+    return CHAPTER_RULES[1];
+  }
+
+  if(minutesSinceMidnight >= 1260 && minutesSinceMidnight < 1320){
+    return CHAPTER_RULES[2];
+  }
+
+  if(minutesSinceMidnight >= 1320 && minutesSinceMidnight < 1380){
+    return CHAPTER_RULES[3];
+  }
+
+  if(minutesSinceMidnight >= 1380 || minutesSinceMidnight < 30){
+    return CHAPTER_RULES[4];
+  }
+
+  return CHAPTER_RULES[5];
 }
 
 function buildPages(items){
@@ -483,8 +490,9 @@ function describePage(page){
   return "Fotoboek";
 }
 
-function getLocalHour(date){
+function getLocalParts(date){
   const parts = new Intl.DateTimeFormat("nl-NL", {
+    minute: "2-digit",
     hour: "2-digit",
     hour12: false,
     timeZone: TIME_ZONE
@@ -493,12 +501,14 @@ function getLocalHour(date){
   const hourPart = parts.find(function(part){
     return part.type === "hour";
   });
+  const minutePart = parts.find(function(part){
+    return part.type === "minute";
+  });
 
-  return hourPart ? Number(hourPart.value) : null;
-}
-
-function formatRange(startHour, endHour){
-  return String(startHour).padStart(2, "0") + ":00-" + String(endHour % 24).padStart(2, "0") + ":00";
+  return {
+    hour: hourPart ? Number(hourPart.value) : 0,
+    minute: minutePart ? Number(minutePart.value) : 0
+  };
 }
 
 function parseTimestampFromName(name){
