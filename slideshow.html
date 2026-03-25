@@ -526,7 +526,7 @@ GOODNIGHT_SWITCH_MINUTE,
 )
 
 if(target <= now){
-target.setDate(target.getDate() + 1)
+return
 }
 
 const delay = target.getTime() - now.getTime()
