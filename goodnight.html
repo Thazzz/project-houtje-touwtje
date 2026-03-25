@@ -121,6 +121,11 @@ overflow:hidden;
 opacity:1;
 }
 
+.polaroid.is-leaving{
+opacity:0;
+transform:rotate(var(--r, 0deg)) scale(.96);
+}
+
 .polaroid img{
 display:block;
 width:100%;
@@ -330,12 +335,7 @@ function getAlternativeUrls(excludeUrl){
   return allUrls.filter(url => url !== excludeUrl)
 }
 
-function setSlotPhoto(slot, url){
-  const existing = slot.querySelector(".polaroid")
-  if(existing){
-    existing.remove()
-  }
-
+function createPolaroid(url){
   const card = document.createElement("article")
   card.className = "polaroid"
   card.style.setProperty("--r", pickRandomRotation())
@@ -345,12 +345,35 @@ function setSlotPhoto(slot, url){
   img.alt = "Feestfoto"
 
   card.appendChild(img)
-  slot.appendChild(card)
-  slot.dataset.url = url
+  return card
+}
 
-  requestAnimationFrame(() => {
-    card.classList.add("show")
-  })
+function setSlotPhoto(slot, url){
+  const existing = slot.querySelector(".polaroid")
+  const nextCard = createPolaroid(url)
+
+  const showNextCard = () => {
+    slot.appendChild(nextCard)
+    slot.dataset.url = url
+
+    requestAnimationFrame(() => {
+      nextCard.classList.add("show")
+    })
+  }
+
+  if(existing){
+    existing.classList.remove("show")
+    existing.classList.add("is-leaving")
+    window.setTimeout(() => {
+      if(existing.parentNode === slot){
+        existing.remove()
+      }
+      showNextCard()
+    }, 420)
+    return
+  }
+
+  showNextCard()
 }
 
 function fillInitialPhotos(){
