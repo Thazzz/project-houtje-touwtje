@@ -97,6 +97,9 @@ let spotlightQueue=[]
 let spotlightBusy=false
 
 const SPOTLIGHT_DURATION = 3000
+const GOODNIGHT_SWITCH_HOUR = 0
+const GOODNIGHT_SWITCH_MINUTE = 35
+const GOODNIGHT_PATH = "/goodnight"
 const SLIDESHOW_MESSAGES = [
 "Nieuwe foto!",
 "Vers van de camera",
@@ -110,6 +113,7 @@ const SLIDESHOW_MESSAGES = [
 "De tafel leeft"
 ]
 let lastBannerMessage = ""
+let goodnightTriggered = false
 
 /* LOCAL CHANNEL */
 
@@ -494,6 +498,62 @@ banner.style.opacity=0
 
 }
 
+function goToGoodnight(){
+
+if(goodnightTriggered) return
+
+goodnightTriggered = true
+
+document.body.style.transition = "opacity .8s ease"
+document.body.style.opacity = "0"
+
+setTimeout(()=>{
+window.location.href = window.location.origin + GOODNIGHT_PATH
+},800)
+
+}
+
+function shouldSwitchToGoodnight(now = new Date()){
+
+const currentMinutes =
+now.getHours() * 60 + now.getMinutes()
+
+const switchMinutes =
+GOODNIGHT_SWITCH_HOUR * 60 + GOODNIGHT_SWITCH_MINUTE
+
+return currentMinutes >= switchMinutes
+
+}
+
+function scheduleGoodnightSwitch(){
+
+if(shouldSwitchToGoodnight()){
+goToGoodnight()
+return
+}
+
+const now = new Date()
+
+const target = new Date(now)
+target.setHours(
+GOODNIGHT_SWITCH_HOUR,
+GOODNIGHT_SWITCH_MINUTE,
+0,
+0
+)
+
+if(target <= now){
+target.setDate(target.getDate() + 1)
+}
+
+const delay = target.getTime() - now.getTime()
+
+setTimeout(()=>{
+goToGoodnight()
+}, delay)
+
+}
+
 /* QR FLASH */
 
 function flashQR(){
@@ -784,6 +844,8 @@ idleSlideshowTimer=setTimeout(showNextIdlePhoto,6000)
 /* START */
 
 async function start(){
+
+scheduleGoodnightSwitch()
 
 createQR()
 
