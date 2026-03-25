@@ -87,6 +87,13 @@ line-height:1.35;
 color:#ddd7cc;
 }
 
+.signature{
+margin-top:18px;
+font-size:clamp(16px,1.4vw,22px);
+letter-spacing:.08em;
+color:#cfc7ba;
+}
+
 .polaroid{
 position:relative;
 width:min(100%, 200px);
@@ -173,6 +180,7 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 const GRID_COLS = 6
 const GRID_ROWS = 3
 const SWAP_INTERVAL_MS = 9000
+const MESSAGE_SWAP_MS = 43000
 const MESSAGE_VARIANTS = [
   {
     title: "Bedankt dat je er was",
@@ -185,6 +193,18 @@ const MESSAGE_VARIANTS = [
   {
     title: "Fijn dat je er was",
     text: "Tot snel en wel thuis straks."
+  },
+  {
+    title: "Wat fijn dat je er was",
+    text: "Dank voor alle mooie momenten van vanavond."
+  },
+  {
+    title: "Bedankt voor deze avond",
+    text: "Tot snel en voor zometeen: kom goed thuis."
+  },
+  {
+    title: "Dank je wel voor vanavond",
+    text: "Ik vond het heel bijzonder dat je erbij was."
   }
 ]
 
@@ -194,7 +214,10 @@ let allUrls = []
 let displayedUrls = new Set()
 let photoSlots = []
 let swapTimer
+let messageTimer
 let lastMessageIndex = -1
+let messageTitleEl
+let messageTextEl
 
 function shuffle(array){
   for(let i = array.length - 1; i > 0; i--){
@@ -240,12 +263,30 @@ function createMessageCard(){
   const text = document.createElement("p")
   text.textContent = message.text
 
+  messageTitleEl = title
+  messageTextEl = text
+
+  const signature = document.createElement("div")
+  signature.className = "signature"
+  signature.textContent = "- x - Chris10 -"
+
   inner.appendChild(title)
   inner.appendChild(text)
+  inner.appendChild(signature)
   card.appendChild(inner)
   slot.appendChild(card)
 
   return slot
+}
+
+function swapMessage(){
+  if(!messageTitleEl || !messageTextEl){
+    return
+  }
+
+  const message = pickMessage()
+  messageTitleEl.textContent = message.title
+  messageTextEl.textContent = message.text
 }
 
 function buildGrid(){
@@ -385,11 +426,17 @@ function startSwapping(){
   swapTimer = setInterval(swapOnePhoto, SWAP_INTERVAL_MS)
 }
 
+function startMessageSwapping(){
+  clearInterval(messageTimer)
+  messageTimer = setInterval(swapMessage, MESSAGE_SWAP_MS)
+}
+
 async function start(){
   buildGrid()
   await loadAllPhotos()
   fillInitialPhotos()
   startSwapping()
+  startMessageSwapping()
 }
 
 start()
