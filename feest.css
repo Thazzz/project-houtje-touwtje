@@ -6,9 +6,10 @@ body{
 
 background:
 radial-gradient(circle at top,
-rgba(255,0,120,0.16),
+rgba(255,255,255,0.08),
+rgba(255,0,120,0.18),
 transparent 60%),
-#171717;
+#202020;
 
 color:#eaeaea;
 font-family:'Inter', sans-serif;
@@ -170,6 +171,7 @@ letter-spacing:3px;
 z-index:1000;
 
 color:#ff4fd8;
+opacity:.98;
 
 text-shadow:
 0 0 6px #fff,
@@ -231,7 +233,7 @@ animation:neonAura 10s ease-in-out infinite;
 font-size:18px;
 margin-top:8px;
 
-opacity:.9;
+opacity:1;
 
 color:#8affff;
 
@@ -580,7 +582,7 @@ left:50%;
 
 transform:translateX(-50%);
 
-background:rgba(0,0,0,0.46);
+background:rgba(20,20,20,0.28);
 
 padding:12px 22px;
 border-radius:8px;
@@ -607,7 +609,7 @@ position:absolute;
 right:30px;
 bottom:30px;
 
-background:rgba(0,0,0,0.44);
+background:rgba(20,20,20,0.26);
 
 padding:12px;
 
@@ -711,8 +713,8 @@ mask-composite:exclude;
 
 /* glow */
 
-filter:blur(6px) brightness(1.2);
-opacity:.8;
+filter:blur(6px) brightness(1.35);
+opacity:.92;
 
 animation:rainbowShift 25s linear infinite;
 
