@@ -326,6 +326,10 @@ function getUnusedUrls(excludeUrl){
   return allUrls.filter(url => !displayedUrls.has(url) && url !== excludeUrl)
 }
 
+function getAlternativeUrls(excludeUrl){
+  return allUrls.filter(url => url !== excludeUrl)
+}
+
 function setSlotPhoto(slot, url){
   const existing = slot.querySelector(".polaroid")
   if(existing){
@@ -369,19 +373,21 @@ function fillInitialPhotos(){
 }
 
 function swapOnePhoto(){
-  if(photoSlots.length === 0 || allUrls.length <= displayedUrls.size){
+  if(photoSlots.length === 0 || allUrls.length <= 1){
     return
   }
 
   const slot = photoSlots[Math.floor(Math.random() * photoSlots.length)]
   const currentUrl = slot.dataset.url || ""
   const availableUrls = getUnusedUrls(currentUrl)
+  const fallbackUrls = getAlternativeUrls(currentUrl)
+  const candidateUrls = availableUrls.length > 0 ? availableUrls : fallbackUrls
 
-  if(availableUrls.length === 0){
+  if(candidateUrls.length === 0){
     return
   }
 
-  const nextUrl = availableUrls[Math.floor(Math.random() * availableUrls.length)]
+  const nextUrl = candidateUrls[Math.floor(Math.random() * candidateUrls.length)]
 
   if(currentUrl){
     displayedUrls.delete(currentUrl)
