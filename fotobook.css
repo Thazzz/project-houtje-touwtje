@@ -63,6 +63,14 @@ width:min(1200px, calc(100% - 32px));
 margin:0 auto;
 }
 
+body[data-viewport="mobile"] .page-shell{
+width:min(100% - 18px, 100%);
+}
+
+body[data-viewport="tablet"] .page-shell{
+width:min(980px, calc(100% - 28px));
+}
+
 .gate{
 min-height:100vh;
 display:grid;
@@ -215,6 +223,19 @@ flex-wrap:wrap;
 justify-content:flex-end;
 }
 
+body[data-viewport="mobile"] .chapter-nav{
+flex-wrap:nowrap;
+overflow-x:auto;
+padding-bottom:4px;
+width:100%;
+justify-content:flex-start;
+scrollbar-width:none;
+}
+
+body[data-viewport="mobile"] .chapter-nav::-webkit-scrollbar{
+display:none;
+}
+
 .chapter-button{
 padding:10px 14px;
 border-radius:999px;
@@ -240,6 +261,17 @@ box-shadow:var(--shadow);
 overflow:hidden;
 }
 
+body[data-viewport="mobile"] .page-frame{
+min-height:72vh;
+padding:10px;
+border-radius:26px;
+}
+
+body[data-viewport="tablet"] .page-frame{
+min-height:66vh;
+padding:14px;
+}
+
 .page-frame::before{
 content:"";
 position:absolute;
@@ -257,6 +289,17 @@ background:linear-gradient(180deg, rgba(20,16,24,0.94), rgba(15,12,19,0.9));
 border:1px solid rgba(255,255,255,0.06);
 display:grid;
 gap:18px;
+}
+
+body[data-viewport="mobile"] .page{
+padding:16px;
+border-radius:20px;
+gap:14px;
+}
+
+body[data-viewport="tablet"] .page{
+padding:18px;
+gap:16px;
 }
 
 .page-cover,
@@ -390,6 +433,19 @@ height:100%;
 object-fit:cover;
 }
 
+body[data-viewport="mobile"] .photo-frame{
+min-height:62vh;
+}
+
+body[data-viewport="mobile"] .photo-frame img{
+object-fit:contain;
+background:rgba(0,0,0,0.24);
+}
+
+body[data-viewport="tablet"] .photo-frame{
+min-height:320px;
+}
+
 .caption{
 margin:0;
 padding:0 4px;
@@ -454,6 +510,37 @@ font-size:14px;
 color:#e8dece;
 }
 
+body[data-viewport="mobile"] .book-header,
+body[data-viewport="mobile"] .book-footer{
+flex-direction:column;
+align-items:flex-start;
+}
+
+body[data-viewport="mobile"] .footer-right{
+width:100%;
+justify-content:space-between;
+}
+
+body[data-viewport="mobile"] .nav-button{
+flex:1 1 0;
+text-align:center;
+}
+
+body[data-viewport="mobile"] .progress-text{
+min-width:70px;
+text-align:center;
+}
+
+body[data-viewport="tablet"] .book-header,
+body[data-viewport="tablet"] .book-footer{
+flex-direction:column;
+align-items:flex-start;
+}
+
+body[data-viewport="tablet"] .chapter-nav{
+justify-content:flex-start;
+}
+
 .loading-state,
 .empty-state{
 height:100%;
@@ -503,16 +590,6 @@ padding:30px 22px;
 .book{
 padding-top:14px;
 gap:14px;
-}
-
-.page-frame{
-padding:10px;
-border-radius:28px;
-}
-
-.page{
-padding:16px;
-border-radius:22px;
 }
 
 .photo-frame{

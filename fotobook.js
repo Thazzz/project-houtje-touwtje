@@ -39,6 +39,8 @@ let photoItems = [];
 let pages = [];
 let activePageIndex = 0;
 let supabaseClient = null;
+let viewportMode = getViewportMode();
+let resizeTimer = null;
 
 if(openBookButton){
   openBookButton.addEventListener("click", function(){
@@ -98,9 +100,26 @@ window.addEventListener("dragstart", function(event){
   }
 });
 
+window.addEventListener("resize", function(){
+  if(resizeTimer){
+    window.clearTimeout(resizeTimer);
+  }
+
+  resizeTimer = window.setTimeout(function(){
+    const nextMode = getViewportMode();
+    if(nextMode !== viewportMode){
+      viewportMode = nextMode;
+      document.body.setAttribute("data-viewport", viewportMode);
+      rebuildBook();
+    }
+  }, 120);
+});
+
 bootstrap();
 
 async function bootstrap(){
+  document.body.setAttribute("data-viewport", viewportMode);
+
   const hasAccess = localStorage.getItem(ACCESS_STORAGE_KEY) === "granted";
 
   if(hasAccess){
@@ -154,7 +173,7 @@ async function loadBook(){
     }
 
     photoItems = mergePhotoData(storageResult.data || [], captionResult.data || []);
-    pages = buildPages(photoItems);
+    pages = buildPages(photoItems, viewportMode);
     renderChapterNav();
     changePage(0);
   }catch(error){
@@ -194,6 +213,7 @@ function mergePhotoData(storageEntries, captionRows){
 
 function assignChapter(timestamp){
   const date = timestamp ? new Date(timestamp) : null;
+
   if(!date || Number.isNaN(date.getTime())){
     return CHAPTER_RULES[0];
   }
@@ -231,7 +251,7 @@ function assignChapter(timestamp){
   return CHAPTER_RULES[5];
 }
 
-function buildPages(items){
+function buildPages(items, mode){
   const grouped = groupByChapter(items);
   const result = [{ type: "cover" }];
 
@@ -255,10 +275,9 @@ function buildPages(items){
 
     while(index < group.photos.length){
       const remaining = group.photos.length - index;
-      const useFeature = remaining >= 3 && rotation % 3 === 0;
-      const useDuo = remaining >= 2 && !useFeature;
+      const layoutChoice = chooseLayout(mode, remaining, rotation);
 
-      if(useFeature){
+      if(layoutChoice === "feature" && remaining >= 3){
         result.push({
           type: "photos",
           layout: "feature",
@@ -268,7 +287,7 @@ function buildPages(items){
           photos: group.photos.slice(index, index + 3)
         });
         index += 3;
-      }else if(useDuo){
+      }else if(layoutChoice === "duo" && remaining >= 2){
         result.push({
           type: "photos",
           layout: "duo",
@@ -298,6 +317,30 @@ function buildPages(items){
   return result;
 }
 
+function chooseLayout(mode, remaining, rotation){
+  if(mode === "mobile"){
+    return "solo";
+  }
+
+  if(mode === "tablet"){
+    if(remaining >= 2 && rotation % 2 === 1){
+      return "duo";
+    }
+
+    return "solo";
+  }
+
+  if(remaining >= 3 && rotation % 3 === 0){
+    return "feature";
+  }
+
+  if(remaining >= 2){
+    return "duo";
+  }
+
+  return "solo";
+}
+
 function groupByChapter(items){
   const groups = [];
 
@@ -322,6 +365,7 @@ function renderChapterNav(){
   const chapterPages = pages.filter(function(page){
     return page.type === "chapter";
   });
+
   chapterNav.innerHTML = "";
 
   chapterPages.forEach(function(page){
@@ -334,6 +378,7 @@ function renderChapterNav(){
       const targetIndex = pages.findIndex(function(candidate){
         return candidate.type === "chapter" && candidate.chapterId === page.chapterId;
       });
+
       if(targetIndex >= 0){
         changePage(targetIndex);
       }
@@ -409,7 +454,7 @@ function renderPage(page, pageIndex){
     '<article class="page layout-' + page.layout + '">' +
       '<div class="photo-grid">' + renderPhotoLayout(page) + '</div>' +
       '<div class="page-meta">' +
-        '<div>' + escapeHtml(page.chapterTitle) + ' <span aria-hidden="true">·</span> ' + escapeHtml(page.chapterRange) + '</div>' +
+        '<div>' + escapeHtml(page.chapterTitle) + ' <span aria-hidden="true">&#183;</span> ' + escapeHtml(page.chapterRange) + '</div>' +
         '<div class="page-count">Spread ' + (pageIndex + 1) + ' van ' + pages.length + '</div>' +
       '</div>' +
     '</article>';
@@ -457,7 +502,7 @@ function updateUiState(){
   const activePage = pages[activePageIndex];
   pageStatus.textContent = describePage(activePage);
   brandSubtitle.textContent = photoItems.length > 0
-    ? photoItems.length + " foto's in uploadvolgorde"
+    ? photoItems.length + " foto's in uploadvolgorde - " + viewportLabel(viewportMode)
     : "Nog geen foto's in het boek";
 
   document.querySelectorAll(".chapter-button").forEach(function(button){
@@ -476,11 +521,11 @@ function describePage(page){
   }
 
   if(page.type === "chapter"){
-    return page.chapterTitle + " · " + page.chapterRange;
+    return page.chapterTitle + " - " + page.chapterRange;
   }
 
   if(page.type === "photos"){
-    return page.chapterTitle + " · " + page.photos.length + " foto" + (page.photos.length === 1 ? "" : "'s") + " op deze spread";
+    return page.chapterTitle + " - " + page.photos.length + " foto" + (page.photos.length === 1 ? "" : "'s") + " op deze spread";
   }
 
   if(page.type === "end"){
@@ -518,6 +563,89 @@ function parseTimestampFromName(name){
   }
 
   return new Date(Number(match[1])).toISOString();
+}
+
+function getViewportMode(){
+  const width = window.innerWidth || document.documentElement.clientWidth || 0;
+
+  if(width < 700){
+    return "mobile";
+  }
+
+  if(width < 1100){
+    return "tablet";
+  }
+
+  return "desktop";
+}
+
+function viewportLabel(mode){
+  if(mode === "mobile"){
+    return "smartphone-modus";
+  }
+
+  if(mode === "tablet"){
+    return "tablet-modus";
+  }
+
+  return "desktop-modus";
+}
+
+function rebuildBook(){
+  if(photoItems.length === 0){
+    return;
+  }
+
+  const currentPage = pages[activePageIndex];
+  const anchor = getPageAnchor(currentPage);
+
+  pages = buildPages(photoItems, viewportMode);
+  renderChapterNav();
+
+  const nextIndex = findPageIndexByAnchor(anchor);
+  changePage(nextIndex >= 0 ? nextIndex : Math.min(activePageIndex, pages.length - 1));
+}
+
+function getPageAnchor(page){
+  if(!page){
+    return { type: "cover" };
+  }
+
+  if(page.type === "photos" && page.photos.length > 0){
+    return {
+      type: "photo",
+      filename: page.photos[0].filename
+    };
+  }
+
+  if(page.type === "chapter"){
+    return {
+      type: "chapter",
+      chapterId: page.chapterId
+    };
+  }
+
+  return { type: page.type };
+}
+
+function findPageIndexByAnchor(anchor){
+  if(!anchor){
+    return -1;
+  }
+
+  return pages.findIndex(function(page){
+    if(anchor.type === "photo"){
+      return page.type === "photos" && page.photos.some(function(photo){
+        return photo.filename === anchor.filename;
+      });
+    }
+
+    if(anchor.type === "chapter"){
+      return page.type === "chapter" && page.chapterId === anchor.chapterId;
+    }
+
+    return page.type === anchor.type;
+  });
 }
 
 function getSupabaseClient(){
