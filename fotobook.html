@@ -73,7 +73,6 @@
 <script>
 const supabaseUrl = "https://gfhnjiyslyualbfbvzmb.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaG5qaXlzbHl1YWxiZmJ2em1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMTgwOTQsImV4cCI6MjA4ODc5NDA5NH0.fOIy6UCpEuYWVBcBpGnr64s8Ua3qjEzRv-WLXJKAfgw"
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
 const ACCESS_CODE = "Chris10!"
 const ACCESS_STORAGE_KEY = "afterparty-pop-access"
@@ -110,6 +109,7 @@ const nextButton = document.getElementById("nextButton")
 let photoItems = []
 let pages = []
 let activePageIndex = 0
+let supabaseClient = null
 
 gateForm.addEventListener("submit", event => {
   event.preventDefault()
@@ -183,12 +183,13 @@ function revealBook(){
 
 async function loadBook(){
   try{
+    const client = getSupabaseClient()
     const [storageResult, captionResult] = await Promise.all([
-      supabaseClient.storage.from(PARTY_BUCKET).list("", {
+      client.storage.from(PARTY_BUCKET).list("", {
         limit: 500,
         sortBy: { column: "name", order: "asc" }
       }),
-      supabaseClient.from(PARTY_TABLE).select("filename, caption")
+      client.from(PARTY_TABLE).select("filename, caption")
     ])
 
     if(storageResult.error){
@@ -219,7 +220,7 @@ function mergePhotoData(storageEntries, captionRows){
   return storageEntries
     .filter(entry => entry.name && /\.(jpg|jpeg|png|webp)$/i.test(entry.name))
     .map(entry => {
-      const publicUrl = supabaseClient.storage.from(PARTY_BUCKET).getPublicUrl(entry.name).data.publicUrl
+      const publicUrl = getSupabaseClient().storage.from(PARTY_BUCKET).getPublicUrl(entry.name).data.publicUrl
       const uploadedAt = entry.created_at || entry.updated_at || parseTimestampFromName(entry.name)
       return {
         filename: entry.name,
@@ -230,6 +231,19 @@ function mergePhotoData(storageEntries, captionRows){
       }
     })
     .sort((left, right) => new Date(left.uploadedAt) - new Date(right.uploadedAt))
+}
+
+function getSupabaseClient(){
+  if(supabaseClient){
+    return supabaseClient
+  }
+
+  if(!window.supabase || typeof window.supabase.createClient !== "function"){
+    throw new Error("Supabase library not available")
+  }
+
+  supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+  return supabaseClient
 }
 
 function assignChapter(timestamp){
