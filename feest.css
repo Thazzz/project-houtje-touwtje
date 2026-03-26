@@ -68,7 +68,7 @@ filter:blur(140px);
 
 opacity:.76;
 
-mix-blend-mode:screen;
+mix-blend-mode:normal;
 
 z-index:-1;
 
@@ -137,7 +137,7 @@ filter:blur(150px);
 
 opacity:.66;
 
-mix-blend-mode:screen;
+mix-blend-mode:normal;
 
 background:radial-gradient(
 circle,
