@@ -45,6 +45,7 @@ display:grid;
 place-items:center;
 min-width:0;
 min-height:0;
+overflow:visible;
 }
 
 .slot.center{
@@ -103,6 +104,7 @@ color:#cfc7ba;
 
 .polaroid{
 position:relative;
+z-index:1;
 width:min(100%, 200px);
 aspect-ratio:4 / 5;
 padding:9px 9px 24px 9px;
@@ -147,14 +149,81 @@ border-radius:999px;
 background:rgba(0,0,0,0.08);
 }
 
+.twinkle-burst{
+position:absolute;
+inset:50% auto auto 50%;
+width:160px;
+height:160px;
+transform:translate(-50%, -50%);
+pointer-events:none;
+z-index:0;
+opacity:0;
+animation:twinkle-burst 900ms ease-out forwards;
+}
+
+.twinkle{
+position:absolute;
+left:50%;
+top:50%;
+width:16px;
+height:16px;
+margin:-8px 0 0 -8px;
+background:
+linear-gradient(transparent 42%, rgba(255,248,214,0.96) 42%, rgba(255,248,214,0.96) 58%, transparent 58%),
+linear-gradient(90deg, transparent 42%, rgba(255,248,214,0.96) 42%, rgba(255,248,214,0.96) 58%, transparent 58%);
+filter:
+drop-shadow(0 0 8px rgba(255,240,180,0.9))
+drop-shadow(0 0 14px rgba(255,240,180,0.5));
+transform:translate(var(--x), var(--y)) rotate(45deg) scale(0.2);
+animation:twinkle-star 900ms ease-out forwards;
+animation-delay:var(--delay, 0ms);
+}
+
+.twinkle::after{
+content:"";
+position:absolute;
+inset:0;
+background:inherit;
+transform:rotate(45deg) scale(0.72);
+}
+
+@keyframes twinkle-burst{
+0%{
+opacity:0;
+}
+18%{
+opacity:1;
+}
+100%{
+opacity:0;
+}
+}
+
+@keyframes twinkle-star{
+0%{
+opacity:0;
+transform:translate(var(--x), var(--y)) rotate(45deg) scale(0.15);
+}
+35%{
+opacity:1;
+transform:translate(var(--x), var(--y)) rotate(45deg) scale(1);
+}
+100%{
+opacity:0;
+transform:translate(var(--x), var(--y)) rotate(45deg) scale(0.4);
+}
+}
+
 .footer-heart{
 position:fixed;
-right:28px;
-bottom:20px;
-width:52px;
-height:52px;
+right:18px;
+bottom:14px;
+width:104px;
+height:104px;
 opacity:.88;
-filter:drop-shadow(0 0 10px rgba(255,62,165,0.28));
+filter:
+drop-shadow(0 0 18px rgba(255,62,165,0.34))
+drop-shadow(0 0 34px rgba(255,62,165,0.2));
 }
 
 .footer-heart img{
@@ -280,7 +349,7 @@ function createMessageCard(){
 
   const signature = document.createElement("div")
   signature.className = "signature"
-  signature.textContent = "- x - Chris10 -"
+  signature.textContent = "-x- Chris10 -x-"
 
   inner.appendChild(title)
   inner.appendChild(text)
@@ -348,11 +417,46 @@ function createPolaroid(url){
   return card
 }
 
+function triggerTwinkle(slot){
+  const burst = document.createElement("div")
+  burst.className = "twinkle-burst"
+
+  const stars = [
+    { x: -46, y: -38, size: 18, delay: 0 },
+    { x: 42, y: -30, size: 12, delay: 80 },
+    { x: -24, y: 28, size: 10, delay: 140 },
+    { x: 34, y: 36, size: 14, delay: 40 },
+    { x: 0, y: -2, size: 22, delay: 20 }
+  ]
+
+  for(const starConfig of stars){
+    const star = document.createElement("span")
+    star.className = "twinkle"
+    star.style.setProperty("--x", `${starConfig.x}px`)
+    star.style.setProperty("--y", `${starConfig.y}px`)
+    star.style.setProperty("--delay", `${starConfig.delay}ms`)
+    star.style.width = `${starConfig.size}px`
+    star.style.height = `${starConfig.size}px`
+    star.style.marginLeft = `${starConfig.size / -2}px`
+    star.style.marginTop = `${starConfig.size / -2}px`
+    burst.appendChild(star)
+  }
+
+  slot.appendChild(burst)
+
+  window.setTimeout(() => {
+    if(burst.parentNode === slot){
+      burst.remove()
+    }
+  }, 1100)
+}
+
 function setSlotPhoto(slot, url){
   const existing = slot.querySelector(".polaroid")
   const nextCard = createPolaroid(url)
 
   const showNextCard = () => {
+    triggerTwinkle(slot)
     slot.appendChild(nextCard)
     slot.dataset.url = url
 
