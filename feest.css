@@ -53,26 +53,27 @@ isolation:isolate;
 ================================= */
 
 #container::before,
-#container::after{
+#container::after,
+body::after{
 
-content:"";
+  content:"";
 
-position:absolute;
+  position:absolute;
 
-width:1200px;
-height:1200px;
+  width:1200px;
+  height:1200px;
 
-pointer-events:none;
+  pointer-events:none;
 
-filter:blur(140px);
+  filter:blur(100px);
 
-opacity:.76;
+  opacity:.35;
 
-mix-blend-mode:normal;
+  mix-blend-mode:normal;
 
-z-index:-1;
+  z-index:-1;
 
-will-change:transform, filter;
+  will-change: transform;
 
 }
 
@@ -135,7 +136,7 @@ pointer-events:none;
 
 filter:blur(150px);
 
-opacity:.66;
+opacity: 0.3;;
 
 mix-blend-mode:normal;
 
