@@ -437,7 +437,6 @@ function renderPage(page, pageIndex){
     pageFrame.innerHTML =
       '<article class="page page-cover">' +
         '<div class="cover-card">' +
-          '<p class="cover-kicker">Fotoboek</p>' +
           '<h1 class="cover-title">' + escapeHtml(PARTY_TITLE) + '</h1>' +
           '<p class="cover-text">' + escapeHtml(PARTY_INTRO) + '</p>' +
           '<div class="cover-meta">' +
@@ -454,7 +453,6 @@ function renderPage(page, pageIndex){
     pageFrame.innerHTML =
       '<article class="page page-chapter">' +
         '<div class="chapter-card">' +
-          '<p class="chapter-kicker">Nieuw hoofdstuk</p>' +
           '<h2>' + escapeHtml(page.chapterTitle) + '</h2>' +
           '<div class="chapter-range">' + escapeHtml(page.chapterRange) + '</div>' +
           '<p>' + escapeHtml(page.chapterMood) + '</p>' +
@@ -468,7 +466,6 @@ function renderPage(page, pageIndex){
     pageFrame.innerHTML =
       '<article class="page page-end">' +
         '<div class="end-card">' +
-          '<p class="chapter-kicker">Einde</p>' +
           '<h2>Afterglow</h2>' +
           '<p>Alles staat erin wat voor nu gekozen is. Later kunnen we de covertekst en de laatste polish nog aanscherpen.</p>' +
         '</div>' +
