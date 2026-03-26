@@ -192,6 +192,10 @@ grid-template-rows:auto 1fr auto;
 gap:10px;
 }
 
+.book > .page-shell{
+min-height:0;
+}
+
 .book-header,
 .book-footer{
 display:flex;
@@ -255,6 +259,7 @@ color:#ffe8f3;
 position:relative;
 height:100%;
 min-height:0;
+max-height:100%;
 padding:18px;
 border-radius:40px;
 background:rgba(255,255,255,0.03);
@@ -385,6 +390,7 @@ height:100%;
 min-height:0;
 display:grid;
 gap:18px;
+overflow:hidden;
 }
 
 .layout-solo .photo-grid{
@@ -402,6 +408,7 @@ grid-template-columns:minmax(0, 1.4fr) minmax(280px, .8fr);
 .feature-side{
 display:grid;
 gap:18px;
+min-height:0;
 }
 
 .photo-card{
