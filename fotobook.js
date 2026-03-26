@@ -485,8 +485,7 @@ function renderPage(page, pageIndex){
     '<article class="page layout-' + page.layout + '">' +
       '<div class="photo-grid">' + renderPhotoLayout(page) + '</div>' +
       '<div class="page-meta">' +
-        '<div>' + escapeHtml(page.chapterTitle) + ' <span aria-hidden="true">&#183;</span> ' + escapeHtml(page.chapterRange) + '</div>' +
-        '<div class="page-count">Spread ' + (pageIndex + 1) + ' van ' + pages.length + '</div>' +
+        '<div class="page-count">' + (pageIndex + 1) + ' / ' + pages.length + '</div>' +
       '</div>' +
     '</article>';
 }
@@ -534,9 +533,7 @@ function updateUiState(){
 
   const activePage = pages[activePageIndex];
   pageStatus.textContent = describePage(activePage);
-  brandSubtitle.textContent = photoItems.length > 0
-    ? photoItems.length + " foto's in uploadvolgorde - " + viewportLabel(viewportMode)
-    : "Nog geen foto's in het boek";
+  brandSubtitle.textContent = "";
 
   document.querySelectorAll(".chapter-button").forEach(function(button){
     const isActive = activePage.chapterId && button.dataset.chapterId === activePage.chapterId;
@@ -550,22 +547,22 @@ function describePage(page){
   }
 
   if(page.type === "cover"){
-    return "Omslag";
+    return "";
   }
 
   if(page.type === "chapter"){
-    return page.chapterTitle + " - " + page.chapterRange;
+    return page.chapterTitle;
   }
 
   if(page.type === "photos"){
-    return page.chapterTitle + " - " + page.photos.length + " foto" + (page.photos.length === 1 ? "" : "'s") + " op deze spread";
+    return page.chapterTitle;
   }
 
   if(page.type === "end"){
-    return "Afsluiting";
+    return "";
   }
 
-  return "Fotoboek";
+  return "";
 }
 
 function getLocalParts(date){
@@ -610,18 +607,6 @@ function getViewportMode(){
   }
 
   return "desktop";
-}
-
-function viewportLabel(mode){
-  if(mode === "mobile"){
-    return "smartphone-modus";
-  }
-
-  if(mode === "tablet"){
-    return "tablet-modus";
-  }
-
-  return "desktop-modus";
 }
 
 function rebuildBook(){
