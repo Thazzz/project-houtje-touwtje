@@ -9,7 +9,6 @@ const PARTY_DATE_LABEL = "5 april 2026";
 const PARTY_TITLE = "Christien's Afterparty Pop";
 const PARTY_INTRO = "Van binnenkomst tot laatste ronde, in het tempo waarin de foto's zijn binnengekomen.";
 const TIME_ZONE = "Europe/Amsterdam";
-const EMPTY_CAPTION = "Geen caption toegevoegd.";
 const PREPARTY_CUTOFF = "2026-04-05T19:59:59+02:00";
 const PARTY_START = "2026-04-05T20:00:00+02:00";
 const PARTY_NIGHT_END = "2026-04-06T12:00:00+02:00";
@@ -154,26 +153,18 @@ function revealBook(){
 async function loadBook(){
   try{
     const client = getSupabaseClient();
+    const storageEntries = await loadAllStorageEntries(client);
     const results = await Promise.all([
-      client.storage.from(PARTY_BUCKET).list("", {
-        limit: 500,
-        sortBy: { column: "name", order: "asc" }
-      }),
       client.from(PARTY_TABLE).select("filename, caption")
     ]);
 
-    const storageResult = results[0];
-    const captionResult = results[1];
-
-    if(storageResult.error){
-      throw storageResult.error;
-    }
+    const captionResult = results[0];
 
     if(captionResult.error){
       throw captionResult.error;
     }
 
-    photoItems = mergePhotoData(storageResult.data || [], captionResult.data || []);
+    photoItems = mergePhotoData(storageEntries, captionResult.data || []);
     pages = buildPages(photoItems, viewportMode);
     renderChapterNav();
     changePage(0);
@@ -183,6 +174,40 @@ async function loadBook(){
     progressText.textContent = "- / -";
     console.error(error);
   }
+}
+
+async function loadAllStorageEntries(client){
+  const allEntries = [];
+  let offset = 0;
+  const limit = 500;
+
+  while(true){
+    const storageResult = await client.storage.from(PARTY_BUCKET).list("", {
+      limit: limit,
+      offset: offset,
+      sortBy: { column: "name", order: "asc" }
+    });
+
+    if(storageResult.error){
+      throw storageResult.error;
+    }
+
+    const batch = storageResult.data || [];
+
+    if(batch.length === 0){
+      break;
+    }
+
+    allEntries.push.apply(allEntries, batch);
+
+    if(batch.length < limit){
+      break;
+    }
+
+    offset += limit;
+  }
+
+  return allEntries;
 }
 
 function mergePhotoData(storageEntries, captionRows){
@@ -487,15 +512,17 @@ function renderPhotoLayout(page){
 }
 
 function renderPhotoCard(photo){
-  const caption = photo.caption || EMPTY_CAPTION;
-  const captionClass = photo.caption ? "caption" : "caption is-empty";
+  const hasCaption = Boolean(photo.caption);
+  const captionMarkup = hasCaption
+    ? '<figcaption class="caption">' + escapeHtml(photo.caption) + '</figcaption>'
+    : "";
 
   return (
     '<figure class="photo-card">' +
       '<div class="photo-frame">' +
-        '<img src="' + escapeAttribute(photo.url) + '" alt="' + escapeAttribute(caption) + '" loading="lazy" referrerpolicy="no-referrer">' +
+        '<img src="' + escapeAttribute(photo.url) + '" alt="' + escapeAttribute(photo.caption || "") + '" loading="lazy" referrerpolicy="no-referrer">' +
       '</div>' +
-      '<figcaption class="' + captionClass + '">' + escapeHtml(caption) + '</figcaption>' +
+      captionMarkup +
     '</figure>'
   );
 }
