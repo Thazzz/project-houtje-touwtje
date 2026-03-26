@@ -5,16 +5,17 @@ const ACCESS_CODE = "Chris10!";
 const ACCESS_STORAGE_KEY = "afterparty-pop-access";
 const PARTY_BUCKET = "party";
 const PARTY_TABLE = "photos";
-const PARTY_DATE_LABEL = "25 maart 2026";
-const PARTY_TITLE = "Christie's Afterparty Pop";
+const PARTY_DATE_LABEL = "5 april 2026";
+const PARTY_TITLE = "Christien's Afterparty Pop";
 const PARTY_INTRO = "Van binnenkomst tot laatste ronde, in het tempo waarin de foto's zijn binnengekomen.";
 const TIME_ZONE = "Europe/Amsterdam";
 const EMPTY_CAPTION = "Geen caption toegevoegd.";
-const PREPARTY_CUTOFF = "2026-04-04T23:59:59+02:00";
-const PARTY_START = "2026-04-05T00:01:00+02:00";
+const PREPARTY_CUTOFF = "2026-04-05T19:59:59+02:00";
+const PARTY_START = "2026-04-05T20:00:00+02:00";
+const PARTY_NIGHT_END = "2026-04-06T12:00:00+02:00";
 
 const CHAPTER_RULES = [
-  { id: "preparty", title: "Preparty", rangeLabel: "Tot 4 april 23:59", mood: "De aanloop, eerste uploads en de opbouw naar de avond." },
+  { id: "preparty", title: "Preparty", rangeLabel: "Tot 5 april 19:59", mood: "De aanloop, eerste uploads en de opbouw naar de avond." },
   { id: "binnenkomst", title: "Binnenkomst", rangeLabel: "20:00-21:00", mood: "De eerste blikken, eerste drankjes en nog frisse energie." },
   { id: "komt-lekker-los", title: "Komt lekker los", rangeLabel: "21:00-22:00", mood: "De avond komt los en de eerste verhalen beginnen te vliegen." },
   { id: "voetjes-van-de-vloer", title: "Voetjes van de vloer", rangeLabel: "22:00-23:00", mood: "De kamer leeft, de kleuren worden feller en de glimlachen losser." },
@@ -220,13 +221,18 @@ function assignChapter(timestamp){
 
   const prepartyCutoff = new Date(PREPARTY_CUTOFF);
   const partyStart = new Date(PARTY_START);
+  const partyNightEnd = new Date(PARTY_NIGHT_END);
 
   if(date <= prepartyCutoff){
     return CHAPTER_RULES[0];
   }
 
   if(date < partyStart){
-    return CHAPTER_RULES[1];
+    return CHAPTER_RULES[0];
+  }
+
+  if(date > partyNightEnd){
+    return CHAPTER_RULES[5];
   }
 
   const localParts = getLocalParts(date);
