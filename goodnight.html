@@ -152,13 +152,25 @@ background:rgba(0,0,0,0.08);
 .twinkle-burst{
 position:absolute;
 inset:50% auto auto 50%;
-width:160px;
-height:160px;
+width:280px;
+height:280px;
 transform:translate(-50%, -50%);
 pointer-events:none;
 z-index:0;
 opacity:0;
 animation:twinkle-burst 900ms ease-out forwards;
+}
+
+.twinkle-burst::before{
+content:"";
+position:absolute;
+inset:50%;
+width:170px;
+height:170px;
+transform:translate(-50%, -50%);
+border-radius:50%;
+background:radial-gradient(circle, rgba(255,244,205,0.42) 0%, rgba(255,244,205,0.16) 34%, rgba(255,244,205,0) 74%);
+filter:blur(5px);
 }
 
 .twinkle{
@@ -190,12 +202,14 @@ transform:rotate(45deg) scale(0.72);
 @keyframes twinkle-burst{
 0%{
 opacity:0;
+transform:translate(-50%, -50%) scale(0.75);
 }
 18%{
 opacity:1;
 }
 100%{
 opacity:0;
+transform:translate(-50%, -50%) scale(1.08);
 }
 }
 
@@ -423,11 +437,13 @@ function triggerTwinkle(slot){
   burst.className = "twinkle-burst"
 
   const stars = [
-    { x: -46, y: -38, size: 18, delay: 0 },
-    { x: 42, y: -30, size: 12, delay: 80 },
-    { x: -24, y: 28, size: 10, delay: 140 },
-    { x: 34, y: 36, size: 14, delay: 40 },
-    { x: 0, y: -2, size: 22, delay: 20 }
+    { x: -108, y: -78, size: 18, delay: 0 },
+    { x: 102, y: -70, size: 14, delay: 80 },
+    { x: -88, y: 74, size: 12, delay: 140 },
+    { x: 96, y: 82, size: 16, delay: 40 },
+    { x: 0, y: -112, size: 24, delay: 20 },
+    { x: -126, y: 8, size: 10, delay: 110 },
+    { x: 128, y: -2, size: 11, delay: 150 }
   ]
 
   for(const starConfig of stars){
