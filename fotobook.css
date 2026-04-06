@@ -443,7 +443,7 @@ content:"";
 position:absolute;
 inset:auto 12% 0;
 height:26%;
-background:linear-gradient(180deg, transparent, rgba(0,0,0,0.42));
+background:none;
 pointer-events:none;
 }
 
