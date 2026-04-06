@@ -237,16 +237,13 @@ justify-content:flex-end;
 }
 
 body[data-viewport="mobile"] .chapter-nav{
-flex-wrap:nowrap;
-overflow-x:auto;
-padding-bottom:4px;
+display:grid;
+grid-template-columns:repeat(3, minmax(0, 1fr));
+gap:6px;
+overflow:visible;
+padding-bottom:0;
 width:100%;
-justify-content:flex-start;
-scrollbar-width:none;
-}
-
-body[data-viewport="mobile"] .chapter-nav::-webkit-scrollbar{
-display:none;
+justify-content:stretch;
 }
 
 .chapter-button{
@@ -278,7 +275,7 @@ overflow:hidden;
 
 body[data-viewport="mobile"] .page-frame{
 min-height:0;
-padding:6px;
+padding:4px;
 border-radius:20px;
 overflow:hidden;
 }
@@ -315,9 +312,9 @@ gap:14px;
 
 body[data-viewport="mobile"] .page{
 height:100%;
-padding:10px;
-border-radius:20px;
-gap:6px;
+padding:8px;
+border-radius:16px;
+gap:4px;
 grid-template-rows:minmax(0, 1fr) auto;
 }
 
@@ -468,7 +465,8 @@ height:100%;
 display:flex;
 align-items:center;
 justify-content:center;
-border-radius:18px;
+border-radius:14px;
+background:var(--bg-soft);
 }
 
 body[data-viewport="mobile"] .photo-frame img{
@@ -569,11 +567,22 @@ body[data-viewport="mobile"] .book-header,
 body[data-viewport="mobile"] .book-footer{
 flex-direction:column;
 align-items:flex-start;
-gap:8px;
+gap:6px;
 }
 
 body[data-viewport="mobile"] .brand-title{
-font-size:11px;
+font-size:10px;
+letter-spacing:.22em;
+line-height:1;
+opacity:.9;
+}
+
+body[data-viewport="mobile"] .brand-block{
+gap:2px;
+}
+
+body[data-viewport="mobile"] .brand-subtitle{
+font-size:13px;
 }
 
 body[data-viewport="mobile"] .footer-left,
@@ -589,7 +598,7 @@ justify-content:space-between;
 body[data-viewport="mobile"] .nav-button{
 flex:1 1 0;
 text-align:center;
-padding:10px 14px;
+padding:9px 12px;
 }
 
 body[data-viewport="mobile"] .progress-text{
@@ -598,8 +607,12 @@ text-align:center;
 }
 
 body[data-viewport="mobile"] .chapter-button{
-padding:8px 12px;
-font-size:13px;
+width:100%;
+min-width:0;
+padding:7px 8px;
+font-size:12px;
+line-height:1.2;
+text-align:center;
 }
 
 body[data-viewport="tablet"] .book-header,
@@ -653,7 +666,7 @@ overflow:auto;
 }
 
 .page-shell{
-width:min(100% - 12px, 100%);
+width:min(100% - 10px, 100%);
 }
 
 .gate-card{
@@ -662,9 +675,9 @@ padding:30px 22px;
 
 .book{
 height:100svh;
-padding-top:8px;
-padding-bottom:8px;
-gap:6px;
+padding-top:6px;
+padding-bottom:6px;
+gap:4px;
 }
 
 .photo-frame{
@@ -672,16 +685,16 @@ min-height:0;
 }
 
 .photo-card{
-gap:8px;
+gap:6px;
 }
 
 .page{
-padding:12px;
-gap:8px;
+padding:8px;
+gap:4px;
 }
 
 .chapter-button{
-padding:8px 12px;
-font-size:14px;
+padding:7px 8px;
+font-size:12px;
 }
 }
