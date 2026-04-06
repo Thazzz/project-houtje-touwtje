@@ -68,6 +68,10 @@ body[data-viewport="mobile"] .page-shell{
 width:min(100% - 18px, 100%);
 }
 
+body[data-viewport="mobile"]::before{
+display:none;
+}
+
 body[data-viewport="tablet"] .page-shell{
 width:min(980px, calc(100% - 28px));
 }
@@ -274,9 +278,13 @@ overflow:hidden;
 
 body[data-viewport="mobile"] .page-frame{
 min-height:0;
-padding:8px;
-border-radius:26px;
+padding:6px;
+border-radius:20px;
 overflow:hidden;
+}
+
+body[data-viewport="mobile"] .page-frame::before{
+display:none;
 }
 
 body[data-viewport="tablet"] .page-frame{
@@ -307,9 +315,9 @@ gap:14px;
 
 body[data-viewport="mobile"] .page{
 height:100%;
-padding:16px;
+padding:10px;
 border-radius:20px;
-gap:8px;
+gap:6px;
 grid-template-rows:minmax(0, 1fr) auto;
 }
 
@@ -460,10 +468,14 @@ height:100%;
 display:flex;
 align-items:center;
 justify-content:center;
+border-radius:18px;
 }
 
 body[data-viewport="mobile"] .photo-frame img{
-height:100%;
+width:auto;
+max-width:100%;
+max-height:100%;
+height:auto;
 object-fit:contain;
 background:rgba(0,0,0,0.24);
 }
@@ -475,8 +487,12 @@ overflow:hidden;
 
 body[data-viewport="mobile"] .photo-card{
 height:100%;
-gap:8px;
+gap:6px;
 grid-template-rows:minmax(0, 1fr) auto;
+}
+
+body[data-viewport="mobile"] .caption{
+display:none;
 }
 
 body[data-viewport="tablet"] .photo-frame{
@@ -556,6 +572,10 @@ align-items:flex-start;
 gap:8px;
 }
 
+body[data-viewport="mobile"] .brand-title{
+font-size:11px;
+}
+
 body[data-viewport="mobile"] .footer-left,
 body[data-viewport="mobile"] .page-meta{
 display:none;
@@ -575,6 +595,11 @@ padding:10px 14px;
 body[data-viewport="mobile"] .progress-text{
 min-width:70px;
 text-align:center;
+}
+
+body[data-viewport="mobile"] .chapter-button{
+padding:8px 12px;
+font-size:13px;
 }
 
 body[data-viewport="tablet"] .book-header,
@@ -628,7 +653,7 @@ overflow:auto;
 }
 
 .page-shell{
-width:min(100% - 20px, 100%);
+width:min(100% - 12px, 100%);
 }
 
 .gate-card{
@@ -636,10 +661,10 @@ padding:30px 22px;
 }
 
 .book{
-height:100dvh;
-padding-top:12px;
-padding-bottom:12px;
-gap:8px;
+height:100svh;
+padding-top:8px;
+padding-bottom:8px;
+gap:6px;
 }
 
 .photo-frame{
