@@ -479,7 +479,7 @@ border-color:rgba(255,255,255,0.04);
 }
 
 body[data-viewport="mobile"] .photo-frame img{
-width:auto;
+width:100%;
 max-width:100%;
 max-height:var(--mobile-photo-max-height);
 height:auto;
