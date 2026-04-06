@@ -111,14 +111,31 @@ window.addEventListener("resize", function(){
       viewportMode = nextMode;
       document.body.setAttribute("data-viewport", viewportMode);
       rebuildBook();
+      updateMobileLayoutMetrics();
+      return;
     }
+
+    updateMobileLayoutMetrics();
   }, 120);
 });
+
+if(window.visualViewport){
+  window.visualViewport.addEventListener("resize", function(){
+    if(resizeTimer){
+      window.clearTimeout(resizeTimer);
+    }
+
+    resizeTimer = window.setTimeout(function(){
+      updateMobileLayoutMetrics();
+    }, 120);
+  });
+}
 
 bootstrap();
 
 async function bootstrap(){
   document.body.setAttribute("data-viewport", viewportMode);
+  updateMobileLayoutMetrics();
 
   const hasAccess = localStorage.getItem(ACCESS_STORAGE_KEY) === "granted";
 
@@ -148,6 +165,7 @@ function unlockBook(code){
 function revealBook(){
   gateView.classList.add("hidden");
   bookView.classList.remove("hidden");
+  updateMobileLayoutMetrics();
 }
 
 async function loadBook(){
@@ -168,6 +186,7 @@ async function loadBook(){
     pages = buildPages(photoItems, viewportMode);
     renderChapterNav();
     changePage(0);
+    updateMobileLayoutMetrics();
   }catch(error){
     pageFrame.innerHTML = '<div class="empty-state">Het fotoboek kon nu niet laden. Controleer de Supabase-verbinding en probeer het daarna opnieuw.</div>';
     pageStatus.textContent = "Laden mislukt";
@@ -426,6 +445,7 @@ function changePage(nextIndex){
   activePageIndex = nextIndex;
   renderPage(pages[activePageIndex], activePageIndex);
   updateUiState();
+  updateMobileLayoutMetrics();
 }
 
 function renderPage(page, pageIndex){
@@ -608,6 +628,7 @@ function getViewportMode(){
 
 function rebuildBook(){
   if(photoItems.length === 0){
+    updateMobileLayoutMetrics();
     return;
   }
 
@@ -619,6 +640,47 @@ function rebuildBook(){
 
   const nextIndex = findPageIndexByAnchor(anchor);
   changePage(nextIndex >= 0 ? nextIndex : Math.min(activePageIndex, pages.length - 1));
+  updateMobileLayoutMetrics();
+}
+
+function updateMobileLayoutMetrics(){
+  const isMobile = viewportMode === "mobile";
+
+  if(!isMobile){
+    document.body.style.removeProperty("--mobile-book-height");
+    document.body.style.removeProperty("--mobile-photo-max-height");
+    return;
+  }
+
+  const viewportHeight = window.visualViewport
+    ? Math.round(window.visualViewport.height)
+    : (window.innerHeight || document.documentElement.clientHeight || 0);
+
+  if(viewportHeight > 0){
+    document.body.style.setProperty("--mobile-book-height", viewportHeight + "px");
+  }
+
+  if(bookView.classList.contains("hidden")){
+    return;
+  }
+
+  const activePage = pageFrame.querySelector(".page");
+  const activePhotoCard = pageFrame.querySelector(".photo-card");
+
+  if(!activePage || !activePhotoCard){
+    document.body.style.removeProperty("--mobile-photo-max-height");
+    return;
+  }
+
+  const pageStyle = window.getComputedStyle(activePage);
+  const cardStyle = window.getComputedStyle(activePhotoCard);
+  const pagePadding =
+    parseFloat(pageStyle.paddingTop || "0") +
+    parseFloat(pageStyle.paddingBottom || "0");
+  const cardGap = parseFloat(cardStyle.rowGap || cardStyle.gap || "0");
+  const imageHeight = Math.max(140, Math.floor(pageFrame.clientHeight - pagePadding - cardGap - 2));
+
+  document.body.style.setProperty("--mobile-photo-max-height", imageHeight + "px");
 }
 
 function getPageAnchor(page){
