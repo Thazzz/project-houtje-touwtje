@@ -239,11 +239,13 @@ justify-content:flex-end;
 body[data-viewport="mobile"] .chapter-nav{
 display:grid;
 grid-template-columns:repeat(3, minmax(0, 1fr));
+grid-template-rows:repeat(2, auto);
 gap:6px;
 overflow:visible;
 padding-bottom:0;
 width:100%;
 justify-content:stretch;
+align-items:stretch;
 }
 
 .chapter-button{
@@ -275,8 +277,11 @@ overflow:hidden;
 
 body[data-viewport="mobile"] .page-frame{
 min-height:0;
-padding:4px;
-border-radius:20px;
+padding:2px;
+border-radius:16px;
+background:transparent;
+border-color:rgba(255,255,255,0.04);
+box-shadow:none;
 overflow:hidden;
 }
 
@@ -312,8 +317,8 @@ gap:14px;
 
 body[data-viewport="mobile"] .page{
 height:100%;
-padding:8px;
-border-radius:16px;
+padding:6px;
+border-radius:14px;
 gap:4px;
 grid-template-rows:minmax(0, 1fr) auto;
 }
@@ -466,7 +471,8 @@ display:flex;
 align-items:center;
 justify-content:center;
 border-radius:14px;
-background:var(--bg-soft);
+background:transparent;
+border-color:rgba(255,255,255,0.04);
 }
 
 body[data-viewport="mobile"] .photo-frame img{
@@ -475,7 +481,7 @@ max-width:100%;
 max-height:100%;
 height:auto;
 object-fit:contain;
-background:rgba(0,0,0,0.24);
+background:transparent;
 }
 
 body[data-viewport="mobile"] .photo-grid{
@@ -567,7 +573,7 @@ body[data-viewport="mobile"] .book-header,
 body[data-viewport="mobile"] .book-footer{
 flex-direction:column;
 align-items:flex-start;
-gap:6px;
+gap:4px;
 }
 
 body[data-viewport="mobile"] .brand-title{
@@ -578,11 +584,11 @@ opacity:.9;
 }
 
 body[data-viewport="mobile"] .brand-block{
-gap:2px;
+gap:0;
 }
 
 body[data-viewport="mobile"] .brand-subtitle{
-font-size:13px;
+display:none;
 }
 
 body[data-viewport="mobile"] .footer-left,
@@ -593,25 +599,27 @@ display:none;
 body[data-viewport="mobile"] .footer-right{
 width:100%;
 justify-content:space-between;
+gap:6px;
 }
 
 body[data-viewport="mobile"] .nav-button{
 flex:1 1 0;
 text-align:center;
-padding:9px 12px;
+padding:8px 10px;
 }
 
 body[data-viewport="mobile"] .progress-text{
-min-width:70px;
+min-width:56px;
 text-align:center;
+font-size:12px;
 }
 
 body[data-viewport="mobile"] .chapter-button{
 width:100%;
 min-width:0;
-padding:7px 8px;
-font-size:12px;
-line-height:1.2;
+padding:6px 6px;
+font-size:11px;
+line-height:1.15;
 text-align:center;
 }
 
@@ -666,7 +674,7 @@ overflow:auto;
 }
 
 .page-shell{
-width:min(100% - 10px, 100%);
+width:min(100% - 8px, 100%);
 }
 
 .gate-card{
@@ -675,9 +683,9 @@ padding:30px 22px;
 
 .book{
 height:100svh;
-padding-top:6px;
-padding-bottom:6px;
-gap:4px;
+padding-top:4px;
+padding-bottom:4px;
+gap:3px;
 }
 
 .photo-frame{
@@ -689,8 +697,8 @@ gap:6px;
 }
 
 .page{
-padding:8px;
-gap:4px;
+padding:6px;
+gap:3px;
 }
 
 .chapter-button{
